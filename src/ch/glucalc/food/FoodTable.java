@@ -20,4 +20,6 @@ public class FoodTable {
       + COLUMN_UNIT + " text not null, " //
       + COLUMN_CARBONHYDRATE + " real not null" //
       + ");";
+
+  public static final String TABLE_DROP = "drop table " + TABLE_NAME + ";";
 }

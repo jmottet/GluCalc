@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import ch.glucalc.food.Food;
+import ch.glucalc.food.category.CategoryFood;
 
 public class TestFragment extends Fragment {
 
@@ -43,6 +44,24 @@ public class TestFragment extends Fragment {
       @Override
       public void onClick(View v) {
         deleteFoods();
+      }
+    });
+
+    final Button generateFoodCategoriesBtn = (Button) rootView.findViewById(R.id.generate_categories_food);
+    generateFoodCategoriesBtn.setOnClickListener(new OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        generateCategoriesOfFood();
+      }
+    });
+
+    final Button deleteFoodCategoriesBtn = (Button) rootView.findViewById(R.id.delete_categories_food);
+    deleteFoodCategoriesBtn.setOnClickListener(new OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        deleteCategoriesOfFood();
       }
     });
 
@@ -103,6 +122,31 @@ public class TestFragment extends Fragment {
 
   private void deleteFoods() {
     new GluCalcSQLiteHelper(context).deleteFoods();
+  }
+
+  private void generateCategoriesOfFood() {
+
+    final int size = 1000;
+
+    Log.i(TAG, "Generating " + size + " categories of food");
+
+    final List<CategoryFood> categories = new ArrayList<CategoryFood>(size);
+    final Random random = new Random();
+
+    for (int i = 0; i < size; i++) {
+      final CategoryFood categoryFood = new CategoryFood();
+      categoryFood.setName("Category " + Math.abs(random.nextInt()));
+      categories.add(categoryFood);
+    }
+    Log.i(TAG, "" + size + " categories of food generated");
+
+    new GluCalcSQLiteHelper(context).storeCategories(categories);
+
+    Log.i(TAG, "" + size + " categories of food stored");
+  }
+
+  private void deleteCategoriesOfFood() {
+    new GluCalcSQLiteHelper(context).deleteCategoriesOfFood();
   }
 
 }

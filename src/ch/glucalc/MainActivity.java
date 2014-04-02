@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import ch.glucalc.food.FoodListFragment;
+import ch.glucalc.food.category.CategoryFoodListFragment;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -30,7 +31,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
     actionBar.addTab(actionBar.newTab().setText("Food").setTabListener(this));
-    actionBar.addTab(actionBar.newTab().setText(R.string.title_section2).setTabListener(this));
+    actionBar.addTab(actionBar.newTab().setText("Categories").setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.title_section3).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText("Test").setTabListener(this));
   }
@@ -82,12 +83,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       case 0:
         fragment = new FoodListFragment();
         break;
-      case 1: {
-        fragment = new DummySectionFragment();
-        final Bundle args = new Bundle();
-        args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-        fragment.setArguments(args);
-      }
+      case 1:
+        fragment = new CategoryFoodListFragment();
         break;
       case 2: {
         fragment = new DummySectionFragment();
