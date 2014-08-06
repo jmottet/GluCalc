@@ -18,8 +18,17 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "glucalc.db";
   private static final int DATABASE_VERSION = 3;
 
-  public GluCalcSQLiteHelper(Context context) {
+  private static GluCalcSQLiteHelper singleInstance;
+
+  private GluCalcSQLiteHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
+  }
+
+  public static synchronized GluCalcSQLiteHelper getGluCalcSQLiteHelper(Context context) {
+    if (singleInstance == null) {
+      singleInstance = new GluCalcSQLiteHelper(context);
+    }
+    return singleInstance;
   }
 
   @Override
@@ -96,6 +105,26 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         categoryFood.setId(id);
         values.clear();
       }
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+
+  }
+
+  public void updateCategory(CategoryFood categoryFood) {
+
+    final SQLiteDatabase db = getWritableDatabase();
+
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
+      db.update(CategoryFoodTable.TABLE_NAME, values, CategoryFoodTable.COLUMN_ID + " = ?",
+          new String[] { String.valueOf(categoryFood.getId()) });
+
+      values.clear();
       db.setTransactionSuccessful();
     } finally {
       db.endTransaction();

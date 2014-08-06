@@ -27,10 +27,29 @@ public class CategoryFoodAdapter extends ArrayAdapter<CategoryFood> {
     final View rowView = inflater.inflate(R.layout.category_food_item_view, parent, false);
 
     final CategoryFood categoryFood = values.get(position);
-    final TextView textView = (TextView) rowView.findViewById(R.id.name);
-    textView.setText(categoryFood.getName());
+    final TextView nameTextView = (TextView) rowView.findViewById(R.id.name);
+    nameTextView.setText(categoryFood.getName());
+    // rowView.setOnClickListener(new OnClickListener() {
+
+    // @Override
+    // public void onClick(View v) {
+    // // set a light sky blue
+    // final int rgbLightSkyBlue = Color.rgb(130, 202, 250);
+    // final int rgbWhite = Color.rgb(255, 255, 255);
+    //
+    // if (v.getBackground() instanceof ColorDrawable) {
+    // final ColorDrawable colorDrawable = (ColorDrawable) v.getBackground();
+    // if (colorDrawable.getColor() == rgbLightSkyBlue) {
+    // v.setBackgroundColor(rgbWhite);
+    // } else if (colorDrawable.getColor() == rgbWhite) {
+    // v.setBackgroundColor(rgbLightSkyBlue);
+    // }
+    // } else {
+    // v.setBackgroundColor(rgbLightSkyBlue);
+    // }
+    // }
+    // });
 
     return rowView;
   }
-
 }

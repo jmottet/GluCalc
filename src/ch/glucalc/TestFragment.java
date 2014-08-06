@@ -87,7 +87,7 @@ public class TestFragment extends Fragment {
     }
     Log.i(TAG, "" + size + " foods generated");
 
-    new GluCalcSQLiteHelper(context).store(foods);
+    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).store(foods);
 
     Log.i(TAG, "" + size + " foods stored");
   }
@@ -121,7 +121,7 @@ public class TestFragment extends Fragment {
   }
 
   private void deleteFoods() {
-    new GluCalcSQLiteHelper(context).deleteFoods();
+    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).deleteFoods();
   }
 
   private void generateCategoriesOfFood() {
@@ -140,13 +140,13 @@ public class TestFragment extends Fragment {
     }
     Log.i(TAG, "" + size + " categories of food generated");
 
-    new GluCalcSQLiteHelper(context).storeCategories(categories);
+    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).storeCategories(categories);
 
     Log.i(TAG, "" + size + " categories of food stored");
   }
 
   private void deleteCategoriesOfFood() {
-    new GluCalcSQLiteHelper(context).deleteCategoriesOfFood();
+    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).deleteCategoriesOfFood();
   }
 
 }

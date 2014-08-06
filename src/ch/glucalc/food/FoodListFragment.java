@@ -56,7 +56,8 @@ public class FoodListFragment extends ListFragment {
   }
 
   private List<Food> populateFoods() {
-    final List<Food> foods = new GluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoods();
+    final List<Food> foods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+        .loadFoods();
     return foods;
   }
 
