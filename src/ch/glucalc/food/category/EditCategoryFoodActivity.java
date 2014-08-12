@@ -1,6 +1,12 @@
 package ch.glucalc.food.category;
 
+import static ch.glucalc.food.category.CategoryFoodConstants.CATEGORY_ID_PARAMETER;
+import static ch.glucalc.food.category.CategoryFoodConstants.CATEGORY_NAME_PARAMETER;
+import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
+import static ch.glucalc.food.category.CategoryFoodConstants.MODIFIED_ID_RESULT;
+import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,23 +28,40 @@ public class EditCategoryFoodActivity extends Activity {
     final EditText newCategory = (EditText) findViewById(R.id.category_edittext);
     final Button loginButton = (Button) findViewById(R.id.category_save_button);
 
-    final long categoryId = getIntent().getLongExtra("categoryId", -1L);
-    final String categoryName = getIntent().getStringExtra("categoryName");
-    log("EditCategoryFoodActivity.onCreate - editing category : " + categoryId + " -> " + categoryName);
+    final String categoryName = getCategoryName();
     newCategory.setText(categoryName);
     loginButton.setOnClickListener(new OnClickListener() {
 
       @Override
       public void onClick(View v) {
-        log("EditCategoryFoodActivity.onClickSave : START");
-        final CategoryFood categoryFood = new CategoryFood();
-        categoryFood.setId(categoryId);
-        categoryFood.setName(newCategory.getText().toString());
-        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditCategoryFoodActivity.this).updateCategory(categoryFood);
-        log("EditCategoryFoodActivity.onClickSave : DONE");
+        log("EditCategoryFoodActivity.onClick : START");
+        saveNewCategory(newCategory);
+        propagateResult();
+        log("EditCategoryFoodActivity.onClick : DONE");
         finish();
       }
+
+      private void saveNewCategory(final EditText aModifiedCategory) {
+        final CategoryFood categoryFoodToUpdate = new CategoryFood();
+        categoryFoodToUpdate.setId(getCategoryId());
+        categoryFoodToUpdate.setName(aModifiedCategory.getText().toString());
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditCategoryFoodActivity.this).updateCategory(categoryFoodToUpdate);
+      }
+
+      private void propagateResult() {
+        final Intent intent = new Intent();
+        intent.putExtra(MODIFIED_ID_RESULT, getCategoryId());
+        setResult(RESULT_CODE_EDITED, intent);
+      }
     });
+  }
+
+  private long getCategoryId() {
+    return getIntent().getLongExtra(CATEGORY_ID_PARAMETER, FAKE_DEFAULT_ID);
+  }
+
+  private String getCategoryName() {
+    return getIntent().getStringExtra(CATEGORY_NAME_PARAMETER);
   }
 
   private void log(String msg) {

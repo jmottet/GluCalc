@@ -1,6 +1,11 @@
 package ch.glucalc.food.category;
 
+import static ch.glucalc.food.category.CategoryFoodConstants.MODIFIED_ID_RESULT;
+import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
+import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
+
 import java.util.List;
+import java.util.ListIterator;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -15,16 +20,21 @@ public class CategoryFoodListFragment extends ListFragment {
 
   private static String TAG = "GluCalc";
 
+  private List<CategoryFood> categories;
+
+  private CategoryFoodAdapter categoryFoodAdapter;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     log("CategoryFoodListFragment.onCreate");
     super.onCreate(savedInstanceState);
 
-    final List<CategoryFood> categories = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(
-        getActivity().getApplicationContext()).loadCategoriesOfFood();
+    // Load the categories from the Database
+    categories = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+        .loadCategoriesOfFood();
 
     // Set the list adapter for this ListFragment
-    final CategoryFoodAdapter categoryFoodAdapter = new CategoryFoodAdapter(getActivity(), categories);
+    categoryFoodAdapter = new CategoryFoodAdapter(getActivity(), categories);
     setListAdapter(categoryFoodAdapter);
 
   }
@@ -42,7 +52,45 @@ public class CategoryFoodListFragment extends ListFragment {
     editCategoryFoodIntent.putExtra("categoryId", currentCategory.getId());
     editCategoryFoodIntent.putExtra("categoryName", currentCategory.getName());
 
-    startActivity(editCategoryFoodIntent);
+    // Un résultat est attendu pour savoir si la catégorie a été modifiée
+    startActivityForResult(editCategoryFoodIntent, REQUEST_EDIT_CODE);
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    // Check which request we're responding to
+    if (requestCode == REQUEST_EDIT_CODE) {
+      // Make sure the request was successful
+      if (resultCode == RESULT_CODE_EDITED) {
+        final long modifiedId = data.getExtras().getLong(MODIFIED_ID_RESULT);
+        final CategoryFood modifiedCategory = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(
+            getActivity().getApplicationContext()).loadCategoryOfFood(modifiedId);
+        updateCategoryList(modifiedCategory);
+      }
+    }
+  }
+
+  /**
+   * Modify the corresponding category of the list if it already exists,
+   * otherwise add the category to the list
+   * 
+   * @param aCategory
+   *          - the category to be added to the list
+   */
+  private void updateCategoryList(CategoryFood aCategory) {
+    boolean itemHasBeenReplace = false;
+    final ListIterator<CategoryFood> listIterator = categories.listIterator();
+    while (listIterator.hasNext() && !itemHasBeenReplace) {
+      final CategoryFood currentCategory = listIterator.next();
+      if (currentCategory.getId() == aCategory.getId()) {
+        listIterator.set(aCategory);
+        itemHasBeenReplace = true;
+      }
+    }
+    if (!itemHasBeenReplace) {
+      categories.add(aCategory);
+    }
+    categoryFoodAdapter.notifyDataSetChanged();
   }
 
   @Override

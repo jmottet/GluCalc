@@ -145,6 +145,22 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     return categories;
   }
 
+  public CategoryFood loadCategoryOfFood(long categoryFoodId) {
+    CategoryFood result = null;
+
+    final String whereClause = CategoryFoodTable.COLUMN_ID + "=?";
+    final String[] whereArgs = { String.valueOf(categoryFoodId) };
+
+    final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS,
+        whereClause, whereArgs, null, null, null);
+    if (cursor.moveToNext()) {
+      result = new CategoryFood();
+      result.setId(cursor.getLong(0));
+      result.setName(cursor.getString(1));
+    }
+    return result;
+  }
+
   public void deleteCategoriesOfFood() {
     getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, null, null);
   }
