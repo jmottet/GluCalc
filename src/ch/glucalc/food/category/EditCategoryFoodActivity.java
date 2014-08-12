@@ -26,25 +26,26 @@ public class EditCategoryFoodActivity extends Activity {
     setContentView(R.layout.edit_category_food);
 
     final EditText newCategory = (EditText) findViewById(R.id.category_edittext);
-    final Button loginButton = (Button) findViewById(R.id.category_save_button);
+    final Button saveButton = (Button) findViewById(R.id.category_save_button);
 
     final String categoryName = getCategoryName();
     newCategory.setText(categoryName);
-    loginButton.setOnClickListener(new OnClickListener() {
+    saveButton.setOnClickListener(new OnClickListener() {
 
       @Override
       public void onClick(View v) {
         log("EditCategoryFoodActivity.onClick : START");
-        saveNewCategory(newCategory);
+        final String newCategoryFoodName = newCategory.getText().toString();
+        saveNewCategory(newCategoryFoodName);
         propagateResult();
         log("EditCategoryFoodActivity.onClick : DONE");
         finish();
       }
 
-      private void saveNewCategory(final EditText aModifiedCategory) {
+      private void saveNewCategory(final String newCategoryFoodName) {
         final CategoryFood categoryFoodToUpdate = new CategoryFood();
         categoryFoodToUpdate.setId(getCategoryId());
-        categoryFoodToUpdate.setName(aModifiedCategory.getText().toString());
+        categoryFoodToUpdate.setName(newCategoryFoodName);
         GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditCategoryFoodActivity.this).updateCategory(categoryFoodToUpdate);
       }
 

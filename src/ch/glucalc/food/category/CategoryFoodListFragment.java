@@ -49,8 +49,8 @@ public class CategoryFoodListFragment extends ListFragment {
     final Intent editCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
         EditCategoryFoodActivity.class);
 
-    editCategoryFoodIntent.putExtra("categoryId", currentCategory.getId());
-    editCategoryFoodIntent.putExtra("categoryName", currentCategory.getName());
+    editCategoryFoodIntent.putExtra(CategoryFoodConstants.CATEGORY_ID_PARAMETER, currentCategory.getId());
+    editCategoryFoodIntent.putExtra(CategoryFoodConstants.CATEGORY_NAME_PARAMETER, currentCategory.getName());
 
     // Un résultat est attendu pour savoir si la catégorie a été modifiée
     startActivityForResult(editCategoryFoodIntent, REQUEST_EDIT_CODE);

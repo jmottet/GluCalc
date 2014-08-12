@@ -1,14 +1,20 @@
 package ch.glucalc.food;
 
+import static ch.glucalc.food.FoodConstants.MODIFIED_ID_RESULT;
+import static ch.glucalc.food.FoodConstants.REQUEST_EDIT_CODE;
+import static ch.glucalc.food.FoodConstants.RESULT_CODE_EDITED;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -19,6 +25,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
@@ -30,6 +37,7 @@ public class FoodListFragment extends ListFragment {
 
   private final FoodAdapter adapter = new FoodAdapter();
   private GestureDetector mGestureDetector;
+  private List<Object> rows;
   private final List<Object[]> alphabet = new ArrayList<Object[]>();
   private final HashMap<String, Integer> sections = new HashMap<String, Integer>();
   private int sideIndexHeight;
@@ -153,7 +161,7 @@ public class FoodListFragment extends ListFragment {
     alphabet.clear();
     sections.clear();
 
-    final List<Object> rows = new ArrayList<Object>();
+    rows = new ArrayList<Object>();
     int start = 0;
     int end = 0;
     String previousLetter = null;
@@ -211,14 +219,61 @@ public class FoodListFragment extends ListFragment {
     updateList();
   }
 
-  // @Override
-  // public boolean onTouchEvent(MotionEvent event) {
-  // if (mGestureDetector.onTouchEvent(event)) {
-  // return true;
-  // } else {
-  // return false;
-  // }
-  // }
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {
+    super.onListItemClick(l, v, position, id);
+
+    log("FoodListFragment.onListItemClick");
+    final Object currentRow = getListView().getItemAtPosition(position);
+    if (currentRow instanceof Food) {
+      final Food currentFood = (Food) currentRow;
+      final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
+      editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
+      editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
+      editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
+      editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
+      editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
+
+      // Un résultat est attendu pour savoir si l'aliment a été modifiée
+      startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
+    }
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    // Check which request we're responding to
+    if (requestCode == REQUEST_EDIT_CODE) {
+      // Make sure the request was successful
+      if (resultCode == RESULT_CODE_EDITED) {
+        final long modifiedId = data.getExtras().getLong(MODIFIED_ID_RESULT);
+        final Food modifiedFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+            .loadFood(modifiedId);
+        updateFoodList(modifiedFood);
+      }
+    }
+  }
+
+  /**
+   * Modify the corresponding food of the list if it already exists
+   * 
+   * @param aFood
+   *          - the food to be added to the list
+   */
+  private void updateFoodList(Food aFood) {
+    boolean itemHasBeenReplace = false;
+    final ListIterator<Object> listIterator = rows.listIterator();
+    while (listIterator.hasNext() && !itemHasBeenReplace) {
+      final Object currentObject = listIterator.next();
+      if (currentObject instanceof Food) {
+        final Food currentFood = (Food) currentObject;
+        if (currentFood.getId() == aFood.getId()) {
+          listIterator.set(aFood);
+          itemHasBeenReplace = true;
+        }
+      }
+    }
+    adapter.notifyDataSetChanged();
+  }
 
   @Override
   public void onAttach(Activity activity) {

@@ -88,6 +88,48 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     getWritableDatabase().delete(FoodTable.TABLE_NAME, null, null);
   }
 
+  public void updateFood(Food food) {
+
+    final SQLiteDatabase db = getWritableDatabase();
+
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      values.put(FoodTable.COLUMN_NAME, food.getName());
+      values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
+      values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
+      values.put(FoodTable.COLUMN_UNIT, food.getUnit());
+
+      db.update(FoodTable.TABLE_NAME, values, FoodTable.COLUMN_ID + " = ?",
+          new String[] { String.valueOf(food.getId()) });
+
+      values.clear();
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  public Food loadFood(long foodId) {
+    Food result = null;
+
+    final String whereClause = FoodTable.COLUMN_ID + "=?";
+    final String[] whereArgs = { String.valueOf(foodId) };
+
+    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
+        null, null, null);
+    if (cursor.moveToNext()) {
+      result = new Food();
+      result.setId(cursor.getLong(0));
+      result.setName(cursor.getString(1));
+      result.setQuantity(cursor.getFloat(2));
+      result.setUnit(cursor.getString(3));
+      result.setCarbonhydrate(cursor.getFloat(4));
+    }
+    return result;
+  }
+
   /* Section : Categories of Food */
 
   public void storeCategories(List<CategoryFood> categories) {
@@ -129,7 +171,6 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     } finally {
       db.endTransaction();
     }
-
   }
 
   public List<CategoryFood> loadCategoriesOfFood() {
