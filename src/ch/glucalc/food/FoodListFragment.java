@@ -148,13 +148,17 @@ public class FoodListFragment extends ListFragment {
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    initList();
+  }
+
+  private void initList() {
     mGestureDetector = new GestureDetector(getActivity(), new SideIndexGestureListener());
     final List<Food> foods = populateFoods();// populateCountries();
     Collections.sort(foods, new Comparator<Food>() {
 
       @Override
       public int compare(Food lhs, Food rhs) {
-        return lhs.getName().compareTo(rhs.getName());
+        return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
       }
     });
 
@@ -246,9 +250,11 @@ public class FoodListFragment extends ListFragment {
       // Make sure the request was successful
       if (resultCode == RESULT_CODE_EDITED) {
         final long modifiedId = data.getExtras().getLong(MODIFIED_ID_RESULT);
-        final Food modifiedFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
-            .loadFood(modifiedId);
-        updateFoodList(modifiedFood);
+        // final Food modifiedFood =
+        // GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+        // .loadFood(modifiedId);
+        // updateFoodList(modifiedFood);
+        initList();
       }
     }
   }

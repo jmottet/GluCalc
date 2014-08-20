@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_food_carbonhydrate_hint" 
-        android:inputType="text">
+        android:inputType="numberDecimal">
     </EditText>
     
     <TextView
@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_food_quantity_hint" 
-        android:inputType="text">
+        android:inputType="numberDecimal">
     </EditText>
     
     <TextView

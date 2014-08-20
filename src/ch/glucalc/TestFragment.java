@@ -20,6 +20,8 @@ public class TestFragment extends Fragment {
 
   private static String TAG = "GluCalc";
 
+  private static int NUMBER_OF_ITEMS_TO_GENERATE = 1000;
+
   private Context context;
 
   @Override
@@ -70,7 +72,7 @@ public class TestFragment extends Fragment {
 
   private void generateFoods() {
 
-    final int size = 1000;
+    final int size = NUMBER_OF_ITEMS_TO_GENERATE;
 
     Log.i(TAG, "Generating " + size + " food");
 
@@ -126,7 +128,7 @@ public class TestFragment extends Fragment {
 
   private void generateCategoriesOfFood() {
 
-    final int size = 1000;
+    final int size = NUMBER_OF_ITEMS_TO_GENERATE;
 
     Log.i(TAG, "Generating " + size + " categories of food");
 

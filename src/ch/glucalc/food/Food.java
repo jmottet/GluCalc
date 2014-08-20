@@ -1,11 +1,13 @@
 package ch.glucalc.food;
 
+import android.text.TextUtils;
+
 public class Food {
 
   private long id;
   private String name;
-  private float quantity;
-  private float carbonhydrate;
+  private Float quantity;
+  private Float carbonhydrate;
   private String unit;
 
   public long getId() {
@@ -24,19 +26,19 @@ public class Food {
     this.name = name;
   }
 
-  public float getQuantity() {
+  public Float getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(float quantity) {
+  public void setQuantity(Float quantity) {
     this.quantity = quantity;
   }
 
-  public float getCarbonhydrate() {
+  public Float getCarbonhydrate() {
     return carbonhydrate;
   }
 
-  public void setCarbonhydrate(float carbonhydrate) {
+  public void setCarbonhydrate(Float carbonhydrate) {
     this.carbonhydrate = carbonhydrate;
   }
 
@@ -46,6 +48,18 @@ public class Food {
 
   public void setUnit(String unit) {
     this.unit = unit;
+  }
+
+  public boolean areSomeMandatoryFieldsMissing() {
+    if (TextUtils.isEmpty(unit) || TextUtils.isEmpty(name) || carbonhydrate == null || quantity == null) {
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public String toString() {
+    return name;
   }
 
 }

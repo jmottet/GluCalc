@@ -7,9 +7,10 @@ import static ch.glucalc.food.FoodConstants.FOOD_ID_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_NAME_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_QUANTITY_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_UNIT_PARAMETER;
-import static ch.glucalc.food.FoodConstants.MODIFIED_ID_RESULT;
-import static ch.glucalc.food.FoodConstants.RESULT_CODE_EDITED;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +20,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
+import ch.glucalc.food.category.CategoryFoodConstants;
 
-public class EditFoodActivity extends Activity {
+public class EditFoodActivity extends Activity implements OnClickListener {
 
   private static String TAG = "GluCalc";
 
@@ -30,52 +32,60 @@ public class EditFoodActivity extends Activity {
   private EditText newFoodUnit;
   private Button saveButton;
 
+  private AlertDialog alertDialog;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.edit_food);
 
     initFieldsAndButton();
+    saveButton.setOnClickListener(this);
+  }
 
-    saveButton.setOnClickListener(new OnClickListener() {
+  @Override
+  public void onClick(View v) {
+    log("EditFoodActivity.onClick : START");
+    final Food foodToUpdate = initFoodFromFields();
+    if (foodToUpdate.areSomeMandatoryFieldsMissing()) {
+      displayErrorMessage();
+    } else {
+      saveNewFood(foodToUpdate);
+      propagateResult();
+      log("EditFoodActivity.onClick : DONE");
+      finish();
+    }
+  }
 
-      @Override
-      public void onClick(View v) {
-        log("EditFoodActivity.onClick : START");
-        saveNewFood();
-        propagateResult();
-        log("EditFoodActivity.onClick : DONE");
-        finish();
-      }
+  @Override
+  public void onStop() {
+    super.onStop();
 
-      private void saveNewFood() {
-        final Food foodToUpdate = new Food();
-        foodToUpdate.setId(getFoodId());
-        foodToUpdate.setName(newFoodName.getText().toString());
+    if (alertDialog != null) {
+      alertDialog.dismiss();
+    }
+  }
 
-        final String newFoodCarbonHydrateText = newFoodCarbonHydrate.getText().toString();
-        try {
-          final Float newFoodCarbonHydrateAsFloat = Float.valueOf(newFoodCarbonHydrateText);
-          foodToUpdate.setCarbonhydrate(newFoodCarbonHydrateAsFloat);
-        } catch (final NumberFormatException nfe) {
-        }
+  @Override
+  public void onDestroy() {
+    log("EditFoodActivity.onDestroy");
+    super.onDestroy();
+  }
 
-        final String newFoodQuantityText = newFoodQuantity.getText().toString();
-        try {
-          final Float newFoodQuantityTextAsFloat = Float.valueOf(newFoodQuantityText);
-          foodToUpdate.setQuantity(newFoodQuantityTextAsFloat);
-        } catch (final NumberFormatException nfe) {
-        }
-        foodToUpdate.setUnit(newFoodUnit.getText().toString());
-        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this).updateFood(foodToUpdate);
-      }
+  @Override
+  public void onPause() {
+    log("EditFoodActivity.onPause");
+    super.onPause();
 
-      private void propagateResult() {
-        final Intent intent = new Intent();
-        intent.putExtra(MODIFIED_ID_RESULT, getFoodId());
-        setResult(RESULT_CODE_EDITED, intent);
-      }
-    });
+    if (alertDialog != null) {
+      alertDialog.dismiss();
+    }
+  }
+
+  @Override
+  public void onResume() {
+    log("EditFoodActivity.onResume");
+    super.onResume();
   }
 
   private void initFieldsAndButton() {
@@ -118,4 +128,64 @@ public class EditFoodActivity extends Activity {
   private void log(String msg) {
     Log.i(TAG, msg);
   }
+
+  private void saveNewFood(Food foodToUpdate) {
+    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this).updateFood(foodToUpdate);
+  }
+
+  private Food initFoodFromFields() {
+    final Food foodToUpdate = new Food();
+    foodToUpdate.setId(getFoodId());
+    foodToUpdate.setName(newFoodName.getText().toString());
+
+    final String newFoodCarbonHydrateText = newFoodCarbonHydrate.getText().toString();
+    try {
+      final Float newFoodCarbonHydrateAsFloat = Float.valueOf(newFoodCarbonHydrateText);
+      foodToUpdate.setCarbonhydrate(newFoodCarbonHydrateAsFloat);
+    } catch (final NumberFormatException nfe) {
+    }
+
+    final String newFoodQuantityText = newFoodQuantity.getText().toString();
+    try {
+      final Float newFoodQuantityTextAsFloat = Float.valueOf(newFoodQuantityText);
+      foodToUpdate.setQuantity(newFoodQuantityTextAsFloat);
+    } catch (final NumberFormatException nfe) {
+    }
+    foodToUpdate.setUnit(newFoodUnit.getText().toString());
+    return foodToUpdate;
+  }
+
+  private void propagateResult() {
+    final Intent intent = new Intent();
+    intent.putExtra(CategoryFoodConstants.MODIFIED_ID_RESULT, getFoodId());
+    setResult(CategoryFoodConstants.RESULT_CODE_EDITED, intent);
+  }
+
+  private void displayErrorMessage() {
+    final Builder builder = new AlertDialog.Builder(EditFoodActivity.this);
+
+    // Setting Dialog Title
+    builder.setTitle("Error");
+
+    // Setting Dialog Message
+    builder.setMessage("Please complete all fields");
+
+    // Setting Icon to Dialog if needed
+    // alertDialog.setIcon(R.drawable.)
+
+    // Setting OK Button
+    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        // Toast.makeText(getApplicationContext(), "You clicked on OK",
+        // Toast.LENGTH_SHORT).show();
+        log("EditFoodActivity - Alert clicked");
+      }
+    });
+
+    alertDialog = builder.create();
+    alertDialog.show();
+  }
+
 }
