@@ -7,6 +7,9 @@ import static ch.glucalc.food.FoodConstants.FOOD_ID_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_NAME_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_QUANTITY_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_UNIT_PARAMETER;
+
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -16,10 +19,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
+import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.food.category.CategoryFoodConstants;
 
 public class EditFoodActivity extends Activity implements OnClickListener {
@@ -27,6 +33,7 @@ public class EditFoodActivity extends Activity implements OnClickListener {
   private static String TAG = "GluCalc";
 
   private EditText newFoodName;
+  private Spinner newFoodCategory;
   private EditText newFoodCarbonHydrate;
   private EditText newFoodQuantity;
   private EditText newFoodUnit;
@@ -90,15 +97,30 @@ public class EditFoodActivity extends Activity implements OnClickListener {
 
   private void initFieldsAndButton() {
     newFoodName = (EditText) findViewById(R.id.food_edittext);
+    newFoodCategory = (Spinner) findViewById(R.id.food_category_spinner);
     newFoodCarbonHydrate = (EditText) findViewById(R.id.food_carbonhydrate_edittext);
     newFoodQuantity = (EditText) findViewById(R.id.food_quantity_edittext);
     newFoodUnit = (EditText) findViewById(R.id.food_unit_edittext);
     saveButton = (Button) findViewById(R.id.food_save_button);
 
+    populateSpinner();
     updateFieldText(newFoodName, getFoodName());
     updateFieldText(newFoodCarbonHydrate, String.valueOf(getFoodCarbonHydrate()));
     updateFieldText(newFoodQuantity, String.valueOf(getFoodQuantity()));
     updateFieldText(newFoodUnit, getFoodUnit());
+  }
+
+  private void populateSpinner() {
+    final ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<CharSequence>(this,
+        android.R.layout.simple_spinner_item);
+    final int spinnerDdItem = android.R.layout.simple_spinner_dropdown_item;
+    final List<CategoryFood> categoriesOfFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this)
+        .loadCategoriesOfFood();
+    for (final CategoryFood categoryFood : categoriesOfFood) {
+      categoryAdapter.add(categoryFood.getName());
+    }
+    categoryAdapter.setDropDownViewResource(spinnerDdItem);
+    newFoodCategory.setAdapter(categoryAdapter);
   }
 
   private void updateFieldText(EditText editText, String text) {

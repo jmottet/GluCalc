@@ -19,6 +19,8 @@
     <string name="edit_food">Food :</string>
     <string name="enter_food_hint">Enter a food name</string>
     
+    <string name="edit_food_category">Category :</string>
+    
     <string name="edit_food_carbonhydrate">Carbonhydrate :</string>
     <string name="enter_food_carbonhydrate_hint">Enter a carbonhydrate</string>
     
