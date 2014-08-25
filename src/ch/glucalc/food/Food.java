@@ -9,6 +9,7 @@ public class Food {
   private Float quantity;
   private Float carbonhydrate;
   private String unit;
+  private long categoryId;
 
   public long getId() {
     return id;
@@ -48,6 +49,14 @@ public class Food {
 
   public void setUnit(String unit) {
     this.unit = unit;
+  }
+
+  public long getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(long categoryId) {
+    this.categoryId = categoryId;
   }
 
   public boolean areSomeMandatoryFieldsMissing() {

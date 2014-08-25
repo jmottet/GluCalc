@@ -1,6 +1,5 @@
 package ch.glucalc.food;
 
-import static ch.glucalc.food.FoodConstants.MODIFIED_ID_RESULT;
 import static ch.glucalc.food.FoodConstants.REQUEST_EDIT_CODE;
 import static ch.glucalc.food.FoodConstants.RESULT_CODE_EDITED;
 
@@ -71,7 +70,7 @@ public class FoodListFragment extends ListFragment {
 
   private void displayListItem() {
 
-    log("CountryListActivity.displayListItem");
+    log("FoodListFragment.displayListItem");
 
     final LinearLayout sideIndex = (LinearLayout) getActivity().findViewById(R.id.sideIndex);
     sideIndexHeight = sideIndex.getHeight();
@@ -94,7 +93,7 @@ public class FoodListFragment extends ListFragment {
 
   private void updateList() {
 
-    log("CountryListActivity.updateList");
+    log("FoodListFragment.updateList");
 
     final LinearLayout sideIndex = (LinearLayout) getActivity().findViewById(R.id.sideIndex);
     sideIndex.removeAllViews();
@@ -237,6 +236,7 @@ public class FoodListFragment extends ListFragment {
       editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
       editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
       editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
+      editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
 
       // Un résultat est attendu pour savoir si l'aliment a été modifiée
       startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
@@ -249,7 +249,7 @@ public class FoodListFragment extends ListFragment {
     if (requestCode == REQUEST_EDIT_CODE) {
       // Make sure the request was successful
       if (resultCode == RESULT_CODE_EDITED) {
-        final long modifiedId = data.getExtras().getLong(MODIFIED_ID_RESULT);
+        // final long modifiedId = data.getExtras().getLong(MODIFIED_ID_RESULT);
         // final Food modifiedFood =
         // GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
         // .loadFood(modifiedId);
@@ -283,49 +283,49 @@ public class FoodListFragment extends ListFragment {
 
   @Override
   public void onAttach(Activity activity) {
-    log("CountryListActivity.onAttach");
+    log("FoodListFragment.onAttach");
     super.onAttach(activity);
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    log("CountryListActivity.onCreate");
+    log("FoodListFragment.onCreate");
     super.onCreate(savedInstanceState);
   }
 
   @Override
   public void onDetach() {
-    log("CountryListActivity.onDetach");
+    log("FoodListFragment.onDetach");
     super.onDetach();
   }
 
   @Override
   public void onDestroy() {
-    log("CountryListActivity.onDestroy");
+    log("FoodListFragment.onDestroy");
     super.onDestroy();
   }
 
   @Override
   public void onPause() {
-    log("CountryListActivity.onPause");
+    log("FoodListFragment.onPause");
     super.onPause();
   }
 
   @Override
   public void onResume() {
-    log("CountryListActivity.onResume");
+    log("FoodListFragment.onResume");
     super.onResume();
   }
 
   @Override
   public void onStart() {
-    log("CountryListActivity.onStart");
+    log("FoodListFragment.onStart");
     super.onStart();
   }
 
   @Override
   public void onStop() {
-    log("CountryListActivity.onStop");
+    log("FoodListFragment.onStop");
     super.onStart();
   }
 

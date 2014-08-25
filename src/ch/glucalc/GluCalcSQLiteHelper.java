@@ -16,7 +16,7 @@ import ch.glucalc.food.category.CategoryFoodTable;
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "glucalc.db";
-  private static final int DATABASE_VERSION = 3;
+  private static final int DATABASE_VERSION = 4;
 
   private static GluCalcSQLiteHelper singleInstance;
 
@@ -40,7 +40,13 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     db.execSQL(FoodTable.TABLE_DROP);
+    db.execSQL(CategoryFoodTable.TABLE_DROP);
     onCreate(db);
+  }
+
+  @Override
+  public void onConfigure(SQLiteDatabase db) {
+    db.setForeignKeyConstraintsEnabled(true);
   }
 
   public void store(List<Food> foods) {
@@ -56,7 +62,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
         values.put(FoodTable.COLUMN_UNIT, food.getUnit());
         values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
-
+        values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
         final long id = db.insert(FoodTable.TABLE_NAME, "", values);
         food.setId(id);
         values.clear();
@@ -79,6 +85,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
       food.setQuantity(cursor.getFloat(2));
       food.setUnit(cursor.getString(3));
       food.setCarbonhydrate(cursor.getFloat(4));
+      food.setCategoryId(cursor.getLong(5));
       foods.add(food);
     }
     return foods;
@@ -91,6 +98,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
   public void updateFood(Food food) {
 
     final SQLiteDatabase db = getWritableDatabase();
+    db.setForeignKeyConstraintsEnabled(true);
 
     final ContentValues values = new ContentValues();
     try {
@@ -100,7 +108,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
       values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
       values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
       values.put(FoodTable.COLUMN_UNIT, food.getUnit());
-
+      values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
       db.update(FoodTable.TABLE_NAME, values, FoodTable.COLUMN_ID + " = ?",
           new String[] { String.valueOf(food.getId()) });
 
@@ -126,6 +134,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
       result.setQuantity(cursor.getFloat(2));
       result.setUnit(cursor.getString(3));
       result.setCarbonhydrate(cursor.getFloat(4));
+      result.setCategoryId(cursor.getLong(5));
     }
     return result;
   }

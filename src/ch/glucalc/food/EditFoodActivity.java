@@ -3,6 +3,7 @@ package ch.glucalc.food;
 import static ch.glucalc.food.FoodConstants.FAKE_DEFAULT_FLOAT_ID;
 import static ch.glucalc.food.FoodConstants.FAKE_DEFAULT_LONG_ID;
 import static ch.glucalc.food.FoodConstants.FOOD_CARBONHYDRATE_PARAMETER;
+import static ch.glucalc.food.FoodConstants.FOOD_CATEGORY_ID_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_ID_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_NAME_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_QUANTITY_PARAMETER;
@@ -38,8 +39,7 @@ public class EditFoodActivity extends Activity implements OnClickListener {
   private EditText newFoodQuantity;
   private EditText newFoodUnit;
   private Button saveButton;
-
-  private AlertDialog alertDialog;
+  private List<CategoryFood> categoriesOfFood;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -65,28 +65,9 @@ public class EditFoodActivity extends Activity implements OnClickListener {
   }
 
   @Override
-  public void onStop() {
-    super.onStop();
-
-    if (alertDialog != null) {
-      alertDialog.dismiss();
-    }
-  }
-
-  @Override
   public void onDestroy() {
     log("EditFoodActivity.onDestroy");
     super.onDestroy();
-  }
-
-  @Override
-  public void onPause() {
-    log("EditFoodActivity.onPause");
-    super.onPause();
-
-    if (alertDialog != null) {
-      alertDialog.dismiss();
-    }
   }
 
   @Override
@@ -103,24 +84,32 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     newFoodUnit = (EditText) findViewById(R.id.food_unit_edittext);
     saveButton = (Button) findViewById(R.id.food_save_button);
 
-    populateSpinner();
+    populateSpinner(getFoodCategoryId());
     updateFieldText(newFoodName, getFoodName());
     updateFieldText(newFoodCarbonHydrate, String.valueOf(getFoodCarbonHydrate()));
     updateFieldText(newFoodQuantity, String.valueOf(getFoodQuantity()));
     updateFieldText(newFoodUnit, getFoodUnit());
   }
 
-  private void populateSpinner() {
+  private void populateSpinner(Long categoryId) {
+    Integer selectedIndex = null;
     final ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<CharSequence>(this,
         android.R.layout.simple_spinner_item);
     final int spinnerDdItem = android.R.layout.simple_spinner_dropdown_item;
-    final List<CategoryFood> categoriesOfFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this)
-        .loadCategoriesOfFood();
+    categoriesOfFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this).loadCategoriesOfFood();
+    int currentPosition = 0;
     for (final CategoryFood categoryFood : categoriesOfFood) {
+      if (categoryId != null && categoryFood.getId() == categoryId) {
+        selectedIndex = currentPosition;
+      }
       categoryAdapter.add(categoryFood.getName());
+      currentPosition++;
     }
     categoryAdapter.setDropDownViewResource(spinnerDdItem);
     newFoodCategory.setAdapter(categoryAdapter);
+    if (categoryId != null && selectedIndex != null) {
+      newFoodCategory.setSelection(selectedIndex);
+    }
   }
 
   private void updateFieldText(EditText editText, String text) {
@@ -145,6 +134,10 @@ public class EditFoodActivity extends Activity implements OnClickListener {
 
   private String getFoodUnit() {
     return getIntent().getStringExtra(FOOD_UNIT_PARAMETER);
+  }
+
+  private long getFoodCategoryId() {
+    return getIntent().getLongExtra(FOOD_CATEGORY_ID_PARAMETER, FAKE_DEFAULT_LONG_ID);
   }
 
   private void log(String msg) {
@@ -174,6 +167,17 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     } catch (final NumberFormatException nfe) {
     }
     foodToUpdate.setUnit(newFoodUnit.getText().toString());
+    final int selectedItemPosition = newFoodCategory.getSelectedItemPosition();
+    long categoryIdSelected = -1;
+    int i = 0;
+    for (final CategoryFood category : categoriesOfFood) {
+      if (i == selectedItemPosition) {
+        categoryIdSelected = category.getId();
+        break;
+      }
+      i++;
+    }
+    foodToUpdate.setCategoryId(categoryIdSelected);
     return foodToUpdate;
   }
 
@@ -206,8 +210,8 @@ public class EditFoodActivity extends Activity implements OnClickListener {
       }
     });
 
-    alertDialog = builder.create();
-    alertDialog.show();
+    final AlertDialog dialog = builder.create();
+    dialog.show();
   }
 
 }

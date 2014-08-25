@@ -16,6 +16,8 @@ public class FoodConstants {
 
   protected static String FOOD_UNIT_PARAMETER = "foodUnit";
 
+  protected static String FOOD_CATEGORY_ID_PARAMETER = "foodCategoryId";
+
   protected static long FAKE_DEFAULT_LONG_ID = -1L;
 
   protected static float FAKE_DEFAULT_FLOAT_ID = -1L;
