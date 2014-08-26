@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import ch.glucalc.food.FoodListFragment;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 
@@ -37,6 +39,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   }
 
   @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle presses on the action bar items
+    switch (item.getItemId()) {
+    case R.id.add:
+      Toast.makeText(MainActivity.this, "You have clicked on Add Button", Toast.LENGTH_SHORT).show();
+
+      return true;
+    case R.id.search:
+      Toast.makeText(MainActivity.this, "You have clicked on Search Button", Toast.LENGTH_SHORT).show();
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
   public void onRestoreInstanceState(Bundle savedInstanceState) {
     // Restore the previously serialized current tab position.
     if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
@@ -53,6 +71,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.options_menu, menu);
     getMenuInflater().inflate(R.menu.main_list, menu);
     return true;
   }
