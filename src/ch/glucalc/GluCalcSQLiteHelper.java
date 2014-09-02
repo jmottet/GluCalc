@@ -184,7 +184,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
   public List<CategoryFood> loadCategoriesOfFood() {
     final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
-        null, null, null, null);
+        null, null, null, CategoryFoodTable.COLUMN_NAME);
     final List<CategoryFood> categories = new ArrayList<CategoryFood>(cursor.getCount());
     while (cursor.moveToNext()) {
       final CategoryFood categoryFood = new CategoryFood();

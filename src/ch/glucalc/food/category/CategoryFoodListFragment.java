@@ -4,6 +4,8 @@ import static ch.glucalc.food.category.CategoryFoodConstants.MODIFIED_ID_RESULT;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -90,6 +92,7 @@ public class CategoryFoodListFragment extends ListFragment {
     if (!itemHasBeenReplace) {
       categories.add(aCategory);
     }
+    sortCategories();
     categoryFoodAdapter.notifyDataSetChanged();
   }
 
@@ -143,6 +146,16 @@ public class CategoryFoodListFragment extends ListFragment {
 
   private void log(String msg) {
     Log.i(TAG, msg);
+  }
+
+  private void sortCategories() {
+    Collections.sort(categories, new Comparator<CategoryFood>() {
+
+      @Override
+      public int compare(CategoryFood lhs, CategoryFood rhs) {
+        return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+      }
+    });
   }
 
 }
