@@ -64,10 +64,6 @@ public class FoodAdapter extends BaseAdapter {
     if (getItemViewType(position) == 0) {
       // Item
       if (view == null) {
-        // final LayoutInflater inflater = (LayoutInflater)
-        // parent.getContext().getSystemService(
-        // Context.LAYOUT_INFLATER_SERVICE);
-        // view = inflater.inflate(R.layout.row_item, parent, false);
         final LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(
             Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.row_food_view, parent, false);

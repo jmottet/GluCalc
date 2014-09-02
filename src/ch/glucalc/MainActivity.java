@@ -23,6 +23,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   private final Fragment[] fFragments = new Fragment[NB_FRAGMENTS];
 
+  private boolean showAddAndSearchMenu = true;
+
+  private int oldPosition = -1;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -73,15 +77,37 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.options_menu, menu);
     getMenuInflater().inflate(R.menu.main_list, menu);
+
     return true;
+  }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    final MenuItem itemAdd = menu.findItem(R.id.add);
+    final MenuItem itemSearch = menu.findItem(R.id.search);
+
+    if (showAddAndSearchMenu) {
+      itemAdd.setVisible(true);
+      itemSearch.setVisible(true);
+    } else {
+      itemAdd.setVisible(false);
+      itemSearch.setVisible(false);
+    }
+    return super.onPrepareOptionsMenu(menu);
   }
 
   @Override
   public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     // When the given tab is selected, show the tab contents in the
     // container view.
-    final Fragment fragment = getFragement(tab.getPosition());
+    final int newPosition = tab.getPosition();
+    final Fragment fragment = getFragement(newPosition);
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+    if (oldPosition != newPosition) {
+      showAddAndSearchMenu = mustAddAndSearchMenuItemDisplayed(newPosition);
+      invalidateOptionsMenu();
+      oldPosition = newPosition;
+    }
   }
 
   @Override
@@ -92,10 +118,37 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
   }
 
-  public Fragment getFragement(int position) {
+  /**
+   * A dummy fragment representing a section of the app, but that simply
+   * displays dummy text.
+   */
+  public static class DummySectionFragment extends Fragment {
+    /**
+     * The fragment argument representing the section number for this fragment.
+     */
+    public static final String ARG_SECTION_NUMBER = "section_number";
 
+    public DummySectionFragment() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      final View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
+      final TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
+      dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+      return rootView;
+    }
+  }
+
+  /**
+   * Retourne un fragment selon sa position. Si celui-ci n'existe pas, il est
+   * créé dynamiquement.
+   * 
+   * @param position
+   * @return un fragment
+   */
+  private Fragment getFragement(int position) {
     Fragment fragment = fFragments[position];
-
     if (fragment == null) {
 
       switch (position) {
@@ -121,25 +174,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     return fragment;
   }
 
-  /**
-   * A dummy fragment representing a section of the app, but that simply
-   * displays dummy text.
-   */
-  public static class DummySectionFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this fragment.
-     */
-    public static final String ARG_SECTION_NUMBER = "section_number";
-
-    public DummySectionFragment() {
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      final View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
-      final TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-      dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-      return rootView;
-    }
+  private boolean mustAddAndSearchMenuItemDisplayed(int position) {
+    return position == 0 || position == 1 ? true : false;
   }
+
 }

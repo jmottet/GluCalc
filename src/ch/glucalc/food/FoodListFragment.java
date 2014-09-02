@@ -249,11 +249,6 @@ public class FoodListFragment extends ListFragment {
     if (requestCode == REQUEST_EDIT_CODE) {
       // Make sure the request was successful
       if (resultCode == RESULT_CODE_EDITED) {
-        // final long modifiedId = data.getExtras().getLong(MODIFIED_ID_RESULT);
-        // final Food modifiedFood =
-        // GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
-        // .loadFood(modifiedId);
-        // updateFoodList(modifiedFood);
         initList();
       }
     }
