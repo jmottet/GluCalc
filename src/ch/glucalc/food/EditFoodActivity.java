@@ -8,6 +8,7 @@ import static ch.glucalc.food.FoodConstants.FOOD_ID_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_NAME_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_QUANTITY_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_UNIT_PARAMETER;
+import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 
 import java.util.List;
 
@@ -27,14 +28,13 @@ import android.widget.Spinner;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.category.CategoryFood;
-import ch.glucalc.food.category.CategoryFoodConstants;
 
 public class EditFoodActivity extends Activity implements OnClickListener {
 
   private static String TAG = "GluCalc";
 
   private EditText newFoodName;
-  private Spinner newFoodCategory;
+  private Spinner newFoodCategorySpinner;
   private EditText newFoodCarbonHydrate;
   private EditText newFoodQuantity;
   private EditText newFoodUnit;
@@ -43,22 +43,26 @@ public class EditFoodActivity extends Activity implements OnClickListener {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    log("EditFoodActivity.onCreate");
     super.onCreate(savedInstanceState);
     setContentView(R.layout.edit_food);
 
-    initFieldsAndButton();
+    if (getFoodCategoryId() == FAKE_DEFAULT_ID) {
+      initFieldsAndButtonForCreation();
+    } else {
+      initFieldsAndButtonForEdition();
+    }
     saveButton.setOnClickListener(this);
   }
 
   @Override
   public void onClick(View v) {
     log("EditFoodActivity.onClick : START");
-    final Food foodToUpdate = initFoodFromFields();
-    if (foodToUpdate.areSomeMandatoryFieldsMissing()) {
+    final Food newFood = initFoodFromFields();
+    if (newFood.areSomeMandatoryFieldsMissing()) {
       displayErrorMessage();
     } else {
-      saveNewFood(foodToUpdate);
-      propagateResult();
+      saveNewFood(newFood);
       log("EditFoodActivity.onClick : DONE");
       finish();
     }
@@ -76,9 +80,21 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     super.onResume();
   }
 
-  private void initFieldsAndButton() {
+  private void initFieldsAndButtonForCreation() {
+    log("EditFoodActivity.initFieldsAndButtonForCreation");
     newFoodName = (EditText) findViewById(R.id.food_edittext);
-    newFoodCategory = (Spinner) findViewById(R.id.food_category_spinner);
+    newFoodCategorySpinner = (Spinner) findViewById(R.id.food_category_spinner);
+    newFoodCarbonHydrate = (EditText) findViewById(R.id.food_carbonhydrate_edittext);
+    newFoodQuantity = (EditText) findViewById(R.id.food_quantity_edittext);
+    newFoodUnit = (EditText) findViewById(R.id.food_unit_edittext);
+    saveButton = (Button) findViewById(R.id.food_save_button);
+    populateSpinner(null);
+  }
+
+  private void initFieldsAndButtonForEdition() {
+    log("EditFoodActivity.initFieldsAndButtonForEdition");
+    newFoodName = (EditText) findViewById(R.id.food_edittext);
+    newFoodCategorySpinner = (Spinner) findViewById(R.id.food_category_spinner);
     newFoodCarbonHydrate = (EditText) findViewById(R.id.food_carbonhydrate_edittext);
     newFoodQuantity = (EditText) findViewById(R.id.food_quantity_edittext);
     newFoodUnit = (EditText) findViewById(R.id.food_unit_edittext);
@@ -92,6 +108,7 @@ public class EditFoodActivity extends Activity implements OnClickListener {
   }
 
   private void populateSpinner(Long categoryId) {
+    log("EditFoodActivity.populateSpinner");
     Integer selectedIndex = null;
     final ArrayAdapter<CharSequence> categoryAdapter = new ArrayAdapter<CharSequence>(this,
         android.R.layout.simple_spinner_item);
@@ -106,9 +123,9 @@ public class EditFoodActivity extends Activity implements OnClickListener {
       currentPosition++;
     }
     categoryAdapter.setDropDownViewResource(spinnerDdItem);
-    newFoodCategory.setAdapter(categoryAdapter);
+    newFoodCategorySpinner.setAdapter(categoryAdapter);
     if (categoryId != null && selectedIndex != null) {
-      newFoodCategory.setSelection(selectedIndex);
+      newFoodCategorySpinner.setSelection(selectedIndex);
     }
   }
 
@@ -144,30 +161,38 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     Log.i(TAG, msg);
   }
 
-  private void saveNewFood(Food foodToUpdate) {
-    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this).updateFood(foodToUpdate);
+  private void saveNewFood(Food newFood) {
+    if (getFoodCategoryId() == FAKE_DEFAULT_LONG_ID) {
+      final long id = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this).store(newFood);
+      propagateResultForCreation(id);
+    } else {
+      GluCalcSQLiteHelper.getGluCalcSQLiteHelper(EditFoodActivity.this).updateFood(newFood);
+      propagateResultForEdition();
+    }
   }
 
   private Food initFoodFromFields() {
-    final Food foodToUpdate = new Food();
-    foodToUpdate.setId(getFoodId());
-    foodToUpdate.setName(newFoodName.getText().toString());
+    final Food newFood = new Food();
+    if (getFoodId() != FAKE_DEFAULT_LONG_ID) {
+      newFood.setId(getFoodId());
+    }
+    newFood.setName(newFoodName.getText().toString());
 
     final String newFoodCarbonHydrateText = newFoodCarbonHydrate.getText().toString();
     try {
       final Float newFoodCarbonHydrateAsFloat = Float.valueOf(newFoodCarbonHydrateText);
-      foodToUpdate.setCarbonhydrate(newFoodCarbonHydrateAsFloat);
+      newFood.setCarbonhydrate(newFoodCarbonHydrateAsFloat);
     } catch (final NumberFormatException nfe) {
     }
 
     final String newFoodQuantityText = newFoodQuantity.getText().toString();
     try {
       final Float newFoodQuantityTextAsFloat = Float.valueOf(newFoodQuantityText);
-      foodToUpdate.setQuantity(newFoodQuantityTextAsFloat);
+      newFood.setQuantity(newFoodQuantityTextAsFloat);
     } catch (final NumberFormatException nfe) {
     }
-    foodToUpdate.setUnit(newFoodUnit.getText().toString());
-    final int selectedItemPosition = newFoodCategory.getSelectedItemPosition();
+    newFood.setUnit(newFoodUnit.getText().toString());
+    final int selectedItemPosition = newFoodCategorySpinner.getSelectedItemPosition();
     long categoryIdSelected = -1;
     int i = 0;
     for (final CategoryFood category : categoriesOfFood) {
@@ -177,14 +202,20 @@ public class EditFoodActivity extends Activity implements OnClickListener {
       }
       i++;
     }
-    foodToUpdate.setCategoryId(categoryIdSelected);
-    return foodToUpdate;
+    newFood.setCategoryId(categoryIdSelected);
+    return newFood;
   }
 
-  private void propagateResult() {
+  private void propagateResultForCreation(long id) {
     final Intent intent = new Intent();
-    intent.putExtra(CategoryFoodConstants.MODIFIED_ID_RESULT, getFoodId());
-    setResult(CategoryFoodConstants.RESULT_CODE_EDITED, intent);
+    intent.putExtra(FoodConstants.CREATED_ID_RESULT, id);
+    setResult(FoodConstants.RESULT_CODE_CREATED, intent);
+  }
+
+  private void propagateResultForEdition() {
+    final Intent intent = new Intent();
+    intent.putExtra(FoodConstants.MODIFIED_ID_RESULT, getFoodId());
+    setResult(FoodConstants.RESULT_CODE_EDITED, intent);
   }
 
   private void displayErrorMessage() {

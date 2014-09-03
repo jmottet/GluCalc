@@ -2,6 +2,8 @@ package ch.glucalc.food;
 
 import static ch.glucalc.food.FoodConstants.REQUEST_EDIT_CODE;
 import static ch.glucalc.food.FoodConstants.RESULT_CODE_EDITED;
+import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_CREATE_CODE;
+import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_CREATED;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +21,9 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -26,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.FoodAdapter.Section;
@@ -59,13 +65,125 @@ public class FoodListFragment extends ListFragment {
       }
       return super.onScroll(e1, e2, distanceX, distanceY);
     }
-
   }
 
-  private List<Food> populateFoods() {
-    final List<Food> foods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
-        .loadFoods();
-    return foods;
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    log("FoodListFragment.onCreate");
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.options_menu, menu);
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.list_alphabet, container, false);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    initList();
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+    case R.id.add:
+      final Intent createFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
+      // Un résultat est attendu pour savoir si la catégorie a été crée
+      startActivityForResult(createFoodIntent, FoodConstants.REQUEST_CREATE_CODE);
+      return true;
+    case R.id.search:
+      Toast.makeText(getActivity(), "You have clicked on Search Button", Toast.LENGTH_SHORT).show();
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {
+    super.onListItemClick(l, v, position, id);
+
+    log("FoodListFragment.onListItemClick");
+    final Object currentRow = getListView().getItemAtPosition(position);
+    if (currentRow instanceof Food) {
+      final Food currentFood = (Food) currentRow;
+      final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
+      editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
+      editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
+      editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
+      editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
+      editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
+      editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
+
+      // Un résultat est attendu pour savoir si l'aliment a été modifiée
+      startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
+    }
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    // Check which request we're responding to
+    if (requestCode == REQUEST_EDIT_CODE) {
+      // Make sure the request was successful
+      if (resultCode == RESULT_CODE_EDITED) {
+        initList();
+      }
+    } else if (requestCode == REQUEST_CREATE_CODE) {
+      // Make sure the request was successful
+      if (resultCode == RESULT_CODE_CREATED) {
+        initList();
+      }
+    }
+  }
+
+  @Override
+  public void onAttach(Activity activity) {
+    log("FoodListFragment.onAttach");
+    super.onAttach(activity);
+  }
+
+  @Override
+  public void onDetach() {
+    log("FoodListFragment.onDetach");
+    super.onDetach();
+  }
+
+  @Override
+  public void onDestroy() {
+    log("FoodListFragment.onDestroy");
+    super.onDestroy();
+  }
+
+  @Override
+  public void onPause() {
+    log("FoodListFragment.onPause");
+    super.onPause();
+  }
+
+  @Override
+  public void onResume() {
+    log("FoodListFragment.onResume");
+    super.onResume();
+  }
+
+  @Override
+  public void onStart() {
+    log("FoodListFragment.onStart");
+    super.onStart();
+  }
+
+  @Override
+  public void onStop() {
+    log("FoodListFragment.onStop");
+    super.onStart();
   }
 
   private void displayListItem() {
@@ -89,65 +207,6 @@ public class FoodListFragment extends ListFragment {
         }
       }
     }
-  }
-
-  private void updateList() {
-
-    log("FoodListFragment.updateList");
-
-    final LinearLayout sideIndex = (LinearLayout) getActivity().findViewById(R.id.sideIndex);
-    sideIndex.removeAllViews();
-    indexListSize = alphabet.size();
-    if (indexListSize < 1) {
-      return;
-    }
-    final int indexMaxSize = (int) Math.floor(sideIndex.getHeight() / 20);
-    int tmpIndexListSize = indexListSize;
-    while (tmpIndexListSize > indexMaxSize) {
-      tmpIndexListSize = tmpIndexListSize / 2;
-    }
-    double delta;
-    if (tmpIndexListSize > 0) {
-      delta = indexListSize / tmpIndexListSize;
-    } else {
-      delta = 1;
-    }
-    TextView tmpTV;
-    for (double i = 1; i <= indexListSize; i = i + delta) {
-      final Object[] tmpIndexItem = alphabet.get((int) i - 1);
-      final String tmpLetter = tmpIndexItem[0].toString();
-      tmpTV = new TextView(getActivity());
-      tmpTV.setText(tmpLetter);
-      tmpTV.setGravity(Gravity.CENTER);
-      tmpTV.setTextSize(15);
-      final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-          ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-      tmpTV.setLayoutParams(params);
-      sideIndex.addView(tmpTV);
-    }
-    sideIndexHeight = sideIndex.getHeight();
-    sideIndex.setOnTouchListener(new OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        // now you know coordinates of touch
-        sideIndexX = event.getX();
-        sideIndexY = event.getY();
-        // and can display a proper item it country list
-        displayListItem();
-        return false;
-      }
-    });
-  }
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.list_alphabet, container, false);
-  }
-
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    initList();
   }
 
   private void initList() {
@@ -222,36 +281,58 @@ public class FoodListFragment extends ListFragment {
     updateList();
   }
 
-  @Override
-  public void onListItemClick(ListView l, View v, int position, long id) {
-    super.onListItemClick(l, v, position, id);
-
-    log("FoodListFragment.onListItemClick");
-    final Object currentRow = getListView().getItemAtPosition(position);
-    if (currentRow instanceof Food) {
-      final Food currentFood = (Food) currentRow;
-      final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
-      editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
-      editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
-      editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
-      editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
-      editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
-      editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
-
-      // Un résultat est attendu pour savoir si l'aliment a été modifiée
-      startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
-    }
+  private List<Food> populateFoods() {
+    final List<Food> foods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+        .loadFoods();
+    return foods;
   }
 
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    // Check which request we're responding to
-    if (requestCode == REQUEST_EDIT_CODE) {
-      // Make sure the request was successful
-      if (resultCode == RESULT_CODE_EDITED) {
-        initList();
-      }
+  private void updateList() {
+
+    log("FoodListFragment.updateList");
+
+    final LinearLayout sideIndex = (LinearLayout) getActivity().findViewById(R.id.sideIndex);
+    sideIndex.removeAllViews();
+    indexListSize = alphabet.size();
+    if (indexListSize < 1) {
+      return;
     }
+    final int indexMaxSize = (int) Math.floor(sideIndex.getHeight() / 20);
+    int tmpIndexListSize = indexListSize;
+    while (tmpIndexListSize > indexMaxSize) {
+      tmpIndexListSize = tmpIndexListSize / 2;
+    }
+    double delta;
+    if (tmpIndexListSize > 0) {
+      delta = indexListSize / tmpIndexListSize;
+    } else {
+      delta = 1;
+    }
+    TextView tmpTV;
+    for (double i = 1; i <= indexListSize; i = i + delta) {
+      final Object[] tmpIndexItem = alphabet.get((int) i - 1);
+      final String tmpLetter = tmpIndexItem[0].toString();
+      tmpTV = new TextView(getActivity());
+      tmpTV.setText(tmpLetter);
+      tmpTV.setGravity(Gravity.CENTER);
+      tmpTV.setTextSize(15);
+      final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+          ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+      tmpTV.setLayoutParams(params);
+      sideIndex.addView(tmpTV);
+    }
+    sideIndexHeight = sideIndex.getHeight();
+    sideIndex.setOnTouchListener(new OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        // now you know coordinates of touch
+        sideIndexX = event.getX();
+        sideIndexY = event.getY();
+        // and can display a proper item it country list
+        displayListItem();
+        return false;
+      }
+    });
   }
 
   /**
@@ -274,54 +355,6 @@ public class FoodListFragment extends ListFragment {
       }
     }
     adapter.notifyDataSetChanged();
-  }
-
-  @Override
-  public void onAttach(Activity activity) {
-    log("FoodListFragment.onAttach");
-    super.onAttach(activity);
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    log("FoodListFragment.onCreate");
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  public void onDetach() {
-    log("FoodListFragment.onDetach");
-    super.onDetach();
-  }
-
-  @Override
-  public void onDestroy() {
-    log("FoodListFragment.onDestroy");
-    super.onDestroy();
-  }
-
-  @Override
-  public void onPause() {
-    log("FoodListFragment.onPause");
-    super.onPause();
-  }
-
-  @Override
-  public void onResume() {
-    log("FoodListFragment.onResume");
-    super.onResume();
-  }
-
-  @Override
-  public void onStart() {
-    log("FoodListFragment.onStart");
-    super.onStart();
-  }
-
-  @Override
-  public void onStop() {
-    log("FoodListFragment.onStop");
-    super.onStart();
   }
 
   private void log(String msg) {

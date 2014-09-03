@@ -71,7 +71,30 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     } finally {
       db.endTransaction();
     }
+  }
 
+  public long store(Food food) {
+    long id = -1;
+    final SQLiteDatabase db = getWritableDatabase();
+
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      values.put(FoodTable.COLUMN_NAME, food.getName());
+      values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
+      values.put(FoodTable.COLUMN_UNIT, food.getUnit());
+      values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
+      values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
+      id = db.insert(FoodTable.TABLE_NAME, "", values);
+      food.setId(id);
+      values.clear();
+
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    return id;
   }
 
   public List<Food> loadFoods() {
@@ -160,7 +183,25 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     } finally {
       db.endTransaction();
     }
+  }
 
+  public long storeCategory(CategoryFood categoryFood) {
+    long id = -1;
+    final SQLiteDatabase db = getWritableDatabase();
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
+      id = db.insert(CategoryFoodTable.TABLE_NAME, "", values);
+      categoryFood.setId(id);
+      values.clear();
+
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    return id;
   }
 
   public void updateCategory(CategoryFood categoryFood) {

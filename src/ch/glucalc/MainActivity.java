@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import ch.glucalc.food.FoodListFragment;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 
@@ -22,10 +20,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   private static final int NB_FRAGMENTS = 4;
 
   private final Fragment[] fFragments = new Fragment[NB_FRAGMENTS];
-
-  private boolean showAddAndSearchMenu = true;
-
-  private int oldPosition = -1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -40,22 +34,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_categories).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_dummy).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_database).setTabListener(this));
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle presses on the action bar items
-    switch (item.getItemId()) {
-    case R.id.add:
-      Toast.makeText(MainActivity.this, "You have clicked on Add Button", Toast.LENGTH_SHORT).show();
-
-      return true;
-    case R.id.search:
-      Toast.makeText(MainActivity.this, "You have clicked on Search Button", Toast.LENGTH_SHORT).show();
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
-    }
   }
 
   @Override
@@ -75,25 +53,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.options_menu, menu);
     getMenuInflater().inflate(R.menu.main_list, menu);
-
     return true;
-  }
-
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    final MenuItem itemAdd = menu.findItem(R.id.add);
-    final MenuItem itemSearch = menu.findItem(R.id.search);
-
-    if (showAddAndSearchMenu) {
-      itemAdd.setVisible(true);
-      itemSearch.setVisible(true);
-    } else {
-      itemAdd.setVisible(false);
-      itemSearch.setVisible(false);
-    }
-    return super.onPrepareOptionsMenu(menu);
   }
 
   @Override
@@ -103,11 +64,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     final int newPosition = tab.getPosition();
     final Fragment fragment = getFragement(newPosition);
     getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-    if (oldPosition != newPosition) {
-      showAddAndSearchMenu = mustAddAndSearchMenuItemDisplayed(newPosition);
-      invalidateOptionsMenu();
-      oldPosition = newPosition;
-    }
   }
 
   @Override
@@ -172,10 +128,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       fFragments[position] = fragment;
     }
     return fragment;
-  }
-
-  private boolean mustAddAndSearchMenuItemDisplayed(int position) {
-    return position == 0 || position == 1 ? true : false;
   }
 
 }

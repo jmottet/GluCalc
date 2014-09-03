@@ -4,7 +4,11 @@ public class FoodConstants {
 
   protected static int REQUEST_EDIT_CODE = 1;
 
+  protected static int REQUEST_CREATE_CODE = 2;
+
   protected static int RESULT_CODE_EDITED = 1;
+
+  protected static int RESULT_CODE_CREATED = 2;
 
   protected static String FOOD_ID_PARAMETER = "FoodId";
 
@@ -23,4 +27,6 @@ public class FoodConstants {
   protected static float FAKE_DEFAULT_FLOAT_ID = -1L;
 
   protected static String MODIFIED_ID_RESULT = "modifiedId";
+
+  protected static String CREATED_ID_RESULT = "createdId";
 }

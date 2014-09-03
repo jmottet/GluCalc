@@ -1,7 +1,10 @@
 package ch.glucalc.food.category;
 
+import static ch.glucalc.food.category.CategoryFoodConstants.CREATED_ID_RESULT;
 import static ch.glucalc.food.category.CategoryFoodConstants.MODIFIED_ID_RESULT;
+import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_CREATE_CODE;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
+import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_CREATED;
 import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
 
 import java.util.Collections;
@@ -14,9 +17,14 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.R;
 
 public class CategoryFoodListFragment extends ListFragment {
 
@@ -30,6 +38,7 @@ public class CategoryFoodListFragment extends ListFragment {
   public void onCreate(Bundle savedInstanceState) {
     log("CategoryFoodListFragment.onCreate");
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
 
     // Load the categories from the Database
     categories = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
@@ -39,6 +48,30 @@ public class CategoryFoodListFragment extends ListFragment {
     categoryFoodAdapter = new CategoryFoodAdapter(getActivity(), categories);
     setListAdapter(categoryFoodAdapter);
 
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.options_menu, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    log("CategoryFoodListFragment.onOptionsItemSelected");
+    switch (item.getItemId()) {
+    case R.id.add:
+      final Intent createCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
+          EditCategoryFoodActivity.class);
+      // Un résultat est attendu pour savoir si la catégorie a été crée
+      startActivityForResult(createCategoryFoodIntent, REQUEST_CREATE_CODE);
+      return true;
+    case R.id.search:
+      Toast.makeText(getActivity(), "You have clicked on Search Button", Toast.LENGTH_SHORT).show();
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
@@ -69,31 +102,15 @@ public class CategoryFoodListFragment extends ListFragment {
             getActivity().getApplicationContext()).loadCategoryOfFood(modifiedId);
         updateCategoryList(modifiedCategory);
       }
-    }
-  }
-
-  /**
-   * Modify the corresponding category of the list if it already exists,
-   * otherwise add the category to the list
-   * 
-   * @param aCategory
-   *          - the category to be added to the list
-   */
-  private void updateCategoryList(CategoryFood aCategory) {
-    boolean itemHasBeenReplace = false;
-    final ListIterator<CategoryFood> listIterator = categories.listIterator();
-    while (listIterator.hasNext() && !itemHasBeenReplace) {
-      final CategoryFood currentCategory = listIterator.next();
-      if (currentCategory.getId() == aCategory.getId()) {
-        listIterator.set(aCategory);
-        itemHasBeenReplace = true;
+    } else if (requestCode == REQUEST_CREATE_CODE) {
+      // Make sure the request was successful
+      if (resultCode == RESULT_CODE_CREATED) {
+        final long createdId = data.getExtras().getLong(CREATED_ID_RESULT);
+        final CategoryFood createdCategory = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(
+            getActivity().getApplicationContext()).loadCategoryOfFood(createdId);
+        updateCategoryList(createdCategory);
       }
     }
-    if (!itemHasBeenReplace) {
-      categories.add(aCategory);
-    }
-    sortCategories();
-    categoryFoodAdapter.notifyDataSetChanged();
   }
 
   @Override
@@ -146,6 +163,30 @@ public class CategoryFoodListFragment extends ListFragment {
 
   private void log(String msg) {
     Log.i(TAG, msg);
+  }
+
+  /**
+   * Modify the corresponding category of the list if it already exists,
+   * otherwise add the category to the list
+   * 
+   * @param aCategory
+   *          - the category to be added to the list
+   */
+  private void updateCategoryList(CategoryFood aCategory) {
+    boolean itemHasBeenReplace = false;
+    final ListIterator<CategoryFood> listIterator = categories.listIterator();
+    while (listIterator.hasNext() && !itemHasBeenReplace) {
+      final CategoryFood currentCategory = listIterator.next();
+      if (currentCategory.getId() == aCategory.getId()) {
+        listIterator.set(aCategory);
+        itemHasBeenReplace = true;
+      }
+    }
+    if (!itemHasBeenReplace) {
+      categories.add(aCategory);
+    }
+    sortCategories();
+    categoryFoodAdapter.notifyDataSetChanged();
   }
 
   private void sortCategories() {
