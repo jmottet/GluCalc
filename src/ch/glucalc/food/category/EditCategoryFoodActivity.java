@@ -10,11 +10,13 @@ import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 
@@ -42,9 +44,13 @@ public class EditCategoryFoodActivity extends Activity {
       public void onClick(View v) {
         log("EditCategoryFoodActivity.onClick : START");
         final String newCategoryFoodName = newCategory.getText().toString();
-        saveNewCategory(newCategoryFoodName);
-        log("EditCategoryFoodActivity.onClick : DONE");
-        finish();
+        if (TextUtils.isEmpty(newCategoryFoodName)) {
+          DialogHelper.displayErrorMessage(EditCategoryFoodActivity.this);
+        } else {
+          saveNewCategory(newCategoryFoodName);
+          log("EditCategoryFoodActivity.onClick : DONE");
+          finish();
+        }
       }
 
       private void saveNewCategory(final String newCategoryFoodName) {

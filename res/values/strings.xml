@@ -35,4 +35,8 @@
     
     <!-- Button Labels -->
     <string name="save_button_string">Save</string>
+    
+    <!-- Dialog Messages -->
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_error_fields_missing">Please complete all fields</string>
 </resources>

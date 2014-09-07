@@ -13,9 +13,6 @@ import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.category.CategoryFood;
@@ -60,7 +58,7 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     log("EditFoodActivity.onClick : START");
     final Food newFood = initFoodFromFields();
     if (newFood.areSomeMandatoryFieldsMissing()) {
-      displayErrorMessage();
+      DialogHelper.displayErrorMessage(EditFoodActivity.this);
     } else {
       saveNewFood(newFood);
       log("EditFoodActivity.onClick : DONE");
@@ -216,33 +214,6 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     final Intent intent = new Intent();
     intent.putExtra(FoodConstants.MODIFIED_ID_RESULT, getFoodId());
     setResult(FoodConstants.RESULT_CODE_EDITED, intent);
-  }
-
-  private void displayErrorMessage() {
-    final Builder builder = new AlertDialog.Builder(EditFoodActivity.this);
-
-    // Setting Dialog Title
-    builder.setTitle("Error");
-
-    // Setting Dialog Message
-    builder.setMessage("Please complete all fields");
-
-    // Setting Icon to Dialog if needed
-    // alertDialog.setIcon(R.drawable.)
-
-    // Setting OK Button
-    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        // Toast.makeText(getApplicationContext(), "You clicked on OK",
-        // Toast.LENGTH_SHORT).show();
-        log("EditFoodActivity - Alert clicked");
-      }
-    });
-
-    final AlertDialog dialog = builder.create();
-    dialog.show();
   }
 
 }
