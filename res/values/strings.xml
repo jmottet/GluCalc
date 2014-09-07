@@ -5,7 +5,8 @@
     <string name="app_name">GluCalc</string>
     <string name="action_settings">Settings</string>
     <string name="search_title">Search an item</string>
-    <string name="add_title">Add a new item</string>
+    <string name="search_food_hint">Search food</string>
+    <string name="add_title">Add new food</string>
     
     <!-- Menu Tabulation -->
     <string name="tab_food">Food</string>
@@ -34,5 +35,4 @@
     
     <!-- Button Labels -->
     <string name="save_button_string">Save</string>
-
 </resources>

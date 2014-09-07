@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -30,13 +32,16 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnCloseListener;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.FoodAdapter.Section;
 
-public class FoodListFragment extends ListFragment {
+@SuppressLint("DefaultLocale")
+public class FoodListFragment extends ListFragment implements OnQueryTextListener, OnCloseListener {
 
   private static String TAG = "GluCalc";
 
@@ -49,6 +54,7 @@ public class FoodListFragment extends ListFragment {
   private static float sideIndexX;
   private static float sideIndexY;
   private int indexListSize;
+  private SearchView mSearchView;
 
   class SideIndexGestureListener extends GestureDetector.SimpleOnGestureListener {
     @Override
@@ -76,31 +82,39 @@ public class FoodListFragment extends ListFragment {
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    log("FoodListFragment.onCreateOptionsMenu");
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.options_menu, menu);
+    inflater.inflate(R.menu.search_food_menu, menu);
+    inflater.inflate(R.menu.add_menu, menu);
+
+    mSearchView = (SearchView) menu.findItem(R.id.search_food).getActionView();
+    // Place an action bar item for searching.
+    mSearchView.setOnQueryTextListener(this);
+    mSearchView.setOnCloseListener(this);
+    mSearchView.setIconifiedByDefault(true);
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    log("FoodListFragment.onCreateView");
     return inflater.inflate(R.layout.list_alphabet, container, false);
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
+    log("FoodListFragment.onActivityCreated");
     super.onCreate(savedInstanceState);
-    initList();
+    initList(false, null);
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    log("FoodListFragment.onOptionsItemSelected");
     switch (item.getItemId()) {
     case R.id.add:
       final Intent createFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
       // Un résultat est attendu pour savoir si la catégorie a été crée
       startActivityForResult(createFoodIntent, FoodConstants.REQUEST_CREATE_CODE);
-      return true;
-    case R.id.search:
-      Toast.makeText(getActivity(), "You have clicked on Search Button", Toast.LENGTH_SHORT).show();
       return true;
     default:
       return super.onOptionsItemSelected(item);
@@ -134,12 +148,12 @@ public class FoodListFragment extends ListFragment {
     if (requestCode == REQUEST_EDIT_CODE) {
       // Make sure the request was successful
       if (resultCode == RESULT_CODE_EDITED) {
-        initList();
+        initList(false, null);
       }
     } else if (requestCode == REQUEST_CREATE_CODE) {
       // Make sure the request was successful
       if (resultCode == RESULT_CODE_CREATED) {
-        initList();
+        initList(false, null);
       }
     }
   }
@@ -209,9 +223,9 @@ public class FoodListFragment extends ListFragment {
     }
   }
 
-  private void initList() {
+  private void initList(boolean filtered, String nameCriteria) {
     mGestureDetector = new GestureDetector(getActivity(), new SideIndexGestureListener());
-    final List<Food> foods = populateFoods();// populateCountries();
+    final List<Food> foods = populateFoods(filtered, nameCriteria);
     Collections.sort(foods, new Comparator<Food>() {
 
       @Override
@@ -281,10 +295,15 @@ public class FoodListFragment extends ListFragment {
     updateList();
   }
 
-  private List<Food> populateFoods() {
-    final List<Food> foods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
-        .loadFoods();
-    return foods;
+  private List<Food> populateFoods(boolean filtered, String nameCriteria) {
+    final List<Food> result;
+    if (!filtered || TextUtils.isEmpty(nameCriteria)) {
+      result = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoods();
+    } else {
+      result = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+          .loadFoodsFilteredByName(nameCriteria);
+    }
+    return result;
   }
 
   private void updateList() {
@@ -341,6 +360,7 @@ public class FoodListFragment extends ListFragment {
    * @param aFood
    *          - the food to be added to the list
    */
+  @SuppressWarnings("unused")
   private void updateFoodList(Food aFood) {
     boolean itemHasBeenReplace = false;
     final ListIterator<Object> listIterator = rows.listIterator();
@@ -361,4 +381,28 @@ public class FoodListFragment extends ListFragment {
     Log.i(TAG, msg);
   }
 
+  @Override
+  public boolean onClose() {
+    if (!TextUtils.isEmpty(mSearchView.getQuery())) {
+      mSearchView.setQuery(null, true);
+    }
+    return true;
+  }
+
+  @Override
+  public boolean onQueryTextSubmit(String query) {
+    log("FoodListFragment.onQueryTextSubmit");
+    // Don't care about this.
+    return true;
+  }
+
+  @Override
+  public boolean onQueryTextChange(String newText) {
+
+    log("FoodListFragment.onQueryTextChange");
+    initList(true, newText);
+    // Toast.makeText(getActivity(), "Searching for: " + newText,
+    // Toast.LENGTH_SHORT).show();
+    return true;
+  }
 }

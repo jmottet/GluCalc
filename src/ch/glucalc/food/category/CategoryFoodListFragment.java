@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Intent;
@@ -22,10 +23,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 
+@SuppressLint("DefaultLocale")
 public class CategoryFoodListFragment extends ListFragment {
 
   private static String TAG = "GluCalc";
@@ -53,7 +54,7 @@ public class CategoryFoodListFragment extends ListFragment {
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.options_menu, menu);
+    inflater.inflate(R.menu.add_menu, menu);
   }
 
   @Override
@@ -65,9 +66,6 @@ public class CategoryFoodListFragment extends ListFragment {
           EditCategoryFoodActivity.class);
       // Un résultat est attendu pour savoir si la catégorie a été crée
       startActivityForResult(createCategoryFoodIntent, REQUEST_CREATE_CODE);
-      return true;
-    case R.id.search:
-      Toast.makeText(getActivity(), "You have clicked on Search Button", Toast.LENGTH_SHORT).show();
       return true;
     default:
       return super.onOptionsItemSelected(item);

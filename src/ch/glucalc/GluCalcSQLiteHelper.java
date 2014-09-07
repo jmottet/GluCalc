@@ -114,6 +114,23 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     return foods;
   }
 
+  public List<Food> loadFoodsFilteredByName(String name) {
+    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+        FoodTable.COLUMN_NAME + " LIKE ?", new String[] { "%" + name + "%" }, null, null, null);
+    final List<Food> foods = new ArrayList<Food>(cursor.getCount());
+    while (cursor.moveToNext()) {
+      final Food food = new Food();
+      food.setId(cursor.getLong(0));
+      food.setName(cursor.getString(1));
+      food.setQuantity(cursor.getFloat(2));
+      food.setUnit(cursor.getString(3));
+      food.setCarbonhydrate(cursor.getFloat(4));
+      food.setCategoryId(cursor.getLong(5));
+      foods.add(food);
+    }
+    return foods;
+  }
+
   public void deleteFoods() {
     getWritableDatabase().delete(FoodTable.TABLE_NAME, null, null);
   }
