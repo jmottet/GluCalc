@@ -39,4 +39,6 @@
     <!-- Dialog Messages -->
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_fields_missing">Please complete all fields</string>
+    <string name="dialog_error_categories_missing">Please create at least one category first</string>
+    
 </resources>

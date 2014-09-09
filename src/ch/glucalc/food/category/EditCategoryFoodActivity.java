@@ -45,7 +45,7 @@ public class EditCategoryFoodActivity extends Activity {
         log("EditCategoryFoodActivity.onClick : START");
         final String newCategoryFoodName = newCategory.getText().toString();
         if (TextUtils.isEmpty(newCategoryFoodName)) {
-          DialogHelper.displayErrorMessage(EditCategoryFoodActivity.this);
+          DialogHelper.displayErrorMessageAllFieldsMissing(EditCategoryFoodActivity.this);
         } else {
           saveNewCategory(newCategoryFoodName);
           log("EditCategoryFoodActivity.onClick : DONE");

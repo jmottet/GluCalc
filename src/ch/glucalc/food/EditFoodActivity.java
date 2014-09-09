@@ -58,7 +58,7 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     log("EditFoodActivity.onClick : START");
     final Food newFood = initFoodFromFields();
     if (newFood.areSomeMandatoryFieldsMissing()) {
-      DialogHelper.displayErrorMessage(EditFoodActivity.this);
+      DialogHelper.displayErrorMessageAllFieldsMissing(EditFoodActivity.this);
     } else {
       saveNewFood(newFood);
       log("EditFoodActivity.onClick : DONE");
@@ -99,6 +99,7 @@ public class EditFoodActivity extends Activity implements OnClickListener {
     saveButton = (Button) findViewById(R.id.food_save_button);
 
     populateSpinner(getFoodCategoryId());
+
     updateFieldText(newFoodName, getFoodName());
     updateFieldText(newFoodCarbonHydrate, String.valueOf(getFoodCarbonHydrate()));
     updateFieldText(newFoodQuantity, String.valueOf(getFoodQuantity()));

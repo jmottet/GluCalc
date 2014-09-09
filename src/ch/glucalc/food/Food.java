@@ -60,7 +60,8 @@ public class Food {
   }
 
   public boolean areSomeMandatoryFieldsMissing() {
-    if (TextUtils.isEmpty(unit) || TextUtils.isEmpty(name) || carbonhydrate == null || quantity == null) {
+    if (TextUtils.isEmpty(unit) || TextUtils.isEmpty(name) || carbonhydrate == null || quantity == null
+        || categoryId == FoodConstants.FAKE_DEFAULT_LONG_ID) {
       return true;
     }
     return false;

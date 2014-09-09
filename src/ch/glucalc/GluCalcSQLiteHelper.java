@@ -240,6 +240,12 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     }
   }
 
+  public boolean isCategoryOfFoodEmpty() {
+    final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
+        null, null, null, CategoryFoodTable.COLUMN_NAME);
+    return cursor.getCount() == 0;
+  }
+
   public List<CategoryFood> loadCategoriesOfFood() {
     final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
         null, null, null, CategoryFoodTable.COLUMN_NAME);

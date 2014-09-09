@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.FoodAdapter.Section;
@@ -112,10 +115,16 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     log("FoodListFragment.onOptionsItemSelected");
     switch (item.getItemId()) {
     case R.id.add:
-      final Intent createFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
-      // Un résultat est attendu pour savoir si la catégorie a été crée
-      startActivityForResult(createFoodIntent, FoodConstants.REQUEST_CREATE_CODE);
-      return true;
+      if (GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).isCategoryOfFoodEmpty()) {
+        final DialogMissingCategories dialog = DialogMissingCategories.newInstance();
+        dialog.show(getFragmentManager(), "missingCategoriesDialog");
+        return false;
+      } else {
+        final Intent createFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
+        // Un résultat est attendu pour savoir si la catégorie a été crée
+        startActivityForResult(createFoodIntent, FoodConstants.REQUEST_CREATE_CODE);
+        return true;
+      }
     default:
       return super.onOptionsItemSelected(item);
     }
@@ -404,5 +413,18 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     // Toast.makeText(getActivity(), "Searching for: " + newText,
     // Toast.LENGTH_SHORT).show();
     return true;
+  }
+
+  public static class DialogMissingCategories extends DialogFragment {
+
+    public static DialogMissingCategories newInstance() {
+      final DialogMissingCategories frag = new DialogMissingCategories();
+      return frag;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      return DialogHelper.getDialogErrorMessageCategoriesMissing(getActivity());
+    }
   }
 }
