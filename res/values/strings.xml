@@ -6,7 +6,10 @@
     <string name="action_settings">Settings</string>
     <string name="search_title">Search an item</string>
     <string name="search_food_hint">Search food</string>
-    <string name="add_title">Add new food</string>
+    <string name="add_title">Add new item</string>
+    <string name="delete_title">Delete item</string>
+    <string name="select_title">Select item</string>
+    <string name="select_performed_title">Select item done</string>
     
     <!-- Menu Tabulation -->
     <string name="tab_food">Food</string>
@@ -17,6 +20,7 @@
     <!-- Edit category food -->
     <string name="edit_category_food">Category :</string>
     <string name="enter_category_hint">Enter a food category</string>
+    <string name="selected">Selected</string>
     
     <!-- Edit food -->
     <string name="edit_food">Food :</string>
@@ -40,5 +44,6 @@
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_fields_missing">Please complete all fields</string>
     <string name="dialog_error_categories_missing">Please create at least one category first</string>
+
     
 </resources>

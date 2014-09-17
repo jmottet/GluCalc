@@ -35,6 +35,12 @@ public class CategoryFoodListFragment extends ListFragment {
 
   private CategoryFoodAdapter categoryFoodAdapter;
 
+  private boolean modeMultiSelection = false;
+
+  private int numberItemSelected = 0;
+
+  private Menu mMenu;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     log("CategoryFoodListFragment.onCreate");
@@ -54,7 +60,10 @@ public class CategoryFoodListFragment extends ListFragment {
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
+    mMenu = menu;
     inflater.inflate(R.menu.add_menu, menu);
+    inflater.inflate(R.menu.selection_menu, menu);
+    initMenuVisibility();
   }
 
   @Override
@@ -66,6 +75,15 @@ public class CategoryFoodListFragment extends ListFragment {
           EditCategoryFoodActivity.class);
       // Un résultat est attendu pour savoir si la catégorie a été crée
       startActivityForResult(createCategoryFoodIntent, REQUEST_CREATE_CODE);
+      return true;
+    case R.id.selection:
+      modeMultiSelection = true;
+      initMenuVisibility();
+      return true;
+    case R.id.selection_performed:
+      modeMultiSelection = false;
+      initMenuVisibility();
+      categoryFoodAdapter.notifyDataSetChanged();
       return true;
     default:
       return super.onOptionsItemSelected(item);
@@ -79,14 +97,32 @@ public class CategoryFoodListFragment extends ListFragment {
 
     super.onListItemClick(l, v, position, id);
 
-    final Intent editCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
-        EditCategoryFoodActivity.class);
+    if (!modeMultiSelection) {
+      final Intent editCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
+          EditCategoryFoodActivity.class);
 
-    editCategoryFoodIntent.putExtra(CategoryFoodConstants.CATEGORY_ID_PARAMETER, currentCategory.getId());
-    editCategoryFoodIntent.putExtra(CategoryFoodConstants.CATEGORY_NAME_PARAMETER, currentCategory.getName());
+      editCategoryFoodIntent.putExtra(CategoryFoodConstants.CATEGORY_ID_PARAMETER, currentCategory.getId());
+      editCategoryFoodIntent.putExtra(CategoryFoodConstants.CATEGORY_NAME_PARAMETER, currentCategory.getName());
 
-    // Un résultat est attendu pour savoir si la catégorie a été modifiée
-    startActivityForResult(editCategoryFoodIntent, REQUEST_EDIT_CODE);
+      // Un résultat est attendu pour savoir si la catégorie a été modifiée
+      startActivityForResult(editCategoryFoodIntent, REQUEST_EDIT_CODE);
+    } else {
+      if (!currentCategory.isSelected()) {
+        v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
+        currentCategory.setSelected(true);
+        numberItemSelected++;
+        if (numberItemSelected == 1) {
+          mMenu.findItem(R.id.delete).setVisible(true);
+        }
+      } else {
+        v.setBackground(null);
+        currentCategory.setSelected(false);
+        numberItemSelected--;
+        if (numberItemSelected == 0) {
+          mMenu.findItem(R.id.delete).setVisible(false);
+        }
+      }
+    }
   }
 
   @Override
@@ -195,6 +231,24 @@ public class CategoryFoodListFragment extends ListFragment {
         return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
       }
     });
+  }
+
+  private void initMenuVisibility() {
+    if (!modeMultiSelection) {
+      mMenu.findItem(R.id.add).setVisible(true);
+      mMenu.findItem(R.id.delete).setVisible(false);
+      mMenu.findItem(R.id.selection).setVisible(true);
+      mMenu.findItem(R.id.selection_performed).setVisible(false);
+    } else {
+      mMenu.findItem(R.id.add).setVisible(false);
+      mMenu.findItem(R.id.selection).setVisible(false);
+      mMenu.findItem(R.id.selection_performed).setVisible(true);
+      if (numberItemSelected == 0) {
+        mMenu.findItem(R.id.delete).setVisible(false);
+      } else {
+        mMenu.findItem(R.id.delete).setVisible(true);
+      }
+    }
   }
 
 }

@@ -4,6 +4,7 @@ public class CategoryFood {
 
   private long id;
   private String name;
+  private boolean selected = false;
 
   public long getId() {
     return id;
@@ -20,4 +21,13 @@ public class CategoryFood {
   public void setName(String name) {
     this.name = name;
   }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
 }

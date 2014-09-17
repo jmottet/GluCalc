@@ -29,6 +29,12 @@ public class CategoryFoodAdapter extends ArrayAdapter<CategoryFood> {
     final CategoryFood categoryFood = values.get(position);
     final TextView nameTextView = (TextView) rowView.findViewById(R.id.name);
     nameTextView.setText(categoryFood.getName());
+
+    // final CheckBox checkBox = (CheckBox)
+    // rowView.findViewById(R.id.checkBox1);
+    // checkBox.setChecked(categoryFood.isSelected());
+    // checkBox.setTag(categoryFood);
+
     // rowView.setOnClickListener(new OnClickListener() {
 
     // @Override
