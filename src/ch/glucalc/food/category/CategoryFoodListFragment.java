@@ -9,10 +9,8 @@ import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,6 +30,7 @@ import android.widget.ListView;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
+import ch.glucalc.beans.DeleteBean;
 
 @SuppressLint("DefaultLocale")
 public class CategoryFoodListFragment extends ListFragment implements OnClickListener {
@@ -42,21 +41,15 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
 
   private CategoryFoodAdapter categoryFoodAdapter;
 
-  private boolean modeMultiSelection = false;
-
-  private int numberItemSelected = 0;
-
-  private Menu mMenu;
-
-  private final Set<Long> idsToDelete = new HashSet<Long>();
+  private final DeleteBean deleteBean = new DeleteBean();
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     log("CategoryFoodListFragment.onCreate");
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    numberItemSelected = 0;
-    modeMultiSelection = false;
+    deleteBean.setNumberItemSelected(0);
+    deleteBean.setModeMultiSelection(false);
 
     // Load the categories from the Database
     categories = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
@@ -71,7 +64,7 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    mMenu = menu;
+    deleteBean.setmMenu(menu);
     inflater.inflate(R.menu.add_menu, menu);
     inflater.inflate(R.menu.selection_menu, menu);
     initMenuVisibility();
@@ -88,11 +81,11 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
       deleteAction();
       return true;
     case R.id.selection:
-      modeMultiSelection = true;
+      deleteBean.setModeMultiSelection(true);
       initMenuVisibility();
       return true;
     case R.id.selection_performed:
-      modeMultiSelection = false;
+      deleteBean.setModeMultiSelection(false);
       initMenuVisibility();
       categoryFoodAdapter.notifyDataSetChanged();
       return true;
@@ -108,7 +101,7 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
 
     super.onListItemClick(l, v, position, id);
 
-    if (!modeMultiSelection) {
+    if (!deleteBean.isModeMultiSelection()) {
       final Intent editCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
           EditCategoryFoodActivity.class);
 
@@ -121,16 +114,16 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
       if (!currentCategory.isSelected()) {
         v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
         currentCategory.setSelected(true);
-        numberItemSelected++;
-        if (numberItemSelected == 1) {
-          mMenu.findItem(R.id.delete).setVisible(true);
+        deleteBean.addOneToNumberItemSelected();
+        if (deleteBean.getNumberItemSelected() == 1) {
+          deleteBean.getmMenu().findItem(R.id.delete).setVisible(true);
         }
       } else {
         v.setBackground(null);
         currentCategory.setSelected(false);
-        numberItemSelected--;
-        if (numberItemSelected == 0) {
-          mMenu.findItem(R.id.delete).setVisible(false);
+        deleteBean.substractOneToNumberItemSelected();
+        if (deleteBean.getNumberItemSelected() == 0) {
+          deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
         }
       }
     }
@@ -252,19 +245,19 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
   }
 
   private void initMenuVisibility() {
-    if (!modeMultiSelection) {
-      mMenu.findItem(R.id.add).setVisible(true);
-      mMenu.findItem(R.id.delete).setVisible(false);
-      mMenu.findItem(R.id.selection).setVisible(true);
-      mMenu.findItem(R.id.selection_performed).setVisible(false);
+    if (!deleteBean.isModeMultiSelection()) {
+      deleteBean.getmMenu().findItem(R.id.add).setVisible(true);
+      deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.selection).setVisible(true);
+      deleteBean.getmMenu().findItem(R.id.selection_performed).setVisible(false);
     } else {
-      mMenu.findItem(R.id.add).setVisible(false);
-      mMenu.findItem(R.id.selection).setVisible(false);
-      mMenu.findItem(R.id.selection_performed).setVisible(true);
-      if (numberItemSelected == 0) {
-        mMenu.findItem(R.id.delete).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.add).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.selection).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.selection_performed).setVisible(true);
+      if (deleteBean.getNumberItemSelected() == 0) {
+        deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
       } else {
-        mMenu.findItem(R.id.delete).setVisible(true);
+        deleteBean.getmMenu().findItem(R.id.delete).setVisible(true);
       }
     }
   }
@@ -279,7 +272,7 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
   private void deleteAction() {
     // show dialog confirmation if needed
     boolean isSomeFoodLinked = false;
-    idsToDelete.clear();
+    deleteBean.resetIdsToDelete();
     for (final CategoryFood category : categories) {
       if (category.isSelected()) {
         if (!isSomeFoodLinked
@@ -287,7 +280,7 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
                 category.getId())) {
           isSomeFoodLinked = true;
         }
-        idsToDelete.add(category.getId());
+        deleteBean.addIdToDelete(category.getId());
       }
     }
     if (isSomeFoodLinked) {
@@ -303,13 +296,13 @@ public class CategoryFoodListFragment extends ListFragment implements OnClickLis
   private void deleteFoodsFirst() {
     // This click means that the user confirmed that he wants to delete the
     // related food
-    for (final Long categoryId : idsToDelete) {
-      GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteFoods(categoryId);
+    for (final Long categoryId : deleteBean.getIdsToDelete()) {
+      GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteFoodsFromSameCategory(categoryId);
     }
   }
 
   private void deleteCategories() {
-    for (final Long categoryId : idsToDelete) {
+    for (final Long categoryId : deleteBean.getIdsToDelete()) {
       GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteCategory(categoryId);
     }
   }

@@ -41,6 +41,7 @@ import android.widget.TextView;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
+import ch.glucalc.beans.DeleteBean;
 import ch.glucalc.food.FoodAdapter.Section;
 
 @SuppressLint("DefaultLocale")
@@ -58,6 +59,8 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
   private static float sideIndexY;
   private int indexListSize;
   private SearchView mSearchView;
+
+  private final DeleteBean deleteBean = new DeleteBean();
 
   class SideIndexGestureListener extends GestureDetector.SimpleOnGestureListener {
     @Override
@@ -81,20 +84,25 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     log("FoodListFragment.onCreate");
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    deleteBean.setNumberItemSelected(0);
+    deleteBean.setModeMultiSelection(false);
   }
 
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     log("FoodListFragment.onCreateOptionsMenu");
     super.onCreateOptionsMenu(menu, inflater);
+    deleteBean.setmMenu(menu);
     inflater.inflate(R.menu.search_food_menu, menu);
     inflater.inflate(R.menu.add_menu, menu);
-
+    inflater.inflate(R.menu.selection_menu, menu);
     mSearchView = (SearchView) menu.findItem(R.id.search_food).getActionView();
     // Place an action bar item for searching.
     mSearchView.setOnQueryTextListener(this);
     mSearchView.setOnCloseListener(this);
     mSearchView.setIconifiedByDefault(true);
+
+    initMenuVisibility();
   }
 
   @Override
@@ -125,6 +133,19 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
         startActivityForResult(createFoodIntent, FoodConstants.REQUEST_CREATE_CODE);
         return true;
       }
+    case R.id.delete:
+      deleteAction();
+      initMenuVisibility();
+      return true;
+    case R.id.selection:
+      deleteBean.setModeMultiSelection(true);
+      initMenuVisibility();
+      return true;
+    case R.id.selection_performed:
+      deleteBean.setModeMultiSelection(false);
+      initMenuVisibility();
+      initList(false, null);
+      return true;
     default:
       return super.onOptionsItemSelected(item);
     }
@@ -138,16 +159,36 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     final Object currentRow = getListView().getItemAtPosition(position);
     if (currentRow instanceof Food) {
       final Food currentFood = (Food) currentRow;
-      final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
-      editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
-      editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
-      editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
-      editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
-      editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
-      editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
 
-      // Un résultat est attendu pour savoir si l'aliment a été modifiée
-      startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
+      if (!deleteBean.isModeMultiSelection()) {
+        // Start the Edition activity
+        final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
+        editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
+        editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
+        editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
+        editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
+        editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
+        editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
+
+        // Un résultat est attendu pour savoir si l'aliment a été modifiée
+        startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
+      } else {
+        if (!currentFood.isSelected()) {
+          v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
+          currentFood.setSelected(true);
+          deleteBean.addOneToNumberItemSelected();
+          if (deleteBean.getNumberItemSelected() == 1) {
+            deleteBean.getmMenu().findItem(R.id.delete).setVisible(true);
+          }
+        } else {
+          v.setBackground(null);
+          currentFood.setSelected(false);
+          deleteBean.substractOneToNumberItemSelected();
+          if (deleteBean.getNumberItemSelected() == 0) {
+            deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
+          }
+        }
+      }
     }
   }
 
@@ -233,6 +274,9 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
   }
 
   private void initList(boolean filtered, String nameCriteria) {
+    deleteBean.resetIdsToDelete();
+    deleteBean.setNumberItemSelected(0);
+
     mGestureDetector = new GestureDetector(getActivity(), new SideIndexGestureListener());
     final List<Food> foods = populateFoods(filtered, nameCriteria);
     Collections.sort(foods, new Comparator<Food>() {
@@ -426,5 +470,39 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       return DialogHelper.getDialogErrorMessageCategoriesMissing(getActivity());
     }
+  }
+
+  private void initMenuVisibility() {
+    if (!deleteBean.isModeMultiSelection()) {
+      deleteBean.getmMenu().findItem(R.id.add).setVisible(true);
+      deleteBean.getmMenu().findItem(R.id.search_food).setVisible(true);
+      deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.selection).setVisible(true);
+      deleteBean.getmMenu().findItem(R.id.selection_performed).setVisible(false);
+    } else {
+      deleteBean.getmMenu().findItem(R.id.add).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.search_food).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.selection).setVisible(false);
+      deleteBean.getmMenu().findItem(R.id.selection_performed).setVisible(true);
+      if (deleteBean.getNumberItemSelected() == 0) {
+        deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
+      } else {
+        deleteBean.getmMenu().findItem(R.id.delete).setVisible(true);
+      }
+    }
+  }
+
+  private void deleteAction() {
+
+    for (final Object currentObject : rows) {
+      if (currentObject instanceof Food) {
+        final Food currentFood = (Food) currentObject;
+        if (currentFood.isSelected()) {
+          GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteFood(
+              currentFood.getId());
+        }
+      }
+    }
+    initList(false, null);
   }
 }

@@ -5,11 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import ch.glucalc.food.FoodListFragment;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 
@@ -17,7 +13,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
   private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
-  private static final int NB_FRAGMENTS = 4;
+  private static final int NB_FRAGMENTS = 3;
 
   private final Fragment[] fFragments = new Fragment[NB_FRAGMENTS];
 
@@ -32,7 +28,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_food).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_categories).setTabListener(this));
-    actionBar.addTab(actionBar.newTab().setText(R.string.tab_dummy).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_database).setTabListener(this));
   }
 
@@ -75,28 +70,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   }
 
   /**
-   * A dummy fragment representing a section of the app, but that simply
-   * displays dummy text.
-   */
-  public static class DummySectionFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this fragment.
-     */
-    public static final String ARG_SECTION_NUMBER = "section_number";
-
-    public DummySectionFragment() {
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      final View rootView = inflater.inflate(R.layout.fragment_dummy, container, false);
-      final TextView dummyTextView = (TextView) rootView.findViewById(R.id.section_label);
-      dummyTextView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-      return rootView;
-    }
-  }
-
-  /**
    * Retourne un fragment selon sa position. Si celui-ci n'existe pas, il est
    * créé dynamiquement.
    * 
@@ -114,14 +87,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
       case 1:
         fragment = new CategoryFoodListFragment();
         break;
-      case 2: {
-        fragment = new DummySectionFragment();
-        final Bundle args = new Bundle();
-        args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-        fragment.setArguments(args);
-      }
-        break;
-      case 3:
+      case 2:
         fragment = new TestFragment();
         break;
       }

@@ -10,6 +10,7 @@ public class Food {
   private Float carbonhydrate;
   private String unit;
   private long categoryId;
+  private boolean selected = false;
 
   public long getId() {
     return id;
@@ -57,6 +58,14 @@ public class Food {
 
   public void setCategoryId(long categoryId) {
     this.categoryId = categoryId;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
   }
 
   public boolean areSomeMandatoryFieldsMissing() {

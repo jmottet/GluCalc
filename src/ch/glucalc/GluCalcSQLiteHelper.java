@@ -141,9 +141,14 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     getWritableDatabase().delete(FoodTable.TABLE_NAME, null, null);
   }
 
-  public void deleteFoods(Long withCategoryId) {
+  public void deleteFoodsFromSameCategory(Long withCategoryId) {
     getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_FK_CATEGORY + " = ?",
         new String[] { String.valueOf(withCategoryId) });
+  }
+
+  public void deleteFood(Long foodId) {
+    getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_ID + " = ?",
+        new String[] { String.valueOf(foodId) });
   }
 
   public void updateFood(Food food) {

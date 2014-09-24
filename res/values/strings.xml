@@ -14,7 +14,6 @@
     <!-- Menu Tabulation -->
     <string name="tab_food">Food</string>
     <string name="tab_categories">Categories</string>
-    <string name="tab_dummy">Dummy</string>
     <string name="tab_database">Database</string>
     
     <!-- Edit category food -->
