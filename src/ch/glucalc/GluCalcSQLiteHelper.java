@@ -131,8 +131,19 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     return foods;
   }
 
+  public boolean existFoodFromCategory(Long categoryId) {
+    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+        FoodTable.COLUMN_FK_CATEGORY + " = ?", new String[] { String.valueOf(categoryId) }, null, null, null);
+    return cursor.getCount() > 0;
+  }
+
   public void deleteFoods() {
     getWritableDatabase().delete(FoodTable.TABLE_NAME, null, null);
+  }
+
+  public void deleteFoods(Long withCategoryId) {
+    getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_FK_CATEGORY + " = ?",
+        new String[] { String.valueOf(withCategoryId) });
   }
 
   public void updateFood(Food food) {
@@ -277,5 +288,10 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
   public void deleteCategoriesOfFood() {
     getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, null, null);
+  }
+
+  public void deleteCategory(Long categoryId) {
+    getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMN_ID + " = ?",
+        new String[] { String.valueOf(categoryId) });
   }
 }

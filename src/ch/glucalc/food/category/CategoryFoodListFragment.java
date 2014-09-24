@@ -9,12 +9,18 @@ import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_EDITED;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListFragment;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,11 +29,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 
 @SuppressLint("DefaultLocale")
-public class CategoryFoodListFragment extends ListFragment {
+public class CategoryFoodListFragment extends ListFragment implements OnClickListener {
 
   private static String TAG = "GluCalc";
 
@@ -41,11 +48,15 @@ public class CategoryFoodListFragment extends ListFragment {
 
   private Menu mMenu;
 
+  private final Set<Long> idsToDelete = new HashSet<Long>();
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     log("CategoryFoodListFragment.onCreate");
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    numberItemSelected = 0;
+    modeMultiSelection = false;
 
     // Load the categories from the Database
     categories = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
@@ -71,10 +82,10 @@ public class CategoryFoodListFragment extends ListFragment {
     log("CategoryFoodListFragment.onOptionsItemSelected");
     switch (item.getItemId()) {
     case R.id.add:
-      final Intent createCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
-          EditCategoryFoodActivity.class);
-      // Un résultat est attendu pour savoir si la catégorie a été crée
-      startActivityForResult(createCategoryFoodIntent, REQUEST_CREATE_CODE);
+      addAction();
+      return true;
+    case R.id.delete:
+      deleteAction();
       return true;
     case R.id.selection:
       modeMultiSelection = true;
@@ -123,6 +134,13 @@ public class CategoryFoodListFragment extends ListFragment {
         }
       }
     }
+  }
+
+  @Override
+  public void onClick(DialogInterface dialog, int which) {
+    deleteFoodsFirst();
+    deleteCategories();
+    refreshCategories();
   }
 
   @Override
@@ -248,6 +266,75 @@ public class CategoryFoodListFragment extends ListFragment {
       } else {
         mMenu.findItem(R.id.delete).setVisible(true);
       }
+    }
+  }
+
+  private void addAction() {
+    final Intent createCategoryFoodIntent = new Intent(getActivity().getApplicationContext(),
+        EditCategoryFoodActivity.class);
+    // Un résultat est attendu pour savoir si la catégorie a été crée
+    startActivityForResult(createCategoryFoodIntent, REQUEST_CREATE_CODE);
+  }
+
+  private void deleteAction() {
+    // show dialog confirmation if needed
+    boolean isSomeFoodLinked = false;
+    idsToDelete.clear();
+    for (final CategoryFood category : categories) {
+      if (category.isSelected()) {
+        if (!isSomeFoodLinked
+            && GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).existFoodFromCategory(
+                category.getId())) {
+          isSomeFoodLinked = true;
+        }
+        idsToDelete.add(category.getId());
+      }
+    }
+    if (isSomeFoodLinked) {
+      // show dialog
+      final DialogWarningDeleteCascade dialog = DialogWarningDeleteCascade.newInstance(this);
+      dialog.show(getFragmentManager(), "warningDeleteCascadeCategoriesDialog");
+    } else {
+      deleteCategories();
+      refreshCategories();
+    }
+  }
+
+  private void deleteFoodsFirst() {
+    // This click means that the user confirmed that he wants to delete the
+    // related food
+    for (final Long categoryId : idsToDelete) {
+      GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteFoods(categoryId);
+    }
+  }
+
+  private void deleteCategories() {
+    for (final Long categoryId : idsToDelete) {
+      GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteCategory(categoryId);
+    }
+  }
+
+  private void refreshCategories() {
+    // Reload the categories from the Database
+    categories.clear();
+    categories.addAll(GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
+        .loadCategoriesOfFood());
+    categoryFoodAdapter.notifyDataSetChanged();
+  }
+
+  public static class DialogWarningDeleteCascade extends DialogFragment {
+
+    private OnClickListener positiveOnClickListener;
+
+    public static DialogWarningDeleteCascade newInstance(OnClickListener positiveOnClickListener) {
+      final DialogWarningDeleteCascade frag = new DialogWarningDeleteCascade();
+      frag.positiveOnClickListener = positiveOnClickListener;
+      return frag;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      return DialogHelper.getDialogWarningDeleteCategoryWithFood(getActivity(), positiveOnClickListener);
     }
   }
 

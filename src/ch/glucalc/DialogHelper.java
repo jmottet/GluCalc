@@ -5,6 +5,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 
 public class DialogHelper {
 
@@ -21,7 +22,7 @@ public class DialogHelper {
     // alertDialog.setIcon(R.drawable.)
 
     // Setting OK Button
-    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -50,7 +51,32 @@ public class DialogHelper {
     // alertDialog.setIcon(R.drawable.)
 
     // Setting OK Button
-    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
+
+    final AlertDialog dialog = builder.create();
+    return dialog;
+  }
+
+  public static Dialog getDialogWarningDeleteCategoryWithFood(Context context, OnClickListener positiveListener) {
+    final Builder builder = new AlertDialog.Builder(context);
+
+    // Setting Dialog Title
+    builder.setTitle(R.string.dialog_confirm_title);
+
+    // Setting Dialog Message
+    builder.setMessage(R.string.dialog_confirm_category_delete_cascade);
+
+    // Setting Icon to Dialog if needed
+    // alertDialog.setIcon(R.drawable.)
+
+    // Setting OK Button
+    builder.setPositiveButton(R.string.dialog_button_yes, positiveListener);
+    builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
