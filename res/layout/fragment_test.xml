@@ -22,7 +22,7 @@
         android:layout_below="@+id/generate_foods"
         android:text="Delete foods" />
     
-        <Button
+   <Button
         android:id="@+id/generate_categories_food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,5 +37,21 @@
         android:layout_alignLeft="@+id/generate_categories_food"
         android:layout_below="@+id/generate_categories_food"
         android:text="Delete food categories" />
+    
+	<Button
+        android:id="@+id/export_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/delete_categories_food"
+        android:layout_below="@+id/delete_categories_food"
+        android:text="Export Food" />   
+
+	<Button
+        android:id="@+id/import_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/export_food"
+        android:layout_below="@+id/export_food"
+        android:text="Import Food" />
 
 </RelativeLayout>
