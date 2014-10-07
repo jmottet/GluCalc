@@ -3,9 +3,11 @@ package ch.glucalc;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.widget.Toast;
 import ch.glucalc.food.FoodListFragment;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 
@@ -29,6 +31,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_food).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_categories).setTabListener(this));
     actionBar.addTab(actionBar.newTab().setText(R.string.tab_database).setTabListener(this));
+
+    final Intent intent = getIntent();
+    if (intent != null && intent.getAction().equals("android.intent.action.VIEW")) {
+      Toast.makeText(getApplicationContext(), R.string.import_csv, Toast.LENGTH_LONG).show();
+    }
   }
 
   @Override
