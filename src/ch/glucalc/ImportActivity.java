@@ -15,13 +15,17 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.MediaColumns;
 import android.widget.Toast;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.category.CategoryFood;
 
 public class ImportActivity extends Activity {
+
+  private static final String COM_GOOGLE_ANDROID_EMAIL_ATTACHMENTPROVIDER = "com.google.android.email.attachmentprovider";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class ImportActivity extends Activity {
         displayNumberOfImportedFood(messageArgs);
       } catch (final Exception e) {
         // warn user about bad data here
+        e.printStackTrace();
         finish();
         return;
       }
@@ -67,7 +72,11 @@ public class ImportActivity extends Activity {
       GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).deleteCategoriesOfFood();
 
       final ContentResolver cr = context.getContentResolver();
-      final InputStream is = cr.openInputStream(data);
+      Uri uri = data;
+      if (data.toString().contains(COM_GOOGLE_ANDROID_EMAIL_ATTACHMENTPROVIDER)) {
+        uri = Uri.parse(getPath(data));
+      }
+      final InputStream is = cr.openInputStream(uri);
 
       final BufferedReader inputReader = new BufferedReader(new InputStreamReader(is));
       String buffer;
@@ -109,4 +118,12 @@ public class ImportActivity extends Activity {
     return result;
   }
 
+  public String getPath(Uri uri) {
+
+    final String[] projection = { MediaColumns.DATA };
+    final Cursor cursor = getApplicationContext().getContentResolver().query(uri, projection, null, null, null);
+    final int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
+    cursor.moveToFirst();
+    return cursor.getString(column_index);
+  }
 }
