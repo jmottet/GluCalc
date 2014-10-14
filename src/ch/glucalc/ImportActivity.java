@@ -12,8 +12,10 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -34,19 +36,44 @@ public class ImportActivity extends Activity {
     final Uri data = getIntent().getData();
     if (data != null) {
       getIntent().setData(null);
-      try {
-        final int importedSize = importFoodToCsvFile(data);
-        final Object[] messageArgs = { importedSize };
 
-        displayNumberOfImportedFood(messageArgs);
-      } catch (final Exception e) {
-        // warn user about bad data here
-        e.printStackTrace();
-        finish();
-        return;
-      }
+      final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ImportActivity.this);
+
+      // set title
+      alertDialogBuilder.setTitle(R.string.dialog_confirm_title);
+
+      // set dialog message
+      alertDialogBuilder.setMessage(R.string.dialog_confirm_food_import).setCancelable(false)
+          .setPositiveButton(R.string.dialog_button_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+              try {
+                final int importedSize = importFoodToCsvFile(data);
+                final Object[] messageArgs = { importedSize };
+                displayNumberOfImportedFood(messageArgs);
+                startMainActivity();
+              } catch (final Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.imported_food_failed, Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+                finish();
+                return;
+              }
+            }
+          }).setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+              ImportActivity.this.finish();
+            }
+          });
+
+      // create alert dialog
+      final AlertDialog alertDialog = alertDialogBuilder.create();
+      // show it
+      alertDialog.show();
     }
+  }
 
+  private void startMainActivity() {
     final Intent startIntent = new Intent(this, MainActivity.class);
     startIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     startActivity(startIntent);
@@ -118,7 +145,7 @@ public class ImportActivity extends Activity {
     return result;
   }
 
-  public String getPath(Uri uri) {
+  private String getPath(Uri uri) {
 
     final String[] projection = { MediaColumns.DATA };
     final Cursor cursor = getApplicationContext().getContentResolver().query(uri, projection, null, null, null);
@@ -126,4 +153,5 @@ public class ImportActivity extends Activity {
     cursor.moveToFirst();
     return cursor.getString(column_index);
   }
+
 }

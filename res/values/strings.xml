@@ -46,10 +46,13 @@
     
     <string name="dialog_confirm_title">Confirm</string>
     <string name="dialog_confirm_category_delete_cascade">A category contains some food, therefore this action will delete them too. Do you want to continue?</string>
+    <string name="dialog_confirm_food_import">Please be aware that all current food will be lost. Food from the chosen file will be imported. Do you want to continue?</string>
     
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_yes">Yes</string>
 	<string name="dialog_button_cancel">Cancel</string>
     
 	<string name="imported_food">Food imported : {0}</string>
+	<string name="imported_food_failed">Food import failed!</string>
+	
 </resources>
