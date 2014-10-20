@@ -54,5 +54,13 @@
     
 	<string name="imported_food">Food imported : {0}</string>
 	<string name="imported_food_failed">Food import failed!</string>
+	<string name="export_category_column">Category</string>
+	<string name="export_food_column">Food</string>
+	<string name="export_carbonhydrate_column">Carbonhydrate</string>
+	<string name="export_quantity_column">Quantity</string>
+	<string name="export_unit_column">Unit</string>
+	<string name="export_food_title">Export food from Glucalc</string>
+	<string name="export_email_chooser_title">Email custom data using...</string>
+	<string name="exported_food_failed">Problem creating attachment</string>
 	
 </resources>

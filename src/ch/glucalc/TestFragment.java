@@ -3,7 +3,6 @@ package ch.glucalc;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -85,12 +85,7 @@ public class TestFragment extends Fragment {
 
       @Override
       public void onClick(View v) {
-        try {
-          exportFoodToCsvFile();
-        } catch (final IOException e) {
-          // TODO: Display an error message
-          e.printStackTrace();
-        }
+        startExportActivity();
       }
     });
 
@@ -111,6 +106,12 @@ public class TestFragment extends Fragment {
     return rootView;
   }
 
+  private void startExportActivity() {
+    final Intent startIntent = new Intent(getActivity(), ExportActivity.class);
+    startActivity(startIntent);
+  }
+
+  @Deprecated
   private void importFoodToCsvFile() throws IOException {
     final Map<String, CategoryFood> categories = new HashMap<String, CategoryFood>();
     final List<Food> foods = new ArrayList<Food>();
@@ -160,32 +161,8 @@ public class TestFragment extends Fragment {
     }
   }
 
-  private void exportFoodToCsvFile() throws IOException {
-    final String title = "Catégorie;Aliment;Glucides;Quantité;Unité\n";
-    final String separator = ";";
-
-    if (isExternalStorageWritable()) {
-      final File exportGlucalcFile = getExportGlucalcFile(context);
-      final FileOutputStream fOut = new FileOutputStream(exportGlucalcFile);
-      fOut.write(title.getBytes());
-
-      final List<Food> foods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).loadFoods();
-      for (final Food food : foods) {
-        final CategoryFood category = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).loadCategoryOfFood(
-            food.getCategoryId());
-        final StringBuilder line = new StringBuilder();
-        line.append(category.getName()).append(separator);
-        line.append(food.getName()).append(separator);
-        line.append(food.getCarbonhydrate()).append(separator);
-        line.append(food.getQuantity()).append(separator);
-        line.append(food.getUnit()).append("\n");
-        fOut.write(line.toString().getBytes());
-      }
-      fOut.close();
-    }
-  }
-
   /* Checks if external storage is available for read and write */
+  @Deprecated
   private boolean isExternalStorageWritable() {
     final String state = Environment.getExternalStorageState();
     if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -195,6 +172,7 @@ public class TestFragment extends Fragment {
   }
 
   /* Checks if external storage is available to at least read */
+  @Deprecated
   private boolean isExternalStorageReadable() {
     final String state = Environment.getExternalStorageState();
     if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
@@ -203,6 +181,7 @@ public class TestFragment extends Fragment {
     return false;
   }
 
+  @Deprecated
   private File getExportGlucalcFile(Context context) {
     // Get the directory for the app's private download directory.
     final File file = new File(context.getExternalFilesDir(null), "GluCalc_Foods.csv.glucalc");
