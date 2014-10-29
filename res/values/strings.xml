@@ -16,6 +16,20 @@
     <string name="tab_categories">Categories</string>
     <string name="tab_database">Database</string>
     
+    <!-- Left Menu -->
+    <string-array name="left_menu_items_array">
+        <item>Meal Diary</item>
+        <item>Insulin Overview</item>
+        <item>Insulin Ratio UI/kg</item>
+        <item>Meals &amp; Insulin</item>
+        <item>Favourite Food</item>
+        <item>Food Categories</item>
+        <item>Food Export</item>
+        <item>Parameters</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>    
+    
     <!-- Edit category food -->
     <string name="edit_category_food">Category :</string>
     <string name="enter_category_hint">Enter a food category</string>
@@ -62,5 +76,7 @@
 	<string name="export_food_title">Export food from Glucalc</string>
 	<string name="export_email_chooser_title">Email custom data using...</string>
 	<string name="exported_food_failed">Problem creating attachment</string>
+	<string name="exported_food_successfully">Food exported successfully!</string>
+	
 	
 </resources>

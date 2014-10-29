@@ -26,6 +26,8 @@ public class ExportActivity extends Activity {
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == REQUEST_SHARE_DATA) {
+      final String errorMessage = getString(R.string.exported_food_successfully);
+      Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
       finish();
     }
   }
