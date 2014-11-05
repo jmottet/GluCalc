@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import ch.glucalc.food.FoodListFragment;
 import ch.glucalc.food.category.CategoryFoodListFragment;
+import ch.glucalc.meal.type.MealTypeListFragment;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -205,6 +206,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     // final FragmentManager fragmentManager = getFragmentManager();
     // fragmentManager.beginTransaction().replace(R.id.content_frame,
     // fragment).commit();
+
+    // position 3 => Food Export
+    if (position == 3) {
+      getFragmentManager().beginTransaction().replace(R.id.container, new MealTypeListFragment()).commit();
+    }
 
     // position 6 => Food Export
     if (position == 6) {

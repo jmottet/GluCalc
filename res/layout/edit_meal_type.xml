@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+	<TextView
+	    android:id="@+id/meal_type_name_textview"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/edit_meal_type_name"
+	    android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/meal_type_name_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_meal_type_name_hint" 
+        android:inputType="text">
+    </EditText>
+    
+    <TextView
+	    android:id="@+id/meal_type_food_target_textview"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/edit_meal_type_food_target"
+	    android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/meal_type_food_target_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_meal_type_food_target_hint" 
+        android:inputType="numberDecimal">
+    </EditText>
+
+    <TextView
+	    android:id="@+id/meal_type_glycemia_target_textview"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/edit_meal_type_glycemia_target"
+	    android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/meal_type_glycemia_target_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_meal_type_glycemia_target_hint" 
+        android:inputType="numberDecimal">
+    </EditText>
+
+    <TextView
+	    android:id="@+id/meal_type_insulin_sensitivity_textview"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/edit_meal_type_insulin_sensitivity"
+	    android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/meal_type_insulin_sensitivity_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_meal_type_insulin_sensitivity_hint" 
+        android:inputType="numberDecimal">
+    </EditText>
+    
+    <TextView
+	    android:id="@+id/meal_type_insulin_textview"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/edit_meal_type_insulin"
+	    android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/meal_type_insulin_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_meal_type_insulin_hint" 
+        android:inputType="numberDecimal">
+    </EditText>    
+        
+    <Button
+        android:id="@+id/meal_type_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="@string/save_button_string" >
+    </Button>
+
+</LinearLayout>

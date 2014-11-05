@@ -51,11 +51,41 @@
 			<intent-filter>
 				  <action android:name="android.intent.action.VIEW" />
 				  <category android:name="android.intent.category.DEFAULT" />
-				  <data
-				    android:mimeType="application/glucalc"
+				  				  <data
+				    android:mimeType="application/*"
 				    android:host="*" 
 				    android:pathPattern=".*\\.glucalc"
 				  />
+				  <data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*\\.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*..*.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern="..*..*..*..*.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*..*..*..*.glucalc"
+				  />		
+				  <data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*..*..*..*..*.glucalc"
+				  />			  
 			</intent-filter>
 			              
         </activity>        
@@ -67,6 +97,11 @@
         
         <activity
             android:name="ch.glucalc.food.EditFoodActivity"
+            android:label="@string/app_name" >
+        </activity>    
+        
+        <activity
+            android:name="ch.glucalc.meal.type.EditMealTypeActivity"
             android:label="@string/app_name" >
         </activity>        
     </application>

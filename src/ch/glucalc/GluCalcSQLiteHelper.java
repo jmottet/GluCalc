@@ -12,11 +12,13 @@ import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodTable;
 import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.food.category.CategoryFoodTable;
+import ch.glucalc.meal.type.MealType;
+import ch.glucalc.meal.type.MealTypeTable;
 
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "glucalc.db";
-  private static final int DATABASE_VERSION = 4;
+  private static final int DATABASE_VERSION = 6;
 
   private static GluCalcSQLiteHelper singleInstance;
 
@@ -35,12 +37,18 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     db.execSQL(FoodTable.TABLE_CREATE);
     db.execSQL(CategoryFoodTable.TABLE_CREATE);
+    db.execSQL(MealTypeTable.TABLE_CREATE);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     db.execSQL(FoodTable.TABLE_DROP);
     db.execSQL(CategoryFoodTable.TABLE_DROP);
+
+    if (DATABASE_VERSION > 6) {
+      db.execSQL(MealTypeTable.TABLE_DROP);
+    }
+
     onCreate(db);
   }
 
@@ -48,6 +56,128 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
   public void onConfigure(SQLiteDatabase db) {
     db.setForeignKeyConstraintsEnabled(true);
   }
+
+  /****** MEAL TYPE SECTION ******/
+
+  public void deleteMealType(Long mealTypeId) {
+    getWritableDatabase().delete(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMN_ID + " = ?",
+        new String[] { String.valueOf(mealTypeId) });
+  }
+
+  public void deleteMealTypes() {
+    getWritableDatabase().delete(MealTypeTable.TABLE_NAME, null, null);
+  }
+
+  public List<MealType> loadMealTypes() {
+    final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, null, null,
+        null, null, MealTypeTable.COLUMN_NAME);
+    final List<MealType> mealTypes = new ArrayList<MealType>(cursor.getCount());
+    while (cursor.moveToNext()) {
+      final MealType mealType = new MealType();
+      mealType.setId(cursor.getLong(0));
+      mealType.setName(cursor.getString(1));
+      mealType.setFoodTarget(cursor.getFloat(2));
+      mealType.setGlycemiaTarget(cursor.getFloat(3));
+      mealType.setInsulinSensitivity(cursor.getFloat(4));
+      mealType.setInsulin(cursor.getFloat(5));
+      mealTypes.add(mealType);
+    }
+    return mealTypes;
+  }
+
+  public MealType loadMealType(long mealTypeId) {
+    MealType result = null;
+
+    final String whereClause = MealTypeTable.COLUMN_ID + "=?";
+    final String[] whereArgs = { String.valueOf(mealTypeId) };
+
+    final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, whereClause,
+        whereArgs, null, null, null);
+    if (cursor.moveToNext()) {
+      result = new MealType();
+      result.setId(cursor.getLong(0));
+      result.setName(cursor.getString(1));
+      result.setFoodTarget(cursor.getFloat(2));
+      result.setGlycemiaTarget(cursor.getFloat(3));
+      result.setInsulinSensitivity(cursor.getFloat(4));
+      result.setInsulin(cursor.getFloat(5));
+    }
+    return result;
+  }
+
+  public void storeMealTypes(List<MealType> mealTypes) {
+
+    final SQLiteDatabase db = getWritableDatabase();
+
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      for (final MealType mealType : mealTypes) {
+        values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
+        values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
+        values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
+        values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
+        values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
+        final long id = db.insert(FoodTable.TABLE_NAME, "", values);
+        mealType.setId(id);
+        values.clear();
+      }
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  public long storeMealType(MealType mealType) {
+    long id = -1;
+    final SQLiteDatabase db = getWritableDatabase();
+
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
+      values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
+      values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
+      values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
+      values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
+      id = db.insert(MealTypeTable.TABLE_NAME, "", values);
+      mealType.setId(id);
+      values.clear();
+
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    return id;
+  }
+
+  public void updateMealType(MealType mealType) {
+
+    final SQLiteDatabase db = getWritableDatabase();
+    db.setForeignKeyConstraintsEnabled(true);
+
+    final ContentValues values = new ContentValues();
+    try {
+      db.beginTransaction();
+
+      values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
+      values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
+      values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
+      values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
+      values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
+      db.update(MealTypeTable.TABLE_NAME, values, MealTypeTable.COLUMN_ID + " = ?",
+          new String[] { String.valueOf(mealType.getId()) });
+
+      values.clear();
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  /****** FOOD SECTION ******/
 
   public void store(List<Food> foods) {
 
@@ -195,7 +325,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     return result;
   }
 
-  /* Section : Categories of Food */
+  /****** CATEGORIES OF FOOD SECTION ******/
 
   public void storeCategories(List<CategoryFood> categories) {
 
