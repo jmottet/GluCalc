@@ -30,32 +30,6 @@ public class CategoryFoodAdapter extends ArrayAdapter<CategoryFood> {
     final TextView nameTextView = (TextView) rowView.findViewById(R.id.name);
     nameTextView.setText(categoryFood.getName());
 
-    // final CheckBox checkBox = (CheckBox)
-    // rowView.findViewById(R.id.checkBox1);
-    // checkBox.setChecked(categoryFood.isSelected());
-    // checkBox.setTag(categoryFood);
-
-    // rowView.setOnClickListener(new OnClickListener() {
-
-    // @Override
-    // public void onClick(View v) {
-    // // set a light sky blue
-    // final int rgbLightSkyBlue = Color.rgb(130, 202, 250);
-    // final int rgbWhite = Color.rgb(255, 255, 255);
-    //
-    // if (v.getBackground() instanceof ColorDrawable) {
-    // final ColorDrawable colorDrawable = (ColorDrawable) v.getBackground();
-    // if (colorDrawable.getColor() == rgbLightSkyBlue) {
-    // v.setBackgroundColor(rgbWhite);
-    // } else if (colorDrawable.getColor() == rgbWhite) {
-    // v.setBackgroundColor(rgbLightSkyBlue);
-    // }
-    // } else {
-    // v.setBackgroundColor(rgbLightSkyBlue);
-    // }
-    // }
-    // });
-
     return rowView;
   }
 }
