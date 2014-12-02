@@ -5,9 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,13 +26,34 @@ import ch.glucalc.food.FoodListFragment;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 import ch.glucalc.meal.type.MealTypeListFragment;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends FragmentActivity {
 
-  private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+  /* Main categories of left menu */
+  private static final int FOOD_MENU_IDX = 0;
+  private static final int REPORT_MENU_IDX = 1;
+  private static final int SETTINGS_MENU_IDX = 2;
+  private static final int EXPORT_MENU_IDX = 3;
+  private static final int ABOUT_MENU_IDX = 4;
 
-  private static final int NB_FRAGMENTS = 3;
+  /* Sub categories of Report left menu */
+  private static final int REPORT_MEAL_DIARY_IDX = 0;
+  private static final int REPORT_INSULIN_OVERVIEW_IDX = 1;
+  private static final int REPORT_INSULIN_RATIO_IDX = 2;
 
-  private final Fragment[] fFragments = new Fragment[NB_FRAGMENTS];
+  /* Sub categories of Settings left menu */
+  private static final int SETTINGS_MEALS_AND_INSULIN_IDX = 0;
+  private static final int SETTINGS_FAVOURITE_FOODS_IDX = 1;
+  private static final int SETTINGS_FOOD_CATEGORIES_IDX = 2;
+  private static final int SETTINGS_PASSWORD_LOCK_IDX = 3;
+  private static final int SETTINGS_ALERTS_IDX = 4;
+  private static final int SETTINGS_INITIAL_SETUP_IDX = 5;
+  private static final int SETTINGS_RESET_IDX = 6;
+
+  /* Sub categories of About menu */
+  private static final int ABOUT_TERMS_OF_USE_IDX = 0;
+
+  private static final List<Integer> CATEGORIES_WITH_SUBMENUS = Arrays.asList(REPORT_MENU_IDX, SETTINGS_MENU_IDX,
+      ABOUT_MENU_IDX);
 
   private ActionBarDrawerToggle mDrawerToggle;
   private DrawerLayout mDrawerLayout;
@@ -92,16 +111,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     getActionBar().setDisplayHomeAsUpEnabled(true);
     getActionBar().setHomeButtonEnabled(true);
 
-    // Set up the action bar.
-    final ActionBar actionBar = getActionBar();
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-    actionBar.addTab(actionBar.newTab().setText(R.string.tab_new_meal).setTabListener(this)
-        .setIcon(R.drawable.ic_tab_new_meal_light));
-    actionBar.addTab(actionBar.newTab().setText(R.string.tab_food).setTabListener(this)
-        .setIcon(R.drawable.ic_tab_food_light));
-    actionBar.addTab(actionBar.newTab().setText(R.string.tab_menu).setTabListener(this)
-        .setIcon(R.drawable.ic_tab_settings_light));
+    // hide the application icon in the action bar
+    getActionBar().setDisplayShowHomeEnabled(false);
 
   }
 
@@ -115,7 +126,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         final int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForGroup(groupPosition));
         parent.setItemChecked(index, true);
-        if (groupPosition != 3) {
+        if (!CATEGORIES_WITH_SUBMENUS.contains(groupPosition)) {
           selectItem(groupPosition, -1);
         }
 
@@ -127,8 +138,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
       @Override
       public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-        Log.d("CHECK", "child clicked");
 
         final int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition,
             childPosition));
@@ -142,90 +151,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
   }
 
   @Override
-  public void onRestoreInstanceState(Bundle savedInstanceState) {
-    // Restore the previously serialized current tab position.
-    if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-      getActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-    }
-  }
-
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
-    // Serialize the current tab position.
-    outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar().getSelectedNavigationIndex());
-  }
-
-  @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.main_list, menu);
     return true;
-  }
-
-  @Override
-  public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    // When the given tab is selected, show the tab contents in the
-    // container view.
-
-    final EnumTab enumTab = EnumTab.getInstanceOf(tab.getPosition());
-    switch (enumTab) {
-    case TAB_NEW_MEAL:
-      tab.setIcon(R.drawable.ic_tab_new_meal_light_selected);
-      if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-        mDrawerLayout.closeDrawer(mDrawerList);
-      }
-      getActionBar().setTitle(mDrawerTitle);
-      getFragmentManager().beginTransaction().replace(R.id.container, getFragement(enumTab.getIndex())).commit();
-      break;
-    case TAB_FOOD:
-      tab.setIcon(R.drawable.ic_tab_food_light_selected);
-      if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-        mDrawerLayout.closeDrawer(mDrawerList);
-      }
-      getActionBar().setTitle(mDrawerTitle);
-      getFragmentManager().beginTransaction().replace(R.id.container, getFragement(enumTab.getIndex())).commit();
-      break;
-    default:
-      tab.setIcon(R.drawable.ic_tab_settings_light_selected);
-      if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-        mDrawerLayout.closeDrawer(mDrawerList);
-      } else {
-        mDrawerLayout.openDrawer(mDrawerList);
-      }
-      break;
-    }
-  }
-
-  @Override
-  public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    final EnumTab enumTab = EnumTab.getInstanceOf(tab.getPosition());
-    switch (enumTab) {
-    case TAB_NEW_MEAL:
-      tab.setIcon(R.drawable.ic_tab_new_meal_light);
-      break;
-    case TAB_FOOD:
-      tab.setIcon(R.drawable.ic_tab_food_light);
-      break;
-    default:
-      tab.setIcon(R.drawable.ic_tab_settings_light);
-      break;
-    }
-  }
-
-  @Override
-  public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    final EnumTab enumTab = EnumTab.getInstanceOf(tab.getPosition());
-    switch (enumTab) {
-    case TAB_MENU:
-      if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-        mDrawerLayout.closeDrawer(mDrawerList);
-      } else {
-        mDrawerLayout.openDrawer(mDrawerList);
-      }
-      break;
-    default:
-      break;
-    }
   }
 
   @Override
@@ -264,67 +193,64 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     getActionBar().setTitle(mTitle);
   }
 
-  /**
-   * Retourne un fragment selon sa position. Si celui-ci n'existe pas, il est
-   * créé dynamiquement.
-   * 
-   * @param position
-   * @return un fragment
-   */
-  private Fragment getFragement(int position) {
-    final EnumTab enumTab = EnumTab.getInstanceOf(position);
-    Fragment fragment = fFragments[position];
-    if (fragment == null) {
-
-      switch (enumTab) {
-      case TAB_NEW_MEAL:
-        fragment = new TestFragment();
-        break;
-      case TAB_FOOD:
-        fragment = new FoodListFragment();
-        break;
-      case TAB_MENU:
-        fragment = new TestFragment();
-        break;
-      }
-
-      fFragments[position] = fragment;
-    }
-    return fragment;
-  }
-
   private void selectItem(int groupPosition, int childPosition) {
     Log.i("MainActivity", "selectItem");
 
-    if (groupPosition == 3) {
+    if (groupPosition == FOOD_MENU_IDX) {
+      openFragment(new FoodListFragment());
+    } else if (groupPosition == REPORT_MENU_IDX) {
       switch (childPosition) {
-      case 0:
-        // position 3/0 => Meals & Insulin
-        getFragmentManager().beginTransaction().replace(R.id.container, new MealTypeListFragment()).commit();
+      case REPORT_MEAL_DIARY_IDX:
         break;
-      case 2:
-        // position 3/2 => Food categories
-        getFragmentManager().beginTransaction().replace(R.id.container, new CategoryFoodListFragment()).commit();
-      default:
+      case REPORT_INSULIN_OVERVIEW_IDX:
         break;
-      }
-      setTitle(menuListDataChild.get(menuListDataHeader.get(groupPosition)).get(childPosition));
-    } else {
-      switch (groupPosition) {
-      case 4:
-        // position 4 => Export
-        startExportActivity();
+      case REPORT_INSULIN_RATIO_IDX:
         break;
       default:
         break;
       }
+    } else if (groupPosition == SETTINGS_MENU_IDX) {
+      switch (childPosition) {
+      case SETTINGS_MEALS_AND_INSULIN_IDX:
+        openFragment(new MealTypeListFragment());
+        break;
+      case SETTINGS_FAVOURITE_FOODS_IDX:
+        break;
+      case SETTINGS_FOOD_CATEGORIES_IDX:
+        openFragment(new CategoryFoodListFragment());
+      case SETTINGS_PASSWORD_LOCK_IDX:
+        break;
+      case SETTINGS_ALERTS_IDX:
+        break;
+      case SETTINGS_INITIAL_SETUP_IDX:
+        break;
+      case SETTINGS_RESET_IDX:
+        break;
+      default:
+        break;
+      }
+    } else if (groupPosition == EXPORT_MENU_IDX) {
+      startExportActivity();
       setTitle(menuListDataHeader.get(groupPosition));
+    } else if (groupPosition == ABOUT_MENU_IDX) {
+      switch (childPosition) {
+      case ABOUT_TERMS_OF_USE_IDX:
+        break;
+      default:
+        break;
+      }
     }
 
-    // update selected item and title, then close the drawer
+    String newTitle = null;
+    if (CATEGORIES_WITH_SUBMENUS.contains(groupPosition)) {
+      newTitle = menuListDataChild.get(menuListDataHeader.get(groupPosition)).get(childPosition);
+    } else {
+      newTitle = menuListDataHeader.get(groupPosition);
+    }
+    setTitle(newTitle);
 
+    // update selected item and title, then close the drawer
     mDrawerLayout.closeDrawer(mDrawerList);
-    getActionBar().selectTab(getActionBar().getTabAt(2));
   }
 
   private void startExportActivity() {
@@ -339,14 +265,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     menuListDataHeader = Arrays.asList(getResources().getStringArray(R.array.left_menu_items_array));
     menuListDataChild = new HashMap<String, List<String>>();
 
-    final List<String> settings = Arrays.asList(getResources()
-        .getStringArray(R.array.left_submenu_settings_items_array));
-    menuListDataChild.put(menuListDataHeader.get(0), new ArrayList<String>());
-    menuListDataChild.put(menuListDataHeader.get(1), new ArrayList<String>());
-    menuListDataChild.put(menuListDataHeader.get(2), new ArrayList<String>());
-    menuListDataChild.put(menuListDataHeader.get(3), settings);
-    menuListDataChild.put(menuListDataHeader.get(4), new ArrayList<String>());
-    menuListDataChild.put(menuListDataHeader.get(5), new ArrayList<String>());
-    menuListDataChild.put(menuListDataHeader.get(6), new ArrayList<String>());
+    final List<String> subSettings = Arrays.asList(getResources().getStringArray(
+        R.array.left_submenu_settings_items_array));
+    final List<String> subReport = Arrays
+        .asList(getResources().getStringArray(R.array.left_submenu_report_items_array));
+    final List<String> subAbout = Arrays.asList(getResources().getStringArray(R.array.left_submenu_about_items_array));
+
+    menuListDataChild.put(menuListDataHeader.get(FOOD_MENU_IDX), new ArrayList<String>());
+    menuListDataChild.put(menuListDataHeader.get(REPORT_MENU_IDX), subReport);
+    menuListDataChild.put(menuListDataHeader.get(SETTINGS_MENU_IDX), subSettings);
+    menuListDataChild.put(menuListDataHeader.get(EXPORT_MENU_IDX), new ArrayList<String>());
+    menuListDataChild.put(menuListDataHeader.get(ABOUT_MENU_IDX), subAbout);
+  }
+
+  private void openFragment(Fragment fragment) {
+    getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
   }
 }

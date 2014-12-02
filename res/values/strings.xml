@@ -11,32 +11,37 @@
     <string name="select_title">Select item</string>
     <string name="select_performed_title">Select item done</string>
     
-    <!-- Menu Tabulation -->
-    <string name="tab_new_meal">New Meal</string>
-    <string name="tab_food">Food</string>
-    <string name="tab_menu">Menu</string>
-    
-    <!-- Left Menu -->
+    <!-- Left Menu Main Categories -->
     <string-array name="left_menu_items_array">
-        <item>Meal Diary</item>
-        <item>Insulin Overview</item>
-        <item>Insulin Ratio</item>
+        <item>Food</item>
+        <item>Report</item>
         <item>Settings</item>
         <item>Export</item>
-        <item>Terms of use</item>
         <item>About Glucalc</item>
     </string-array>
     
+    <!-- Left Menu Subcategories -->
+    
+    <string-array name="left_submenu_report_items_array">
+    	<item>Meal Diary</item>
+        <item>Insulin Overview</item>
+        <item>Insulin Ratio</item>
+    </string-array>
+            
     <string-array name="left_submenu_settings_items_array">
         <item>Meals and Insulin</item>
-        <item>Favourite foods</item>
-        <item>Food categories</item>
-        <item>Password lock</item>
+        <item>Favourite Foods</item>
+        <item>Food Categories</item>
+        <item>Password Lock</item>
         <item>Alerts</item>
-        <item>Initial setup</item>
+        <item>Initial Setup</item>
         <item>Reset</item>
     </string-array>
-        
+
+    <string-array name="left_submenu_about_items_array">
+        <item>Terms of use</item>
+    </string-array>
+    
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>    
     
