@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ch.glucalc.TestActivity$PlaceholderFragment" >
+
+    <Button
+        android:id="@+id/generate_foods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate foods" />
+
+    <Button
+        android:id="@+id/delete_foods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/generate_foods"
+        android:layout_below="@+id/generate_foods"
+        android:text="Delete foods" />
+    
+   <Button
+        android:id="@+id/generate_categories_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/delete_foods"
+        android:layout_below="@+id/delete_foods"
+        android:text="Generate food categories" />
+
+    <Button
+        android:id="@+id/delete_categories_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/generate_categories_food"
+        android:layout_below="@+id/generate_categories_food"
+        android:text="Delete food categories" />
+    
+	<Button
+        android:id="@+id/export_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/delete_categories_food"
+        android:layout_below="@+id/delete_categories_food"
+        android:text="Export Food" />   
+
+	<Button
+        android:id="@+id/import_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/export_food"
+        android:layout_below="@+id/export_food"
+        android:text="Import Food" />
+
+</RelativeLayout>
+<!-- From: file:/C:/Users/jmottet/AndroidstudioProjects/GluCalc/app/src/main/res/layout/fragment_test.xml -->

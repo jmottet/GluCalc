@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ch.glucalc"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21" />
+	
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/glucalc_ic_58x58_2"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Glucalc" >
+        
+        <activity
+            android:name="ch.glucalc.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+         <activity android:name="ch.glucalc.ExportActivity"
+            android:label="@string/app_name">
+        </activity>
+        
+        <activity android:name="ch.glucalc.ImportActivity"
+            android:label="@string/app_name">
+            
+			<!-- This intent-filter below is for importing file from explorer or drive -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<data android:mimeType="application/octet-stream" />
+				<data android:scheme="file" />
+				<data android:host="*" />
+				<data android:pathPattern=".*\\.glucalc" />
+				<data android:pathPattern=".*..*..*..*..*..*.glucalc" />
+				<data android:pathPattern=".*..*..*..*..*.glucalc" />
+				<data android:pathPattern=".*..*..*..*.glucalc" />
+				<data android:pathPattern=".*..*..*.glucalc" />
+				<data android:pathPattern=".*..*.glucalc" />
+				<data android:pathPattern=".*.glucalc" /> 
+			</intent-filter>
+			
+			<!-- This intent-filter below is for importing file from email or gmail -->
+			<intent-filter>
+				  <action android:name="android.intent.action.VIEW" />
+				  <category android:name="android.intent.category.DEFAULT" />
+				  				  <data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*\\.glucalc"
+				  />
+				  <data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*\\.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*..*.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern="..*..*..*..*.glucalc"
+				  />
+<data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*..*..*..*.glucalc"
+				  />		
+				  <data
+				    android:mimeType="application/*"
+				    android:host="*" 
+				    android:pathPattern=".*..*..*..*..*..*.glucalc"
+				  />			  
+			</intent-filter>
+			              
+        </activity>        
+        
+        <activity
+            android:name="ch.glucalc.food.category.EditCategoryFoodActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="ch.glucalc.food.EditFoodActivity"
+            android:label="@string/app_name" >
+        </activity>    
+        
+        <activity
+            android:name="ch.glucalc.meal.type.EditMealTypeActivity"
+            android:label="@string/app_name" >
+        </activity>        
+    </application>
+
+</manifest>
