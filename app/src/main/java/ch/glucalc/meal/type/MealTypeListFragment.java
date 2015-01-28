@@ -11,10 +11,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
-
+import android.support.v4.app.Fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ListFragment;
+import android.support.v4.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -40,6 +40,10 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
 
   private final DeleteBean deleteBean = new DeleteBean();
 
+
+  public MealTypeListFragment () {
+      log("MealTypeListFragment.new");
+  }
   @Override
   public void onCreate(Bundle savedInstanceState) {
     log("MealTypeListFragment.onCreate");
@@ -109,7 +113,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
           currentMealType.getInsulinSensitivity());
       editMealTypeIntent.putExtra(MealTypeConstants.MEAL_TYPE_INSULIN_PARAMETER, currentMealType.getInsulin());
 
-      // Un résultat est attendu pour savoir si la catégorie a été modifiée
+      // Un resultat est attendu pour savoir si la categorie a ete modifiee
       startActivityForResult(editMealTypeIntent, REQUEST_EDIT_CODE);
     } else {
       if (!currentMealType.isSelected()) {
@@ -264,7 +268,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
 
   private void addAction() {
     final Intent createMealTypeIntent = new Intent(getActivity().getApplicationContext(), EditMealTypeActivity.class);
-    // Un résultat est attendu pour savoir si la catégorie a été crée
+    // Un resultat est attendu pour savoir si la categorie a ete cree
     startActivityForResult(createMealTypeIntent, REQUEST_CREATE_CODE);
   }
 

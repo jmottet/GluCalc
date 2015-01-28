@@ -19,64 +19,26 @@
 
 <resources>
 
-    <style name="Theme.Glucalc" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_glucalc</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.Glucalc</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Glucalc</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Glucalc</item>
-        <item name="android:actionDropDownStyle">@style/DropDownNav.Glucalc</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.Glucalc</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_glucalc</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_glucalc</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Glucalc</item>
-        
-                <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.Glucalc.Widget</item>
-
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppTheme.Base">
     </style>
 
-    <style name="ActionBar.Solid.Glucalc" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ab_solid_glucalc</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_glucalc</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_glucalc</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Glucalc</item>
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorAccent">@color/accentColor</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <!-- Customize your theme here. -->
     </style>
 
-    <style name="ActionBar.Transparent.Glucalc" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_glucalc</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Glucalc</item>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
     </style>
 
-    <style name="PopupMenu.Glucalc" parent="@android:style/Widget.Holo.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_glucalc</item>	
-    </style>
-
-    <style name="DropDownListView.Glucalc" parent="@android:style/Widget.Holo.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_glucalc</item>
-    </style>
-
-    <style name="ActionBarTabStyle.Glucalc" parent="@android:style/Widget.Holo.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_glucalc</item>
-    </style>
-
-    <style name="DropDownNav.Glucalc" parent="@android:style/Widget.Holo.Spinner">
-        <item name="android:background">@drawable/spinner_background_ab_glucalc</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_glucalc</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_glucalc</item>
-    </style>
-    
-    <style name="ProgressBar.Glucalc" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_glucalc</item>
-    </style>
-    
-    <style name="ActionButton.CloseMode.Glucalc" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
-        <item name="android:background">@drawable/btn_cab_done_glucalc</item>
-    </style>
-
-    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.Glucalc.Widget" parent="@android:style/Theme.Holo">
-        <item name="android:popupMenuStyle">@style/PopupMenu.Glucalc</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Glucalc</item>
+    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="android:background">@color/primaryColor</item>
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 
 </resources>

@@ -13,8 +13,9 @@
     
     <!-- Left Menu Main Categories -->
     <string-array name="left_menu_items_array">
+        <item>New Meal</item>
         <item>Food</item>
-        <item>Report</item>
+        <item>Check</item>
         <item>Settings</item>
         <item>Export</item>
         <item>About Glucalc</item>
@@ -43,7 +44,13 @@
     </string-array>
     
     <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>    
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- Edit new meal -->
+    <string name="enter_new_meal_type_hint">Enter a meal type</string>
+    <string name="edit_new_meal_type">Meal type</string>
+    <string name="enter_new_meal_carbohydrate_hint">Enter a carbohydrate</string>
+    <string name="edit_new_meal_carbohydrate">Carbohydrate</string>
     
     <!-- Edit category food -->
     <string name="edit_category_food">Category :</string>
@@ -76,7 +83,7 @@
 	<string name="edit_meal_type_insulin_sensitivity">Sensitivity factor</string>
 	<string name="enter_meal_type_insulin_hint">Enter an insulin</string>
     <string name="edit_meal_type_insulin">Insulin</string>
-	
+
     <!-- Button Labels -->
     <string name="save_button_string">Save</string>
     

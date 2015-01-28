@@ -43,7 +43,7 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
     final String childText = (String) getChild(groupPosition, childPosition);
 
     if (convertView == null) {
-      convertView = inflater.inflate(R.layout.drawer_sublist_item, null);
+      convertView = inflater.inflate(R.layout.navigation_drawer_sublist_item, null);
     }
 
     final TextView txtListChild = (TextView) convertView.findViewById(R.id.left_submenu_textview);
@@ -77,7 +77,7 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
     final String headerTitle = (String) getGroup(groupPosition);
 
     if (convertView == null) {
-      convertView = inflater.inflate(R.layout.drawer_list_item, null);
+      convertView = inflater.inflate(R.layout.navigation_drawer_list_item, null);
     }
 
     final TextView lblListHeader = (TextView) convertView.findViewById(R.id.left_menu_textview);
