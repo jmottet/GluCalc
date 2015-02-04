@@ -2,6 +2,8 @@ package ch.glucalc.food.category;
 
 public class CategoryFoodConstants {
 
+  public static String REQUEST_CODE = "RequestCode";
+
   public static int REQUEST_EDIT_CODE = 1;
 
   public static int REQUEST_CREATE_CODE = 2;

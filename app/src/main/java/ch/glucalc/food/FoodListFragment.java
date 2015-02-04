@@ -1,25 +1,11 @@
 package ch.glucalc.food;
 
-import static ch.glucalc.food.FoodConstants.REQUEST_EDIT_CODE;
-import static ch.glucalc.food.FoodConstants.RESULT_CODE_EDITED;
-import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_CREATE_CODE;
-import static ch.glucalc.food.category.CategoryFoodConstants.RESULT_CODE_CREATED;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.regex.Pattern;
-
-import android.support.v4.app.ListFragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -38,6 +24,14 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.regex.Pattern;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
@@ -77,6 +71,32 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
                 displayListItem();
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
+        }
+    }
+
+
+    private OnFoodEdition mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnFoodEdition {
+
+        public void openEditFoodFragment();
+
+        public void openEditFoodFragment(Food food);
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnFoodEdition) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFoodEdition");
         }
     }
 
@@ -129,9 +149,7 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
                     dialog.show(getFragmentManager(), "missingCategoriesDialog");
                     return false;
                 } else {
-                    final Intent createFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
-                    // Un r+�sultat est attendu pour savoir si la cat�gorie a �t� cr�e
-                    startActivityForResult(createFoodIntent, FoodConstants.REQUEST_CREATE_CODE);
+                    mCallback.openEditFoodFragment();
                     return true;
                 }
             case R.id.delete:
@@ -163,16 +181,15 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
 
             if (!deleteBean.isModeMultiSelection()) {
                 // Start the Edition activity
-                final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodActivity.class);
-                editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
-                editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
-                editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
-                editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
-                editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
-                editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
+//                final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodFragment.class);
+//                editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
+//                editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
+//                editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
+//                editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
+//                editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
+//                editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
 
-                // Un r�sultat est attendu pour savoir si l'aliment a �t� modifi�e
-                startActivityForResult(editFoodIntent, FoodConstants.REQUEST_EDIT_CODE);
+                mCallback.openEditFoodFragment(currentFood);
             } else {
                 if (!currentFood.isSelected()) {
                     v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
@@ -193,27 +210,21 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == REQUEST_EDIT_CODE) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_CODE_EDITED) {
-                initList(false, null);
-            }
-        } else if (requestCode == REQUEST_CREATE_CODE) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_CODE_CREATED) {
-                initList(false, null);
-            }
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        log("FoodListFragment.onAttach");
-        super.onAttach(activity);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        // Check which request we're responding to
+//        if (requestCode == REQUEST_EDIT_CODE) {
+//            // Make sure the request was successful
+//            if (resultCode == RESULT_CODE_EDITED) {
+//                initList(false, null);
+//            }
+//        } else if (requestCode == REQUEST_CREATE_CODE) {
+//            // Make sure the request was successful
+//            if (resultCode == RESULT_CODE_CREATED) {
+//                initList(false, null);
+//            }
+//        }
+//    }
 
     @Override
     public void onDetach() {

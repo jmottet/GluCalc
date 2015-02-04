@@ -1,6 +1,9 @@
 package ch.glucalc;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,240 +11,186 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity {
+import ch.glucalc.food.EditFoodFragment;
+import ch.glucalc.food.Food;
+import ch.glucalc.food.FoodConstants;
+import ch.glucalc.food.FoodListFragment;
+import ch.glucalc.food.category.CategoryFood;
+import ch.glucalc.food.category.CategoryFoodConstants;
+import ch.glucalc.food.category.CategoryFoodListFragment;
+import ch.glucalc.food.category.EditCategoryFoodFragment;
+import ch.glucalc.meal.NewMealFragment;
+import ch.glucalc.meal.type.EditMealTypeFragment;
+import ch.glucalc.meal.type.MealType;
+import ch.glucalc.meal.type.MealTypeConstants;
+import ch.glucalc.meal.type.MealTypeListFragment;
 
-  /* Main categories of left menu */
-//  private static final int NEW_MEAL_MENU_IDX = 0;
-//  private static final int FOOD_MENU_IDX = 1;
-//  private static final int CHECK_MENU_IDX = 2;
-//  private static final int SETTINGS_MENU_IDX = 3;
-//  private static final int EXPORT_MENU_IDX = 4;
-//  private static final int ABOUT_MENU_IDX = 5;
+import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
+import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 
-  /* Sub categories of Check left menu */
-//  private static final int CHECK_MEAL_DIARY_IDX = 0;
-//  private static final int CHECK_INSULIN_OVERVIEW_IDX = 1;
-//  private static final int CHECK_INSULIN_RATIO_IDX = 2;
+public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.OnNavigationItemSelected, CategoryFoodListFragment.OnCategoryFoodEdition,
+        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition {
 
-  /* Sub categories of Settings left menu */
-//  private static final int SETTINGS_MEALS_AND_INSULIN_IDX = 0;
-//  private static final int SETTINGS_FAVOURITE_FOODS_IDX = 1;
-//  private static final int SETTINGS_FOOD_CATEGORIES_IDX = 2;
-//  private static final int SETTINGS_PASSWORD_LOCK_IDX = 3;
-//  private static final int SETTINGS_ALERTS_IDX = 4;
-//  private static final int SETTINGS_INITIAL_SETUP_IDX = 5;
-//  private static final int SETTINGS_RESET_IDX = 6;
+    private Toolbar toolbar;
 
-  /* Sub categories of About menu */
-//  private static final int ABOUT_TERMS_OF_USE_IDX = 0;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i("MainActivity", "onCreate");
 
-//  private static final List<Integer> CATEGORIES_WITH_SUBMENUS = Arrays.asList(CHECK_MENU_IDX, SETTINGS_MENU_IDX,
-//      ABOUT_MENU_IDX);
-
-//  private ActionBarDrawerToggle mDrawerToggle;
-//  private DrawerLayout mDrawerLayout;
-//  private CharSequence mDrawerTitle;
-//  private CharSequence mTitle;
-
-  private Toolbar toolbar;
-
-//  ExpandableListAdapter listAdapter;
-//  ExpandableListView mDrawerList;
-//  HashMap<String, List<String>> menuListDataChild;
-//  List<String> menuListDataHeader;
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    Log.i("MainActivity", "onCreate");
-
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
     /* Set up the Toolbar which was previously an actionBar */
-    toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
-    setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     /* Set up the navigation bar which is the left menu */
-    NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-    drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar, this);
+        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+    }
 
-//    mTitle = mDrawerTitle = getTitle();
-//
-//    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//    mDrawerList = (ExpandableListView) findViewById(R.id.nav_left_drawer);
-//    prepareListData();
-//
-//    listAdapter = new LeftMenuExpandableListAdapter(this, menuListDataHeader, menuListDataChild);
-//    mDrawerList.setAdapter(listAdapter);
-//    mDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_list, menu);
+        return true;
+    }
 
-    // set a custom shadow that overlays the main content when the drawer opens
-//    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("MainActivity", "onOptionsItemSelected");
+        return super.onOptionsItemSelected(item);
+    }
 
-    // ActionBarDrawerToggle ties together the the proper interactions
-    // between the sliding drawer and the action bar app icon
-//
-//    mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-//                                                   mDrawerLayout, /* DrawerLayout object */
-//                                                   R.string.drawer_open, /* "open drawer" description for accessibility */
-//                                                   R.string.drawer_close /* "close drawer" description for accessibility */
-//    ) {
-//      @Override
-//      public void onDrawerClosed(View view) {
-//        getActionBar().setTitle(mTitle);
-//        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-//      }
-//
-//      @Override
-//      public void onDrawerOpened(View drawerView) {
-//        getActionBar().setTitle(mDrawerTitle);
-//        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-//      }
-//    };
-//    mDrawerLayout.setDrawerListener(mDrawerToggle);
-//
-//    // enable ActionBar app icon to behave as action to toggle nav drawer
-//    getActionBar().setDisplayHomeAsUpEnabled(true);
-//    getActionBar().setHomeButtonEnabled(true);
-//
-//    // hide the application icon in the action bar
-//    getActionBar().setDisplayShowHomeEnabled(false);
+    @Override
+    public void setToolbarTitle(CharSequence title) {
+        getSupportActionBar().setTitle(title);
+    }
 
-  }
+    @Override
+    public CharSequence getToolbarTitle() {
+        return getSupportActionBar().getTitle();
+    }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.main_list, menu);
-    return true;
-  }
+    @Override
+    public void startExportActivity() {
+        final Intent startIntent = new Intent(this, ExportActivity.class);
+        startActivity(startIntent);
+    }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    Log.i("MainActivity", "onOptionsItemSelected");
+    @Override
+    public void openNewMealFragment() {
+        openFragment(new NewMealFragment(), false);
+    }
 
-    // The action bar home/up action should open or close the drawer.
-    // ActionBarDrawerToggle will take care of this.
-//    if (mDrawerToggle.onOptionsItemSelected(item)) {
-//      return true;
-//    }
-    return super.onOptionsItemSelected(item);
-  }
+    @Override
+    public void openFoodListFragment() {
+        openFragment(new FoodListFragment(), false);
+    }
 
-//  @Override
-//  protected void onPostCreate(Bundle savedInstanceState) {
-//    Log.i("MainActivity", "onPostCreate");
-//    super.onPostCreate(savedInstanceState);
-//    // Sync the toggle state after onRestoreInstanceState has occurred.
-//    mDrawerToggle.syncState();
-//  }
+    @Override
+    public void openMealTypeListFragment() {
+        openFragment(new MealTypeListFragment(), false);
+    }
 
-//  @Override
-//  public void onConfigurationChanged(Configuration newConfig) {
-//    Log.i("MainActivity", "onConfigurationChanged");
-//    super.onConfigurationChanged(newConfig);
-//    // Pass any configuration change to the drawer toggls
-//    mDrawerToggle.onConfigurationChanged(newConfig);
-//  }
+    @Override
+    public void openCategoryFoodListFragment() {
+        openFragment(new CategoryFoodListFragment(), false);
+    }
 
-//  @Override
-//  public void setTitle(CharSequence title) {
-//    Log.i("MainActivity", "setTitle");
-//
-//    mTitle = title;
-//    getActionBar().setTitle(mTitle);
-//  }
+    @Override
+    public void openEditCategoryFoodFragment(CategoryFood categoryFood) {
+        Bundle arguments = new Bundle();
 
-//  private void selectItem(int groupPosition, int childPosition) {
-//    Log.i("MainActivity", "selectItem");
-//
-//    if (groupPosition == NEW_MEAL_MENU_IDX) {
-//        openFragment(new NewMealFragment());
-//    } else if (groupPosition == FOOD_MENU_IDX) {
-//      openFragment(new FoodListFragment());
-//    } else if (groupPosition == CHECK_MENU_IDX) {
-//      switch (childPosition) {
-//      case CHECK_MEAL_DIARY_IDX:
-//        break;
-//      case CHECK_INSULIN_OVERVIEW_IDX:
-//        break;
-//      case CHECK_INSULIN_RATIO_IDX:
-//        break;
-//      default:
-//        break;
-//      }
-//    } else if (groupPosition == SETTINGS_MENU_IDX) {
-//      switch (childPosition) {
-//      case SETTINGS_MEALS_AND_INSULIN_IDX:
-//        openFragment(new MealTypeListFragment());
-//        break;
-//      case SETTINGS_FAVOURITE_FOODS_IDX:
-//        break;
-//      case SETTINGS_FOOD_CATEGORIES_IDX:
-//        openFragment(new CategoryFoodListFragment());
-//      case SETTINGS_PASSWORD_LOCK_IDX:
-//        break;
-//      case SETTINGS_ALERTS_IDX:
-//        break;
-//      case SETTINGS_INITIAL_SETUP_IDX:
-//        break;
-//      case SETTINGS_RESET_IDX:
-//        break;
-//      default:
-//        break;
-//      }
-//    } else if (groupPosition == EXPORT_MENU_IDX) {
-//      startExportActivity();
-//      setTitle(menuListDataHeader.get(groupPosition));
-//    } else if (groupPosition == ABOUT_MENU_IDX) {
-//      switch (childPosition) {
-//      case ABOUT_TERMS_OF_USE_IDX:
-//        break;
-//      default:
-//        break;
-//      }
-//    }
-//
-//    String newTitle = null;
-//    if (CATEGORIES_WITH_SUBMENUS.contains(groupPosition)) {
-//      newTitle = menuListDataChild.get(menuListDataHeader.get(groupPosition)).get(childPosition);
-//    } else {
-//      newTitle = menuListDataHeader.get(groupPosition);
-//    }
-//    setTitle(newTitle);
-//
-//    // update selected item and title, then close the drawer
-//    mDrawerLayout.closeDrawer(mDrawerList);
-//  }
-//
-//  private void startExportActivity() {
-//    Log.i("MainActivity", "startExportActivity");
-//    final Intent startIntent = new Intent(this, ExportActivity.class);
-//    startActivity(startIntent);
-//  }
-//
-//  private void prepareListData() {
-//    Log.i("MainActivity", "prepareListData");
-//
-//    menuListDataHeader = Arrays.asList(getResources().getStringArray(R.array.left_menu_items_array));
-//    menuListDataChild = new HashMap<String, List<String>>();
-//
-//    final List<String> subSettings = Arrays.asList(getResources().getStringArray(
-//        R.array.left_submenu_settings_items_array));
-//    final List<String> subReport = Arrays
-//        .asList(getResources().getStringArray(R.array.left_submenu_report_items_array));
-//    final List<String> subAbout = Arrays.asList(getResources().getStringArray(R.array.left_submenu_about_items_array));
-//
-//    menuListDataChild.put(menuListDataHeader.get(NEW_MEAL_MENU_IDX), new ArrayList<String>());
-//    menuListDataChild.put(menuListDataHeader.get(FOOD_MENU_IDX), new ArrayList<String>());
-//    menuListDataChild.put(menuListDataHeader.get(CHECK_MENU_IDX), subReport);
-//    menuListDataChild.put(menuListDataHeader.get(SETTINGS_MENU_IDX), subSettings);
-//    menuListDataChild.put(menuListDataHeader.get(EXPORT_MENU_IDX), new ArrayList<String>());
-//    menuListDataChild.put(menuListDataHeader.get(ABOUT_MENU_IDX), subAbout);
-//  }
-//
-//  private void openFragment(Fragment fragment) {
-//    getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-//  }
+        arguments.putLong(CategoryFoodConstants.REQUEST_CODE, REQUEST_EDIT_CODE);
+        arguments.putLong(CategoryFoodConstants.CATEGORY_ID_PARAMETER, categoryFood.getId());
+        arguments.putString(CategoryFoodConstants.CATEGORY_NAME_PARAMETER, categoryFood.getName());
+
+        EditCategoryFoodFragment editCategoryFoodFragment = new EditCategoryFoodFragment();
+        editCategoryFoodFragment.setArguments(arguments);
+
+        openFragment(editCategoryFoodFragment, true);
+    }
+
+    @Override
+    public void openEditCategoryFoodFragment() {
+        Bundle arguments = new Bundle();
+        arguments.putLong(CategoryFoodConstants.CATEGORY_ID_PARAMETER, FAKE_DEFAULT_ID);
+
+        EditCategoryFoodFragment editCategoryFoodFragment = new EditCategoryFoodFragment();
+        editCategoryFoodFragment.setArguments(arguments);
+        openFragment(editCategoryFoodFragment, true);
+    }
+
+    @Override
+    public void openEditFoodFragment(Food food) {
+        Bundle arguments = new Bundle();
+
+        arguments.putLong(FoodConstants.FOOD_ID_PARAMETER, food.getId());
+        arguments.putString(FoodConstants.FOOD_NAME_PARAMETER, food.getName());
+        arguments.putFloat(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, food.getCarbonhydrate());
+        arguments.putFloat(FoodConstants.FOOD_QUANTITY_PARAMETER, food.getQuantity());
+        arguments.putString(FoodConstants.FOOD_UNIT_PARAMETER, food.getUnit());
+        arguments.putLong(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, food.getCategoryId());
+
+        EditFoodFragment editFoodFragment = new EditFoodFragment();
+        editFoodFragment.setArguments(arguments);
+
+        openFragment(editFoodFragment, true);
+    }
+
+    @Override
+    public void openEditFoodFragment() {
+        Bundle arguments = new Bundle();
+        arguments.putLong(FoodConstants.FOOD_ID_PARAMETER, FAKE_DEFAULT_ID);
+
+        EditFoodFragment editFoodFragment = new EditFoodFragment();
+        editFoodFragment.setArguments(arguments);
+        openFragment(editFoodFragment, true);
+    }
+
+    @Override
+    public void openEditMealTypeFragment(MealType mealType) {
+        Bundle arguments = new Bundle();
+
+        arguments.putLong(MealTypeConstants.MEAL_TYPE_ID_PARAMETER, mealType.getId());
+        arguments.putString(MealTypeConstants.MEAL_TYPE_NAME_PARAMETER, mealType.getName());
+        arguments.putFloat(MealTypeConstants.MEAL_TYPE_FOOD_TARGET_PARAMETER, mealType.getFoodTarget());
+        arguments.putFloat(MealTypeConstants.MEAL_TYPE_GLYCEMIA_TARGET_PARAMETER,
+                mealType.getGlycemiaTarget());
+        arguments.putFloat(MealTypeConstants.MEAL_TYPE_INSULIN_SENSITIVITY_PARAMETER,
+                mealType.getInsulinSensitivity());
+        arguments.putFloat(MealTypeConstants.MEAL_TYPE_INSULIN_PARAMETER, mealType.getInsulin());
+
+        EditMealTypeFragment editMealTypeFragment = new EditMealTypeFragment();
+        editMealTypeFragment.setArguments(arguments);
+        openFragment(editMealTypeFragment, true);
+    }
+
+    @Override
+    public void openEditMealTypeFragment() {
+        Bundle arguments = new Bundle();
+        arguments.putLong(MealTypeConstants.MEAL_TYPE_ID_PARAMETER, FAKE_DEFAULT_ID);
+
+        EditMealTypeFragment editMealTypeFragment = new EditMealTypeFragment();
+        editMealTypeFragment.setArguments(arguments);
+        openFragment(editMealTypeFragment, true);
+    }
+
+    private void openFragment(Fragment fragment, boolean backAvailable) {
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.container, fragment);
+        if (backAvailable) {
+            transaction.addToBackStack(null);
+        }
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
 }

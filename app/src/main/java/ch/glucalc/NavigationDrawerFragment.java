@@ -1,14 +1,13 @@
 package ch.glucalc;
 
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,11 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import ch.glucalc.food.FoodListFragment;
-import ch.glucalc.food.category.CategoryFoodListFragment;
-import ch.glucalc.meal.NewMealFragment;
-import ch.glucalc.meal.type.MealTypeListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,10 +74,55 @@ public class NavigationDrawerFragment extends Fragment {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private ActionBarActivity mActionBarActivity;
+    private OnNavigationItemSelected mCallback;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
+    }
+
+    // Container Activity must implement this interface
+    public interface OnNavigationItemSelected {
+
+        public void setToolbarTitle(CharSequence title);
+
+        public CharSequence getToolbarTitle();
+
+        public void startExportActivity();
+
+        public void openNewMealFragment();
+
+        public void openFoodListFragment();
+
+        public void openMealTypeListFragment();
+
+        public void openCategoryFoodListFragment();
+    }
+
+    private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(preferenceName, preferenceValue);
+        editor.apply();
+    }
+
+
+    private static String readFromPreferences(Context context, String preferenceName, String defaultValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(preferenceName, defaultValue);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnNavigationItemSelected) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnNavigationItemSelected");
+        }
     }
 
     @Override
@@ -102,11 +141,10 @@ public class NavigationDrawerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar, ActionBarActivity actionBarActivity) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
-        mActionBarActivity = actionBarActivity;
-        mTitle = mDrawerTitle = mActionBarActivity.getTitle();
+        mTitle = mDrawerTitle = mCallback.getToolbarTitle();
         mDrawerList = (ExpandableListView) getActivity().findViewById(R.id.nav_left_drawer);
         prepareListData();
 
@@ -152,7 +190,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                mActionBarActivity.getSupportActionBar().setTitle(mDrawerTitle);
+                mCallback.setToolbarTitle(mDrawerTitle);
                 if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
                     saveToPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, String.valueOf(mUserLearnedDrawer));
@@ -163,7 +201,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                mActionBarActivity.getSupportActionBar().setTitle(mTitle);
+                mCallback.setToolbarTitle(mTitle);
                 getActivity().invalidateOptionsMenu();
             }
 
@@ -186,27 +224,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        openFragment(new NewMealFragment());
-    }
-
-    public void setTitle(CharSequence title) {
-        Log.i("NavigationDrawerFragment", "setTitle");
-
-        mTitle = title;
-        mActionBarActivity.getSupportActionBar().setTitle(mTitle);
-    }
-
-    public static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(preferenceName, preferenceValue);
-        editor.apply();
-    }
-
-
-    public static String readFromPreferences(Context context, String preferenceName, String defaultValue) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(preferenceName, defaultValue);
+        mCallback.openNewMealFragment();
     }
 
     private void prepareListData() {
@@ -228,16 +246,12 @@ public class NavigationDrawerFragment extends Fragment {
         menuListDataChild.put(menuListDataHeader.get(ABOUT_MENU_IDX), subAbout);
     }
 
-    private void openFragment(Fragment fragment) {
-        getFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-    }
-
     private void selectItem(int groupPosition, int childPosition) {
 
         if (groupPosition == NEW_MEAL_MENU_IDX) {
-            openFragment(new NewMealFragment());
+            mCallback.openNewMealFragment();
         } else if (groupPosition == FOOD_MENU_IDX) {
-            openFragment(new FoodListFragment());
+            mCallback.openFoodListFragment();
         } else if (groupPosition == CHECK_MENU_IDX) {
             switch (childPosition) {
                 case CHECK_MEAL_DIARY_IDX:
@@ -252,12 +266,12 @@ public class NavigationDrawerFragment extends Fragment {
         } else if (groupPosition == SETTINGS_MENU_IDX) {
             switch (childPosition) {
                 case SETTINGS_MEALS_AND_INSULIN_IDX:
-                    openFragment(new MealTypeListFragment());
+                    mCallback.openMealTypeListFragment();
                     break;
                 case SETTINGS_FAVOURITE_FOODS_IDX:
                     break;
                 case SETTINGS_FOOD_CATEGORIES_IDX:
-                    openFragment(new CategoryFoodListFragment());
+                    mCallback.openCategoryFoodListFragment();
                 case SETTINGS_PASSWORD_LOCK_IDX:
                     break;
                 case SETTINGS_ALERTS_IDX:
@@ -270,7 +284,7 @@ public class NavigationDrawerFragment extends Fragment {
                     break;
             }
         } else if (groupPosition == EXPORT_MENU_IDX) {
-            startExportActivity();
+            mCallback.startExportActivity();
             // setTitle(menuListDataHeader.get(groupPosition));
         } else if (groupPosition == ABOUT_MENU_IDX) {
             switch (childPosition) {
@@ -293,12 +307,10 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.closeDrawer(containerView);
     }
 
-    private void startExportActivity() {
-        final Intent startIntent = new Intent(getActivity(), ExportActivity.class);
-        startActivity(startIntent);
+    private void setTitle(CharSequence title) {
+        Log.i("NavigationDrawerFragment", "setTitle");
+
+        mTitle = title;
+        mCallback.setToolbarTitle(mTitle);
     }
-
-
 }
-
-
