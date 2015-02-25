@@ -70,7 +70,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ExpandableListAdapter listAdapter;
     private ExpandableListView mDrawerList;
     private HashMap<String, List<String>> menuListDataChild;
-    private List<String> menuListDataHeader;
+    private List<MenuGroupItem> menuListDataHeader;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -228,8 +228,16 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void prepareListData() {
+        List<String> titles = Arrays.asList(getResources().getStringArray(R.array.left_menu_items_array));
+        Integer[] imageResources = {R.drawable.ic_menu_new_meal, R.drawable.ic_menu_food, R.drawable.ic_menu_check, R.drawable.ic_menu_settings, R.drawable.ic_menu_export, R.drawable.ic_menu_about};
+        menuListDataHeader = new ArrayList<>(titles.size());
+        for(int i=0; i < titles.size(); i++) {
+            MenuGroupItem menuGroupItem = new MenuGroupItem();
+            menuGroupItem.setTitle(titles.get(i));
+            menuGroupItem.setImageResource(imageResources[i]);
+            menuListDataHeader.add(menuGroupItem);
+        }
 
-        menuListDataHeader = Arrays.asList(getResources().getStringArray(R.array.left_menu_items_array));
         menuListDataChild = new HashMap<String, List<String>>();
 
         final List<String> subSettings = Arrays.asList(getResources().getStringArray(
@@ -238,12 +246,12 @@ public class NavigationDrawerFragment extends Fragment {
                 .asList(getResources().getStringArray(R.array.left_submenu_report_items_array));
         final List<String> subAbout = Arrays.asList(getResources().getStringArray(R.array.left_submenu_about_items_array));
 
-        menuListDataChild.put(menuListDataHeader.get(NEW_MEAL_MENU_IDX), new ArrayList<String>());
-        menuListDataChild.put(menuListDataHeader.get(FOOD_MENU_IDX), new ArrayList<String>());
-        menuListDataChild.put(menuListDataHeader.get(CHECK_MENU_IDX), subReport);
-        menuListDataChild.put(menuListDataHeader.get(SETTINGS_MENU_IDX), subSettings);
-        menuListDataChild.put(menuListDataHeader.get(EXPORT_MENU_IDX), new ArrayList<String>());
-        menuListDataChild.put(menuListDataHeader.get(ABOUT_MENU_IDX), subAbout);
+        menuListDataChild.put(titles.get(NEW_MEAL_MENU_IDX), new ArrayList<String>());
+        menuListDataChild.put(titles.get(FOOD_MENU_IDX), new ArrayList<String>());
+        menuListDataChild.put(titles.get(CHECK_MENU_IDX), subReport);
+        menuListDataChild.put(titles.get(SETTINGS_MENU_IDX), subSettings);
+        menuListDataChild.put(titles.get(EXPORT_MENU_IDX), new ArrayList<String>());
+        menuListDataChild.put(titles.get(ABOUT_MENU_IDX), subAbout);
     }
 
     private void selectItem(int groupPosition, int childPosition) {
@@ -299,7 +307,7 @@ public class NavigationDrawerFragment extends Fragment {
         if (CATEGORIES_WITH_SUBMENUS.contains(groupPosition)) {
             newTitle = menuListDataChild.get(menuListDataHeader.get(groupPosition)).get(childPosition);
         } else {
-            newTitle = menuListDataHeader.get(groupPosition);
+            newTitle = menuListDataHeader.get(groupPosition).getTitle();
         }
         setTitle(newTitle);
 

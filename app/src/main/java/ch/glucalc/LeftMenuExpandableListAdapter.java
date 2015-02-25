@@ -1,5 +1,6 @@
 package ch.glucalc;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,16 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
   private final Context mContext;
-  private final List<String> parentRecord;
+  private final List<MenuGroupItem> parentRecord;
   private final HashMap<String, List<String>> childRecord;
   private final LayoutInflater inflater;
 
-  public LeftMenuExpandableListAdapter(Context context, List<String> listDataHeader,
+  public LeftMenuExpandableListAdapter(Context context, List<MenuGroupItem> listDataHeader,
       HashMap<String, List<String>> listChildData) {
     this.mContext = context;
     this.parentRecord = listDataHeader;
@@ -28,7 +30,7 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public Object getChild(int groupPosition, int childPosititon) {
-    return this.childRecord.get(this.parentRecord.get(groupPosition)).get(childPosititon);
+    return this.childRecord.get(this.parentRecord.get(groupPosition).getTitle()).get(childPosititon);
   }
 
   @Override
@@ -54,7 +56,7 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public int getChildrenCount(int groupPosition) {
-    return this.childRecord.get(this.parentRecord.get(groupPosition)).size();
+    return this.childRecord.get(this.parentRecord.get(groupPosition).getTitle()).size();
   }
 
   @Override
@@ -74,7 +76,7 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-    final String headerTitle = (String) getGroup(groupPosition);
+    MenuGroupItem menuGroupItem = (MenuGroupItem) getGroup(groupPosition);
 
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.navigation_drawer_list_item, null);
@@ -82,8 +84,12 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
     final TextView lblListHeader = (TextView) convertView.findViewById(R.id.left_menu_textview);
     lblListHeader.setTypeface(null, Typeface.BOLD);
-    lblListHeader.setText(headerTitle);
+    lblListHeader.setText(menuGroupItem.getTitle());
 
+      if (menuGroupItem.getImageResource() != null) {
+          final ImageView imageView = (ImageView) convertView.findViewById(R.id.left_menu_imageview);
+          imageView.setImageResource(menuGroupItem.getImageResource());
+      }
     return convertView;
   }
 

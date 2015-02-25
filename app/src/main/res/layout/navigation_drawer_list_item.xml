@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/navigation_drawer_list_item_highlighter"
     android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/left_menu_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="2dp"
+        />
 
         <TextView
             android:id="@+id/left_menu_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/primaryColor"
             android:textSize="17dp"
+            android:padding="2dp"
             />
 
 </LinearLayout>
