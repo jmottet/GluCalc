@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -20,9 +21,9 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnCloseListener;
-import android.widget.SearchView.OnQueryTextListener;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnCloseListener;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -117,11 +118,13 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
         inflater.inflate(R.menu.search_food_menu, menu);
         inflater.inflate(R.menu.add_menu, menu);
         inflater.inflate(R.menu.selection_menu, menu);
-//        mSearchView = (SearchView) menu.findItem(R.id.search_food).getActionView();
-//        // Place an action bar item for searching.
-//        mSearchView.setOnQueryTextListener(this);
-//        mSearchView.setOnCloseListener(this);
-//        mSearchView.setIconifiedByDefault(true);
+        MenuItem menuItem =  menu.findItem(R.id.search_food);
+
+        mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        // Place an action bar item for searching.
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
+        mSearchView.setIconifiedByDefault(true);
 
         initMenuVisibility();
     }
@@ -450,7 +453,7 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
         if (!TextUtils.isEmpty(mSearchView.getQuery())) {
             mSearchView.setQuery(null, true);
         }
-        return true;
+        return false;
     }
 
     @Override

@@ -69,7 +69,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private ExpandableListAdapter listAdapter;
     private ExpandableListView mDrawerList;
-    private HashMap<String, List<String>> menuListDataChild;
+    private HashMap<String, List<MenuChildItem>> menuListDataChild;
     private List<MenuGroupItem> menuListDataHeader;
 
     private CharSequence mDrawerTitle;
@@ -151,6 +151,20 @@ public class NavigationDrawerFragment extends Fragment {
         listAdapter = new LeftMenuExpandableListAdapter(getActivity(), menuListDataHeader, menuListDataChild);
         mDrawerList.setAdapter(listAdapter);
         mDrawerList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+
+        mDrawerList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousItem = -1;
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(groupPosition != previousItem ) {
+                    mDrawerList.collapseGroup(previousItem);
+                    mDrawerList.setItemChecked(groupPosition, true);
+                }
+                previousItem = groupPosition;
+            }
+        });
+
 
         mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -238,19 +252,45 @@ public class NavigationDrawerFragment extends Fragment {
             menuListDataHeader.add(menuGroupItem);
         }
 
-        menuListDataChild = new HashMap<String, List<String>>();
+        menuListDataChild = new HashMap<String, List<MenuChildItem>>();
 
-        final List<String> subSettings = Arrays.asList(getResources().getStringArray(
-                R.array.left_submenu_settings_items_array));
-        final List<String> subReport = Arrays
+        List<MenuChildItem> subReport = new ArrayList<MenuChildItem>();
+        final List<String> subReportTitles = Arrays
                 .asList(getResources().getStringArray(R.array.left_submenu_report_items_array));
-        final List<String> subAbout = Arrays.asList(getResources().getStringArray(R.array.left_submenu_about_items_array));
+        Integer[] subReportImageResources = {R.drawable.ic_submenu_meal_diary, R.drawable.ic_submenu_insulin_overview, R.drawable.ic_submenu_insulin_ratio};
+        for(int i=0; i < subReportTitles.size(); i++) {
+            MenuChildItem menuChildItem = new MenuChildItem();
+            menuChildItem.setTitle(subReportTitles.get(i));
+            menuChildItem.setImageResource(subReportImageResources[i]);
+            subReport.add(menuChildItem);
+        }
 
-        menuListDataChild.put(titles.get(NEW_MEAL_MENU_IDX), new ArrayList<String>());
-        menuListDataChild.put(titles.get(FOOD_MENU_IDX), new ArrayList<String>());
+        List<MenuChildItem> subSettings = new ArrayList<MenuChildItem>();
+        final List<String> subSettingsTitles = Arrays.asList(getResources().getStringArray(
+                R.array.left_submenu_settings_items_array));
+        Integer[] subSettingsImageResources = {R.drawable.ic_submenu_meals_and_insulin, R.drawable.ic_submenu_favourite_foods, R.drawable.ic_submenu_food_categories, R.drawable.ic_submenu_password_lock, R.drawable.ic_submenu_alerts, R.drawable.ic_submenu_initial_setup, R.drawable.ic_submenu_reset};
+        for(int i=0; i < subSettingsTitles.size(); i++) {
+            MenuChildItem menuChildItem = new MenuChildItem();
+            menuChildItem.setTitle(subSettingsTitles.get(i));
+            menuChildItem.setImageResource(subSettingsImageResources[i]);
+            subSettings.add(menuChildItem);
+        }
+
+        List<MenuChildItem> subAbout = new ArrayList<MenuChildItem>();
+        final List<String> subAboutTitles = Arrays.asList(getResources().getStringArray(R.array.left_submenu_about_items_array));
+        Integer[] subAboutImageResources = {R.drawable.ic_submenu_terms_of_use};
+        for(int i=0; i < subAboutTitles.size(); i++) {
+            MenuChildItem menuChildItem = new MenuChildItem();
+            menuChildItem.setTitle(subAboutTitles.get(i));
+            menuChildItem.setImageResource(subAboutImageResources[i]);
+            subAbout.add(menuChildItem);
+        }
+
+        menuListDataChild.put(titles.get(NEW_MEAL_MENU_IDX), new ArrayList<MenuChildItem>());
+        menuListDataChild.put(titles.get(FOOD_MENU_IDX), new ArrayList<MenuChildItem>());
         menuListDataChild.put(titles.get(CHECK_MENU_IDX), subReport);
         menuListDataChild.put(titles.get(SETTINGS_MENU_IDX), subSettings);
-        menuListDataChild.put(titles.get(EXPORT_MENU_IDX), new ArrayList<String>());
+        menuListDataChild.put(titles.get(EXPORT_MENU_IDX), new ArrayList<MenuChildItem>());
         menuListDataChild.put(titles.get(ABOUT_MENU_IDX), subAbout);
     }
 
@@ -305,7 +345,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         String newTitle = null;
         if (CATEGORIES_WITH_SUBMENUS.contains(groupPosition)) {
-            newTitle = menuListDataChild.get(menuListDataHeader.get(groupPosition)).get(childPosition);
+            newTitle = menuListDataChild.get(menuListDataHeader.get(groupPosition).getTitle()).get(childPosition).getTitle();
         } else {
             newTitle = menuListDataHeader.get(groupPosition).getTitle();
         }

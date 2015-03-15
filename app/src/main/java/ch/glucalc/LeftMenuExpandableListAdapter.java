@@ -17,11 +17,11 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
   private final Context mContext;
   private final List<MenuGroupItem> parentRecord;
-  private final HashMap<String, List<String>> childRecord;
+  private final HashMap<String, List<MenuChildItem>> childRecord;
   private final LayoutInflater inflater;
 
   public LeftMenuExpandableListAdapter(Context context, List<MenuGroupItem> listDataHeader,
-      HashMap<String, List<String>> listChildData) {
+      HashMap<String, List<MenuChildItem>> listChildData) {
     this.mContext = context;
     this.parentRecord = listDataHeader;
     this.childRecord = listChildData;
@@ -42,7 +42,7 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
   public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView,
       ViewGroup parent) {
 
-    final String childText = (String) getChild(groupPosition, childPosition);
+    final MenuChildItem childItem = (MenuChildItem) getChild(groupPosition, childPosition);
 
     if (convertView == null) {
       convertView = inflater.inflate(R.layout.navigation_drawer_sublist_item, null);
@@ -50,7 +50,13 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
 
     final TextView txtListChild = (TextView) convertView.findViewById(R.id.left_submenu_textview);
 
-    txtListChild.setText(childText);
+    txtListChild.setText(childItem.getTitle());
+
+    if (childItem.getImageResource() != null) {
+      final ImageView imageView = (ImageView) convertView.findViewById(R.id.left_submenu_imageview);
+      imageView.setImageResource(childItem.getImageResource());
+    }
+
     return convertView;
   }
 
@@ -86,10 +92,10 @@ public class LeftMenuExpandableListAdapter extends BaseExpandableListAdapter {
     lblListHeader.setTypeface(null, Typeface.BOLD);
     lblListHeader.setText(menuGroupItem.getTitle());
 
-      if (menuGroupItem.getImageResource() != null) {
-          final ImageView imageView = (ImageView) convertView.findViewById(R.id.left_menu_imageview);
-          imageView.setImageResource(menuGroupItem.getImageResource());
-      }
+    if (menuGroupItem.getImageResource() != null) {
+      final ImageView imageView = (ImageView) convertView.findViewById(R.id.left_menu_imageview);
+      imageView.setImageResource(menuGroupItem.getImageResource());
+    }
     return convertView;
   }
 

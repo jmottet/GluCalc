@@ -4,6 +4,6 @@
     <item android:id="@+id/search_food"
           android:title="@string/search_title"
           android:icon="@android:drawable/ic_menu_search"
-          app:showAsAction="collapseActionView|ifRoom"
-          android:actionViewClass="ch.glucalc.widget.MySearchView" />
+          app:showAsAction="always"
+          app:actionViewClass="android.support.v7.widget.SearchView" />
 </menu>

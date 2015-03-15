@@ -3,7 +3,7 @@ package ch.glucalc;
 /**
  * Created by jmottet on 24/02/2015.
  */
-public class MenuGroupItem {
+public class MenuChildItem {
 
     private String title;
 
