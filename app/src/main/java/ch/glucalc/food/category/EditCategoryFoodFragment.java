@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.EditText;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
+import ch.glucalc.food.Food;
 
 import static ch.glucalc.food.category.CategoryFoodConstants.CATEGORY_ID_PARAMETER;
 import static ch.glucalc.food.category.CategoryFoodConstants.CATEGORY_NAME_PARAMETER;
@@ -24,6 +28,8 @@ import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 public class EditCategoryFoodFragment extends Fragment {
 
     private static String TAG = "GluCalc";
+
+    private EditText newCategory;
 
     private OnCategoryFoodSaved mCallback;
 
@@ -49,12 +55,24 @@ public class EditCategoryFoodFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        log("FoodListFragment.onCreateOptionsMenu");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.accept_menu, menu);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
         View layout = inflater.inflate(R.layout.edit_category_food, container, false);
-        final EditText newCategory = (EditText) layout.findViewById(R.id.category_edittext);
-        final Button saveButton = (Button) layout.findViewById(R.id.category_save_button);
+        newCategory = (EditText) layout.findViewById(R.id.category_edittext);
 
         if (getCategoryId() != FAKE_DEFAULT_ID) {
             // Initaliser les champs avec les valeurs
@@ -62,11 +80,16 @@ public class EditCategoryFoodFragment extends Fragment {
             newCategory.setText(categoryName);
         }
 
-        saveButton.setOnClickListener(new OnClickListener() {
+        return layout;
+    }
 
-            @Override
-            public void onClick(View v) {
-                log("EditCategoryFoodFragment.onClick : START");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        log("EditCategoryFoodFragment.onOptionsItemSelected : START");
+
+        log("EditFoodFragment.onOptionsItemSelected");
+        switch (item.getItemId()) {
+            case R.id.save:
                 final String newCategoryFoodName = newCategory.getText().toString();
                 if (TextUtils.isEmpty(newCategoryFoodName)) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
@@ -75,26 +98,24 @@ public class EditCategoryFoodFragment extends Fragment {
                     log("EditCategoryFoodFragment.onClick : DONE");
                     mCallback.openCategoryFoodListFragment();
                 }
-            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-            private void saveNewCategory(final String newCategoryFoodName) {
-                if (getCategoryId() != FAKE_DEFAULT_ID) {
-                    final CategoryFood categoryFoodToUpdate = new CategoryFood();
-                    categoryFoodToUpdate.setId(getCategoryId());
-                    categoryFoodToUpdate.setName(newCategoryFoodName);
-                    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity())
-                            .updateCategory(categoryFoodToUpdate);
-                } else {
-                    final CategoryFood categoryFoodToCreate = new CategoryFood();
-                    categoryFoodToCreate.setName(newCategoryFoodName);
-                    final long id = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).storeCategory(
-                            categoryFoodToCreate);
-                }
-            }
-
-        });
-
-        return layout;
+    private void saveNewCategory(final String newCategoryFoodName) {
+        if (getCategoryId() != FAKE_DEFAULT_ID) {
+            final CategoryFood categoryFoodToUpdate = new CategoryFood();
+            categoryFoodToUpdate.setId(getCategoryId());
+            categoryFoodToUpdate.setName(newCategoryFoodName);
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity())
+                    .updateCategory(categoryFoodToUpdate);
+        } else {
+            final CategoryFood categoryFoodToCreate = new CategoryFood();
+            categoryFoodToCreate.setName(newCategoryFoodName);
+            final long id = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).storeCategory(
+                    categoryFoodToCreate);
+        }
     }
 
     private long getCategoryId() {

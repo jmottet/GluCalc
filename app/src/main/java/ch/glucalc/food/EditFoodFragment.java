@@ -5,8 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -32,7 +38,7 @@ import static ch.glucalc.food.FoodConstants.FOOD_QUANTITY_PARAMETER;
 import static ch.glucalc.food.FoodConstants.FOOD_UNIT_PARAMETER;
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 
-public class EditFoodFragment extends Fragment implements OnClickListener {
+public class EditFoodFragment extends Fragment {
 
     private static String TAG = "GluCalc";
 
@@ -41,7 +47,6 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
     private EditText newFoodCarbonHydrate;
     private EditText newFoodQuantity;
     private EditText newFoodUnit;
-    private Button saveButton;
     private List<CategoryFood> categoriesOfFood;
 
     private OnFoodSaved mCallback;
@@ -51,7 +56,10 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
 
         public void openFoodListFragment();
 
+        public ActionBar getSupportedActionBar();
+
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -68,6 +76,19 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        log("FoodListFragment.onCreateOptionsMenu");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.accept_menu, menu);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         log("EditFoodFragment.onCreate");
         View layout = inflater.inflate(R.layout.edit_food, container, false);
@@ -77,20 +98,24 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
         } else {
             initFieldsAndButtonForEdition(layout);
         }
-        saveButton.setOnClickListener(this);
         return layout;
     }
 
     @Override
-    public void onClick(View v) {
-        log("EditFoodFragment.onClick : START");
-        final Food newFood = initFoodFromFields();
-        if (newFood.areSomeMandatoryFieldsMissing()) {
-            DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
-        } else {
-            saveNewFood(newFood);
-            log("EditFoodFragment.onClick : DONE");
-            mCallback.openFoodListFragment();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        log("EditFoodFragment.onOptionsItemSelected");
+        switch (item.getItemId()) {
+            case R.id.save:
+                final Food newFood = initFoodFromFields();
+                if (newFood.areSomeMandatoryFieldsMissing()) {
+                    DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
+                } else {
+                    saveNewFood(newFood);
+                    log("EditFoodFragment.onClick : DONE");
+                    mCallback.openFoodListFragment();
+                }
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -100,12 +125,6 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
         super.onDestroy();
     }
 
-    @Override
-    public void onResume() {
-        log("EditFoodFragment.onResume");
-        super.onResume();
-    }
-
     private void initFieldsAndButtonForCreation(View layout) {
         log("EditFoodFragment.initFieldsAndButtonForCreation");
         newFoodName = (EditText) layout.findViewById(R.id.food_edittext);
@@ -113,7 +132,6 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
         newFoodCarbonHydrate = (EditText) layout.findViewById(R.id.food_carbonhydrate_edittext);
         newFoodQuantity = (EditText) layout.findViewById(R.id.food_quantity_edittext);
         newFoodUnit = (EditText) layout.findViewById(R.id.food_unit_edittext);
-        saveButton = (Button) layout.findViewById(R.id.food_save_button);
         populateSpinner(null);
     }
 
@@ -124,7 +142,6 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
         newFoodCarbonHydrate = (EditText) layout.findViewById(R.id.food_carbonhydrate_edittext);
         newFoodQuantity = (EditText) layout.findViewById(R.id.food_quantity_edittext);
         newFoodUnit = (EditText) layout.findViewById(R.id.food_unit_edittext);
-        saveButton = (Button) layout.findViewById(R.id.food_save_button);
 
         populateSpinner(getFoodCategoryId());
 
@@ -242,7 +259,7 @@ public class EditFoodFragment extends Fragment implements OnClickListener {
     private void propagateResultForEdition() {
         final Intent intent = new Intent();
         intent.putExtra(FoodConstants.MODIFIED_ID_RESULT, getFoodId());
-//        setResult(FoodConstants.RESULT_CODE_EDITED, intent);
+        // setResult(FoodConstants.RESULT_CODE_EDITED, intent);
     }
 
 }

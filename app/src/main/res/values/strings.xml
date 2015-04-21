@@ -10,6 +10,7 @@
     <string name="delete_title">Delete item</string>
     <string name="select_title">Select item</string>
     <string name="select_performed_title">Select item done</string>
+    <string name="save_title">Save item</string>
     
     <!-- Left Menu Main Categories -->
     <string-array name="left_menu_items_array">

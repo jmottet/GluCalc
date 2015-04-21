@@ -19,22 +19,26 @@ public class NewMealFragment extends Fragment {
 
   private static String TAG = "GluCalc";
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        log("NewMealFragment.onCreate");
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        log("EditMealTypeFragment.onCreateOptionsMenu");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.accept_menu, menu);
+    }
+
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
       // Inflate the layout for this fragment
       return inflater.inflate(R.layout.new_meal_view, container, false);
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    log("NewMealFragment.onCreate");
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
   }
 
   @Override

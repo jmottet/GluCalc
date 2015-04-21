@@ -241,6 +241,10 @@ public class NavigationDrawerFragment extends Fragment {
         mCallback.openNewMealFragment();
     }
 
+    public void setDrawerIndicatorEnabled(boolean indicatorEnabled) {
+        mDrawerToggle.setDrawerIndicatorEnabled(indicatorEnabled);
+    }
+
     private void prepareListData() {
         List<String> titles = Arrays.asList(getResources().getStringArray(R.array.left_menu_items_array));
         Integer[] imageResources = {R.drawable.ic_menu_new_meal, R.drawable.ic_menu_food, R.drawable.ic_menu_check, R.drawable.ic_menu_settings, R.drawable.ic_menu_export, R.drawable.ic_menu_about};

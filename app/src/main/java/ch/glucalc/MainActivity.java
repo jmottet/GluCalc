@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,9 +30,20 @@ import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.OnNavigationItemSelected, CategoryFoodListFragment.OnCategoryFoodEdition,
-        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition {
+        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition  {
 
     private Toolbar toolbar;
+    NavigationDrawerFragment drawerFragment;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public ActionBar getSupportedActionBar() {
+        return getSupportActionBar();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +57,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    /* Set up the navigation bar which is the left menu */
-        NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        /* Set up the navigation bar which is the left menu */
+        drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
     }
 
@@ -135,7 +147,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         EditFoodFragment editFoodFragment = new EditFoodFragment();
         editFoodFragment.setArguments(arguments);
-
         openFragment(editFoodFragment, true);
     }
 
@@ -146,6 +157,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         EditFoodFragment editFoodFragment = new EditFoodFragment();
         editFoodFragment.setArguments(arguments);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         openFragment(editFoodFragment, true);
     }
 

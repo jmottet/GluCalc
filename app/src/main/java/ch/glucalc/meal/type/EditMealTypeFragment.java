@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,7 +38,6 @@ public class EditMealTypeFragment extends Fragment {
     private EditText newMealTypeGlycemiaTarget;
     private EditText newMealTypeInsulinSensitivity;
     private EditText newMealTypeInsulin;
-    private Button saveButton;
 
     private OnMealTypeSaved mCallback;
 
@@ -61,6 +64,40 @@ public class EditMealTypeFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        log("EditMealTypeFragment.onCreateOptionsMenu");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.accept_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        log("EditCategoryFoodFragment.onOptionsItemSelected : START");
+
+        log("EditFoodFragment.onOptionsItemSelected");
+        switch (item.getItemId()) {
+            case R.id.save:
+                log("EditMealTypeFragment.onClick : START");
+                final MealType newMealType = initMealTypeFromFields();
+                if (newMealType.areSomeMandatoryFieldsMissing()) {
+                    DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
+                } else {
+                    saveNewMealType(newMealType);
+                    log("EditMealTypeFragment.onClick : DONE");
+                    mCallback.openMealTypeListFragment();
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
 
@@ -71,32 +108,16 @@ public class EditMealTypeFragment extends Fragment {
         } else {
             initFieldsAndButtonForEdition(layout);
         }
-
-        saveButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                log("EditMealTypeFragment.onClick : START");
-                final MealType newMealType = initMealTypeFromFields();
-                if (newMealType.areSomeMandatoryFieldsMissing()) {
-                    DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
-                } else {
-                    saveNewMealType(newMealType);
-                    log("EditMealTypeFragment.onClick : DONE");
-                    mCallback.openMealTypeListFragment();
-                }
-            }
-
-            private void saveNewMealType(MealType newMealType) {
-                if (getMealTypeId() == FAKE_DEFAULT_ID) {
-                    final long id = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).storeMealType(
-                            newMealType);
-                } else {
-                    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealType(newMealType);
-                }
-            }
-        });
         return layout;
+    }
+
+    private void saveNewMealType(MealType newMealType) {
+        if (getMealTypeId() == FAKE_DEFAULT_ID) {
+            final long id = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).storeMealType(
+                    newMealType);
+        } else {
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealType(newMealType);
+        }
     }
 
     private MealType initMealTypeFromFields() {
@@ -143,7 +164,6 @@ public class EditMealTypeFragment extends Fragment {
         newMealTypeGlycemiaTarget = (EditText) layout.findViewById(R.id.meal_type_glycemia_target_edittext);
         newMealTypeInsulinSensitivity = (EditText) layout.findViewById(R.id.meal_type_insulin_sensitivity_edittext);
         newMealTypeInsulin = (EditText) layout.findViewById(R.id.meal_type_insulin_edittext);
-        saveButton = (Button) layout.findViewById(R.id.meal_type_save_button);
     }
 
     private void initFieldsAndButtonForEdition(View layout) {
@@ -153,7 +173,6 @@ public class EditMealTypeFragment extends Fragment {
         newMealTypeGlycemiaTarget = (EditText) layout.findViewById(R.id.meal_type_glycemia_target_edittext);
         newMealTypeInsulinSensitivity = (EditText) layout.findViewById(R.id.meal_type_insulin_sensitivity_edittext);
         newMealTypeInsulin = (EditText) layout.findViewById(R.id.meal_type_insulin_edittext);
-        saveButton = (Button) layout.findViewById(R.id.meal_type_save_button);
 
         updateFieldText(newMealTypeName, getMealTypeName());
         updateFieldText(newMealTypeFoodTarget, String.valueOf(getMealTypeFoodTarget()));
