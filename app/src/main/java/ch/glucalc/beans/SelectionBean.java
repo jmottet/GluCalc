@@ -5,7 +5,7 @@ import java.util.Set;
 
 import android.view.Menu;
 
-public class DeleteBean {
+public class SelectionBean {
 
   private boolean modeMultiSelection = false;
 

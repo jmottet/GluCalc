@@ -1,6 +1,8 @@
 package ch.glucalc;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -12,13 +14,15 @@ import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodTable;
 import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.food.category.CategoryFoodTable;
+import ch.glucalc.food.favourite.food.FavouriteFood;
+import ch.glucalc.food.favourite.food.FavouriteFoodTable;
 import ch.glucalc.meal.type.MealType;
 import ch.glucalc.meal.type.MealTypeTable;
 
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "glucalc.db";
-  private static final int DATABASE_VERSION = 6;
+  private static final int DATABASE_VERSION = 8;
 
   private static GluCalcSQLiteHelper singleInstance;
 
@@ -38,18 +42,21 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     db.execSQL(FoodTable.TABLE_CREATE);
     db.execSQL(CategoryFoodTable.TABLE_CREATE);
     db.execSQL(MealTypeTable.TABLE_CREATE);
+    db.execSQL(FavouriteFoodTable.TABLE_CREATE);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    db.execSQL(FoodTable.TABLE_DROP);
-    db.execSQL(CategoryFoodTable.TABLE_DROP);
 
-    if (DATABASE_VERSION > 6) {
+
+    if (DATABASE_VERSION == 6) {
+      db.execSQL(FoodTable.TABLE_DROP);
+      db.execSQL(CategoryFoodTable.TABLE_DROP);
       db.execSQL(MealTypeTable.TABLE_DROP);
+      onCreate(db);
+    } else if (DATABASE_VERSION > 6) {
+      db.execSQL(FavouriteFoodTable.TABLE_CREATE);
     }
-
-    onCreate(db);
   }
 
   @Override
@@ -81,6 +88,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
       mealType.setInsulinSensitivity(cursor.getFloat(4));
       mealType.setInsulin(cursor.getFloat(5));
       mealTypes.add(mealType);
+        System.out.println("Meal Type Id : " + mealType.getId());
     }
     return mealTypes;
   }
@@ -240,6 +248,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
       food.setCarbonhydrate(cursor.getFloat(4));
       food.setCategoryId(cursor.getLong(5));
       foods.add(food);
+        System.out.println("Food Id : " + food.getId());
     }
     return foods;
   }
@@ -429,4 +438,120 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMN_ID + " = ?",
         new String[] { String.valueOf(categoryId) });
   }
+
+
+
+/****** FAVOURITE FOOD SECTION ******/
+
+// addFavouriteFood
+// removeFavouriteFood
+// List<Food> loadFavouriteFoods
+
+    public void deleteFavouriteFoods() {
+        getWritableDatabase().delete(FavouriteFoodTable.TABLE_NAME, null, null);
+    }
+
+    public long storeFavouriteFood(FavouriteFood favouriteFood) {
+        long id = -1;
+        final SQLiteDatabase db = getWritableDatabase();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(FavouriteFoodTable.COLUMN_FK_MEAL_TYPE, favouriteFood.getMealTypeId());
+            values.put(FavouriteFoodTable.COLUMN_FK_FOOD, favouriteFood.getFoodId());
+            values.put(FavouriteFoodTable.COLUMN_CARBONHYDRATE, favouriteFood.getQuantity());
+            values.put(FavouriteFoodTable.COLUMN_QUANTITY, favouriteFood.getQuantity());
+            id = db.insert(FavouriteFoodTable.TABLE_NAME, "", values);
+            favouriteFood.setId(id);
+            values.clear();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return id;
+    }
+
+    public void updateFavouriteFood(FavouriteFood favouriteFood) {
+
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(FavouriteFoodTable.COLUMN_FK_MEAL_TYPE, favouriteFood.getMealTypeId());
+            values.put(FavouriteFoodTable.COLUMN_FK_FOOD, favouriteFood.getFoodId());
+            values.put(FavouriteFoodTable.COLUMN_CARBONHYDRATE, favouriteFood.getQuantity());
+            values.put(FavouriteFoodTable.COLUMN_QUANTITY, favouriteFood.getQuantity());
+            db.update(FavouriteFoodTable.TABLE_NAME, values, FavouriteFoodTable.COLUMN_ID + " = ?",
+                    new String[] { String.valueOf(favouriteFood.getId()) });
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteFavouriteFood(Long favouriteFoodId) {
+        getWritableDatabase().delete(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMN_ID + " = ?",
+                new String[] { String.valueOf(favouriteFoodId) });
+    }
+
+    public List<FavouriteFood> loadFavouriteFoods(long mealTypeId) {
+        final String whereClause = FavouriteFoodTable.COLUMN_FK_MEAL_TYPE + "=?";
+        final String[] whereArgs = { String.valueOf(mealTypeId) };
+
+        final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
+
+        final List<FavouriteFood> favouriteFoods = new ArrayList<FavouriteFood>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final FavouriteFood favouriteFood = new FavouriteFood();
+            favouriteFood.setId(cursor.getLong(0));
+            favouriteFood.setMealTypeId(cursor.getLong(1));
+            favouriteFood.setFoodId(cursor.getLong(2));
+            favouriteFood.setQuantity(cursor.getFloat(3));
+            favouriteFood.setCarbonhydrate(cursor.getFloat(4));
+
+            String foodName = loadFood(favouriteFood.getFoodId()).getName();
+            favouriteFood.setName(foodName);
+            favouriteFoods.add(favouriteFood);
+        }
+        sortFavouriteFoods(favouriteFoods);
+        return favouriteFoods;
+    }
+
+    public List<FavouriteFood> loadFavouriteFoods() {
+
+        final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
+                null, null, null, null, null);
+
+        final List<FavouriteFood> favouriteFoods = new ArrayList<FavouriteFood>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final FavouriteFood favouriteFood = new FavouriteFood();
+            favouriteFood.setId(cursor.getLong(0));
+            favouriteFood.setMealTypeId(cursor.getLong(1));
+            favouriteFood.setFoodId(cursor.getLong(2));
+            favouriteFood.setQuantity(cursor.getFloat(3));
+            favouriteFood.setCarbonhydrate(cursor.getFloat(4));
+
+            String foodName = loadFood(favouriteFood.getFoodId()).getName();
+            favouriteFood.setName(foodName);
+            favouriteFoods.add(favouriteFood);
+        }
+        sortFavouriteFoods(favouriteFoods);
+        return favouriteFoods;
+    }
+
+    private void sortFavouriteFoods(List<FavouriteFood> favouriteFoods) {
+        Collections.sort(favouriteFoods, new Comparator<FavouriteFood>() {
+
+            @Override
+            public int compare(FavouriteFood lhs, FavouriteFood rhs) {
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+            }
+        });
+    }
 }

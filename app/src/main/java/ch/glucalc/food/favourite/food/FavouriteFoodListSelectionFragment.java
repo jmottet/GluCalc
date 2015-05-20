@@ -1,4 +1,4 @@
-package ch.glucalc.food;
+package ch.glucalc.food.favourite.food;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnCloseListener;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -21,10 +24,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnCloseListener;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,10 +39,15 @@ import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.beans.SelectionBean;
+import ch.glucalc.food.Food;
+import ch.glucalc.food.FoodAdapter;
 import ch.glucalc.food.FoodAdapter.Section;
+import ch.glucalc.meal.type.MealTypeConstants;
+
+import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 
 @SuppressLint("DefaultLocale")
-public class FoodListFragment extends ListFragment implements OnQueryTextListener, OnCloseListener {
+public class FavouriteFoodListSelectionFragment extends ListFragment implements OnQueryTextListener, OnCloseListener {
 
     private static String TAG = "GluCalc";
 
@@ -76,14 +82,12 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     }
 
 
-    private OnFoodEdition mCallback;
+    private OnFavouriteFoodAddition mCallback;
 
     // Container Activity must implement this interface
-    public interface OnFoodEdition {
+    public interface OnFavouriteFoodAddition {
 
-        public void openEditFoodFragment();
-
-        public void openEditFoodFragment(Food food);
+        public void openFavouriteFoodListFragment(long mealTypeId);
 
     }
 
@@ -94,30 +98,29 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnFoodEdition) activity;
+            mCallback = (OnFavouriteFoodAddition) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFoodEdition");
+                    + " must implement OnFavouriteFoodAddition");
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        log("FoodListFragment.onCreate");
+        log("FavouriteFoodListSelectionFragment.onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         selectionBean.setNumberItemSelected(0);
-        selectionBean.setModeMultiSelection(false);
+        selectionBean.setModeMultiSelection(true);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        log("FoodListFragment.onCreateOptionsMenu");
+        log("FavouriteFoodListSelectionFragment.onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
         selectionBean.setmMenu(menu);
         inflater.inflate(R.menu.search_food_menu, menu);
         inflater.inflate(R.menu.add_menu, menu);
-        inflater.inflate(R.menu.selection_menu, menu);
         MenuItem menuItem =  menu.findItem(R.id.search_food);
 
         mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
@@ -131,42 +134,24 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        log("FoodListFragment.onCreateView");
+        log("FavouriteFoodListSelectionFragment.onCreateView");
         return inflater.inflate(R.layout.list_alphabet, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        log("FoodListFragment.onActivityCreated");
+        log("FavouriteFoodListSelectionFragment.onActivityCreated");
         super.onCreate(savedInstanceState);
         initList(false, null);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        log("FoodListFragment.onOptionsItemSelected");
+        log("FavouriteFoodListSelectionFragment.onOptionsItemSelected");
         switch (item.getItemId()) {
             case R.id.add:
-                if (GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).isCategoryOfFoodEmpty()) {
-                    final DialogMissingCategories dialog = DialogMissingCategories.newInstance();
-                    dialog.show(getFragmentManager(), "missingCategoriesDialog");
-                    return false;
-                } else {
-                    mCallback.openEditFoodFragment();
-                    return true;
-                }
-            case R.id.delete:
-                deleteAction();
-                initMenuVisibility();
-                return true;
-            case R.id.selection:
-                selectionBean.setModeMultiSelection(true);
-                initMenuVisibility();
-                return true;
-            case R.id.selection_performed:
-                selectionBean.setModeMultiSelection(false);
-                initMenuVisibility();
-                initList(false, null);
+                addAction();
+                mCallback.openFavouriteFoodListFragment(getMealTypeId());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -177,97 +162,68 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        log("FoodListFragment.onListItemClick");
+        log("FavouriteFoodListSelectionFragment.onListItemClick");
         final Object currentRow = getListView().getItemAtPosition(position);
         if (currentRow instanceof Food) {
             final Food currentFood = (Food) currentRow;
 
-            if (!selectionBean.isModeMultiSelection()) {
-                // Start the Edition activity
-//                final Intent editFoodIntent = new Intent(getActivity().getApplicationContext(), EditFoodFragment.class);
-//                editFoodIntent.putExtra(FoodConstants.FOOD_ID_PARAMETER, currentFood.getId());
-//                editFoodIntent.putExtra(FoodConstants.FOOD_NAME_PARAMETER, currentFood.getName());
-//                editFoodIntent.putExtra(FoodConstants.FOOD_CARBONHYDRATE_PARAMETER, currentFood.getCarbonhydrate());
-//                editFoodIntent.putExtra(FoodConstants.FOOD_QUANTITY_PARAMETER, currentFood.getQuantity());
-//                editFoodIntent.putExtra(FoodConstants.FOOD_UNIT_PARAMETER, currentFood.getUnit());
-//                editFoodIntent.putExtra(FoodConstants.FOOD_CATEGORY_ID_PARAMETER, currentFood.getCategoryId());
-
-                mCallback.openEditFoodFragment(currentFood);
+            if (!currentFood.isSelected()) {
+                v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
+                currentFood.setSelected(true);
+                selectionBean.addOneToNumberItemSelected();
+                if (selectionBean.getNumberItemSelected() == 1) {
+                    selectionBean.getmMenu().findItem(R.id.add).setVisible(true);
+                }
             } else {
-                if (!currentFood.isSelected()) {
-                    v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
-                    currentFood.setSelected(true);
-                    selectionBean.addOneToNumberItemSelected();
-                    if (selectionBean.getNumberItemSelected() == 1) {
-                        selectionBean.getmMenu().findItem(R.id.delete).setVisible(true);
-                    }
-                } else {
-                    v.setBackground(null);
-                    currentFood.setSelected(false);
-                    selectionBean.substractOneToNumberItemSelected();
-                    if (selectionBean.getNumberItemSelected() == 0) {
-                        selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
-                    }
+                v.setBackground(null);
+                currentFood.setSelected(false);
+                selectionBean.substractOneToNumberItemSelected();
+                if (selectionBean.getNumberItemSelected() == 0) {
+                    selectionBean.getmMenu().findItem(R.id.add).setVisible(false);
                 }
             }
         }
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        // Check which request we're responding to
-//        if (requestCode == REQUEST_EDIT_CODE) {
-//            // Make sure the request was successful
-//            if (resultCode == RESULT_CODE_EDITED) {
-//                initList(false, null);
-//            }
-//        } else if (requestCode == REQUEST_CREATE_CODE) {
-//            // Make sure the request was successful
-//            if (resultCode == RESULT_CODE_CREATED) {
-//                initList(false, null);
-//            }
-//        }
-//    }
-
     @Override
     public void onDetach() {
-        log("FoodListFragment.onDetach");
+        log("FavouriteFoodListSelectionFragment.onDetach");
         super.onDetach();
     }
 
     @Override
     public void onDestroy() {
-        log("FoodListFragment.onDestroy");
+        log("FavouriteFoodListSelectionFragment.onDestroy");
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        log("FoodListFragment.onPause");
+        log("FavouriteFoodListSelectionFragment.onPause");
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        log("FoodListFragment.onResume");
+        log("FavouriteFoodListSelectionFragment.onResume");
         super.onResume();
     }
 
     @Override
     public void onStart() {
-        log("FoodListFragment.onStart");
+        log("FavouriteFoodListSelectionFragment.onStart");
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        log("FoodListFragment.onStop");
+        log("FavouriteFoodListSelectionFragment.onStop");
         super.onStart();
     }
 
     private void displayListItem() {
 
-        log("FoodListFragment.displayListItem");
+        log("FavouriteFoodListSelectionFragment.displayListItem");
 
         final LinearLayout sideIndex = (LinearLayout) getActivity().findViewById(R.id.sideIndex);
         sideIndexHeight = sideIndex.getHeight();
@@ -376,7 +332,7 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
 
     private void updateList() {
 
-        log("FoodListFragment.updateList");
+        log("FavouriteFoodListSelectionFragment.updateList");
 
         final LinearLayout sideIndex = (LinearLayout) getActivity().findViewById(R.id.sideIndex);
         sideIndex.removeAllViews();
@@ -458,7 +414,7 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        log("FoodListFragment.onQueryTextSubmit");
+        log("FavouriteFoodListSelectionFragment.onQueryTextSubmit");
         // Don't care about this.
         return true;
     }
@@ -466,57 +422,34 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
     @Override
     public boolean onQueryTextChange(String newText) {
 
-        log("FoodListFragment.onQueryTextChange");
-        initList(true, newText);
-        // Toast.makeText(getActivity(), "Searching for: " + newText,
-        // Toast.LENGTH_SHORT).show();
         return true;
     }
 
-    public static class DialogMissingCategories extends DialogFragment {
-
-        public static DialogMissingCategories newInstance() {
-            final DialogMissingCategories frag = new DialogMissingCategories();
-            return frag;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return DialogHelper.getDialogErrorMessageCategoriesMissing(getActivity());
-        }
-    }
-
     private void initMenuVisibility() {
-        if (!selectionBean.isModeMultiSelection()) {
-            selectionBean.getmMenu().findItem(R.id.add).setVisible(true);
-            selectionBean.getmMenu().findItem(R.id.search_food).setVisible(true);
-            selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
-            selectionBean.getmMenu().findItem(R.id.selection).setVisible(true);
-            selectionBean.getmMenu().findItem(R.id.selection_performed).setVisible(false);
-        } else {
+        selectionBean.getmMenu().findItem(R.id.search_food).setVisible(true);
+        if (selectionBean.getNumberItemSelected() == 0) {
             selectionBean.getmMenu().findItem(R.id.add).setVisible(false);
-            selectionBean.getmMenu().findItem(R.id.search_food).setVisible(false);
-            selectionBean.getmMenu().findItem(R.id.selection).setVisible(false);
-            selectionBean.getmMenu().findItem(R.id.selection_performed).setVisible(true);
-            if (selectionBean.getNumberItemSelected() == 0) {
-                selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
-            } else {
-                selectionBean.getmMenu().findItem(R.id.delete).setVisible(true);
-            }
+        } else {
+            selectionBean.getmMenu().findItem(R.id.add).setVisible(true);
         }
     }
 
-    private void deleteAction() {
+    private void addAction() {
 
         for (final Object currentObject : rows) {
             if (currentObject instanceof Food) {
                 final Food currentFood = (Food) currentObject;
                 if (currentFood.isSelected()) {
-                    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteFood(
-                            currentFood.getId());
+                    FavouriteFood newFavouriteFood = new FavouriteFood();
+                    newFavouriteFood.setMealTypeId(getMealTypeId());
+                    newFavouriteFood.setFoodId(currentFood.getId());
+                    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).storeFavouriteFood(newFavouriteFood);
                 }
             }
         }
-        initList(false, null);
+    }
+
+    private long getMealTypeId() {
+        return getArguments().getLong(MealTypeConstants.MEAL_TYPE_ID_PARAMETER, FAKE_DEFAULT_ID);
     }
 }

@@ -96,6 +96,8 @@ public class NavigationDrawerFragment extends Fragment {
         public void openMealTypeListFragment();
 
         public void openCategoryFoodListFragment();
+
+        public void openFavouriteFoodMealTypeListSelectionFragment();
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -321,9 +323,11 @@ public class NavigationDrawerFragment extends Fragment {
                     mCallback.openMealTypeListFragment();
                     break;
                 case SETTINGS_FAVOURITE_FOODS_IDX:
+                    mCallback.openFavouriteFoodMealTypeListSelectionFragment();
                     break;
                 case SETTINGS_FOOD_CATEGORIES_IDX:
                     mCallback.openCategoryFoodListFragment();
+                    break;
                 case SETTINGS_PASSWORD_LOCK_IDX:
                     break;
                 case SETTINGS_ALERTS_IDX:

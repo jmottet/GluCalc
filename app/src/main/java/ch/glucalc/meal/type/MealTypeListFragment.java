@@ -28,8 +28,7 @@ import android.widget.ListView;
 
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
-import ch.glucalc.beans.DeleteBean;
-import ch.glucalc.food.category.CategoryFood;
+import ch.glucalc.beans.SelectionBean;
 
 @SuppressLint("DefaultLocale")
 public class MealTypeListFragment extends ListFragment implements OnClickListener {
@@ -40,7 +39,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
 
     private MealTypeAdapter mealTypeAdapter;
 
-    private final DeleteBean deleteBean = new DeleteBean();
+    private final SelectionBean selectionBean = new SelectionBean();
 
     private OnMealTypeEdition mCallback;
 
@@ -76,8 +75,8 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
         log("MealTypeListFragment.onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        deleteBean.setNumberItemSelected(0);
-        deleteBean.setModeMultiSelection(false);
+        selectionBean.setNumberItemSelected(0);
+        selectionBean.setModeMultiSelection(false);
 
         // Load the mealTypes from the Database
         mealTypes = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealTypes();
@@ -91,7 +90,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        deleteBean.setmMenu(menu);
+        selectionBean.setmMenu(menu);
         inflater.inflate(R.menu.add_menu, menu);
         inflater.inflate(R.menu.selection_menu, menu);
         initMenuVisibility();
@@ -108,11 +107,11 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
                 deleteAction();
                 return true;
             case R.id.selection:
-                deleteBean.setModeMultiSelection(true);
+                selectionBean.setModeMultiSelection(true);
                 initMenuVisibility();
                 return true;
             case R.id.selection_performed:
-                deleteBean.setModeMultiSelection(false);
+                selectionBean.setModeMultiSelection(false);
                 initMenuVisibility();
                 mealTypeAdapter.notifyDataSetChanged();
                 return true;
@@ -128,22 +127,22 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
 
         super.onListItemClick(l, v, position, id);
 
-        if (!deleteBean.isModeMultiSelection()) {
+        if (!selectionBean.isModeMultiSelection()) {
             mCallback.openEditMealTypeFragment(currentMealType);
         } else {
             if (!currentMealType.isSelected()) {
                 v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
                 currentMealType.setSelected(true);
-                deleteBean.addOneToNumberItemSelected();
-                if (deleteBean.getNumberItemSelected() == 1) {
-                    deleteBean.getmMenu().findItem(R.id.delete).setVisible(true);
+                selectionBean.addOneToNumberItemSelected();
+                if (selectionBean.getNumberItemSelected() == 1) {
+                    selectionBean.getmMenu().findItem(R.id.delete).setVisible(true);
                 }
             } else {
                 v.setBackground(null);
                 currentMealType.setSelected(false);
-                deleteBean.substractOneToNumberItemSelected();
-                if (deleteBean.getNumberItemSelected() == 0) {
-                    deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
+                selectionBean.substractOneToNumberItemSelected();
+                if (selectionBean.getNumberItemSelected() == 0) {
+                    selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
                 }
             }
         }
@@ -257,19 +256,19 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
     }
 
     private void initMenuVisibility() {
-        if (!deleteBean.isModeMultiSelection()) {
-            deleteBean.getmMenu().findItem(R.id.add).setVisible(true);
-            deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
-            deleteBean.getmMenu().findItem(R.id.selection).setVisible(true);
-            deleteBean.getmMenu().findItem(R.id.selection_performed).setVisible(false);
+        if (!selectionBean.isModeMultiSelection()) {
+            selectionBean.getmMenu().findItem(R.id.add).setVisible(true);
+            selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
+            selectionBean.getmMenu().findItem(R.id.selection).setVisible(true);
+            selectionBean.getmMenu().findItem(R.id.selection_performed).setVisible(false);
         } else {
-            deleteBean.getmMenu().findItem(R.id.add).setVisible(false);
-            deleteBean.getmMenu().findItem(R.id.selection).setVisible(false);
-            deleteBean.getmMenu().findItem(R.id.selection_performed).setVisible(true);
-            if (deleteBean.getNumberItemSelected() == 0) {
-                deleteBean.getmMenu().findItem(R.id.delete).setVisible(false);
+            selectionBean.getmMenu().findItem(R.id.add).setVisible(false);
+            selectionBean.getmMenu().findItem(R.id.selection).setVisible(false);
+            selectionBean.getmMenu().findItem(R.id.selection_performed).setVisible(true);
+            if (selectionBean.getNumberItemSelected() == 0) {
+                selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
             } else {
-                deleteBean.getmMenu().findItem(R.id.delete).setVisible(true);
+                selectionBean.getmMenu().findItem(R.id.delete).setVisible(true);
             }
         }
     }
@@ -284,7 +283,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
     private void deleteAction() {
         // show dialog confirmation if needed
         boolean isSomeFoodLinked = false;
-        deleteBean.resetIdsToDelete();
+        selectionBean.resetIdsToDelete();
         for (final MealType mealType : mealTypes) {
             if (mealType.isSelected()) {
                 if (!isSomeFoodLinked
@@ -292,7 +291,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
                         mealType.getId())) {
                     isSomeFoodLinked = true;
                 }
-                deleteBean.addIdToDelete(mealType.getId());
+                selectionBean.addIdToDelete(mealType.getId());
             }
         }
         deleteMealTypes();
@@ -300,7 +299,7 @@ public class MealTypeListFragment extends ListFragment implements OnClickListene
     }
 
     private void deleteMealTypes() {
-        for (final Long mealTypeId : deleteBean.getIdsToDelete()) {
+        for (final Long mealTypeId : selectionBean.getIdsToDelete()) {
             GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteMealType(mealTypeId);
         }
     }

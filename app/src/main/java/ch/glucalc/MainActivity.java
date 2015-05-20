@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.glucalc.food.EditFoodFragment;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodConstants;
@@ -20,17 +23,21 @@ import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.food.category.CategoryFoodConstants;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 import ch.glucalc.food.category.EditCategoryFoodFragment;
+import ch.glucalc.food.favourite.food.FavouriteFood;
+import ch.glucalc.food.favourite.food.FavouriteFoodListFragment;
 import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.type.EditMealTypeFragment;
 import ch.glucalc.meal.type.MealType;
 import ch.glucalc.meal.type.MealTypeConstants;
 import ch.glucalc.meal.type.MealTypeListFragment;
+import ch.glucalc.food.favourite.food.FavouriteFoodMealTypeListSelectionFragment;
+import ch.glucalc.food.favourite.food.FavouriteFoodListSelectionFragment;
 
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.OnNavigationItemSelected, CategoryFoodListFragment.OnCategoryFoodEdition,
-        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition  {
+        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition, FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition  {
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
@@ -48,6 +55,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
+        int count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
+        System.out.println(count);
+        insertFavouriteFoodsIfNone();
+        count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
+        System.out.println(count);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -60,6 +72,62 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         /* Set up the navigation bar which is the left menu */
         drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+    }
+
+    private void insertFavouriteFoodsIfNone() {
+        // Breakfast
+        Integer mealTypeId = 1;
+        List<FavouriteFood> favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods(mealTypeId);
+        if (favouriteFoods.isEmpty()) {
+            List<Integer> foodIds = new ArrayList<>();
+            foodIds.add(1);
+            foodIds.add(2);
+            foodIds.add(3);
+            foodIds.add(4);
+            for (FavouriteFood newFavouriteFood : getNewFavouriteFoods(mealTypeId, foodIds)) {
+                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeFavouriteFood(newFavouriteFood);
+            }
+        }
+        // Dinner
+        mealTypeId = 2;
+        favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods(mealTypeId);
+        if (favouriteFoods.isEmpty()) {
+            List<Integer> foodIds = new ArrayList<>();
+            foodIds.add(5);
+            foodIds.add(6);
+            foodIds.add(7);
+            foodIds.add(8);
+            for (FavouriteFood newFavouriteFood : getNewFavouriteFoods(mealTypeId, foodIds)) {
+                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeFavouriteFood(newFavouriteFood);
+            }
+        }
+
+        // Lunch
+        mealTypeId = 3;
+        favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods(mealTypeId);
+        if (favouriteFoods.isEmpty()) {
+            List<Integer> foodIds = new ArrayList<>();
+            foodIds.add(10);
+            foodIds.add(11);
+            foodIds.add(12);
+            foodIds.add(13);
+            foodIds.add(14);
+            for (FavouriteFood newFavouriteFood : getNewFavouriteFoods(mealTypeId, foodIds)) {
+                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeFavouriteFood(newFavouriteFood);
+            }
+        }
+    }
+
+    private List<FavouriteFood> getNewFavouriteFoods(int mealTypeId, List<Integer> foodIds) {
+        List<FavouriteFood> result = new ArrayList<>();
+
+        for (Integer foodId : foodIds) {
+            FavouriteFood favouriteFood = new FavouriteFood();
+            favouriteFood.setMealTypeId(mealTypeId);
+            favouriteFood.setFoodId(foodId);
+            result.add(favouriteFood);
+        }
+        return result;
     }
 
     @Override
@@ -108,6 +176,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void openCategoryFoodListFragment() {
         openFragment(new CategoryFoodListFragment(), false);
+    }
+
+    @Override
+    public void openFavouriteFoodMealTypeListSelectionFragment() {
+        openFragment(new FavouriteFoodMealTypeListSelectionFragment(), false);
     }
 
     @Override
@@ -189,6 +262,28 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         openFragment(editMealTypeFragment, true);
     }
 
+    @Override
+    public void openFavouriteFoodListFragment(long mealTypeId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(MealTypeConstants.MEAL_TYPE_ID_PARAMETER, mealTypeId);
+
+        FavouriteFoodListFragment favouriteFoodListFragment = new FavouriteFoodListFragment();
+        favouriteFoodListFragment.setArguments(arguments);
+        openFragment(favouriteFoodListFragment, true);
+
+    }
+
+
+    @Override
+    public void openFavouriteFoodListSelectionFragment(long mealTypeId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(MealTypeConstants.MEAL_TYPE_ID_PARAMETER, mealTypeId);
+
+        FavouriteFoodListSelectionFragment favouriteFoodListSelectionFragment = new FavouriteFoodListSelectionFragment();
+        favouriteFoodListSelectionFragment.setArguments(arguments);
+        openFragment(favouriteFoodListSelectionFragment, true);
+    }
+
     private void openFragment(Fragment fragment, boolean backAvailable) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -203,5 +298,4 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         // Commit the transaction
         transaction.commit();
     }
-
 }
