@@ -24,6 +24,7 @@ import ch.glucalc.food.category.CategoryFoodConstants;
 import ch.glucalc.food.category.CategoryFoodListFragment;
 import ch.glucalc.food.category.EditCategoryFoodFragment;
 import ch.glucalc.food.favourite.food.FavouriteFood;
+import ch.glucalc.food.favourite.food.FavouriteFoodConstants;
 import ch.glucalc.food.favourite.food.FavouriteFoodListFragment;
 import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.type.EditMealTypeFragment;
@@ -32,12 +33,13 @@ import ch.glucalc.meal.type.MealTypeConstants;
 import ch.glucalc.meal.type.MealTypeListFragment;
 import ch.glucalc.food.favourite.food.FavouriteFoodMealTypeListSelectionFragment;
 import ch.glucalc.food.favourite.food.FavouriteFoodListSelectionFragment;
+import ch.glucalc.food.favourite.food.EditFavouriteFoodFragment;
 
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.OnNavigationItemSelected, CategoryFoodListFragment.OnCategoryFoodEdition,
-        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition, FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition  {
+        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition, FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition, EditFavouriteFoodFragment.OnFavouriteFoodSaved  {
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
@@ -273,6 +275,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     }
 
+    @Override
+    public void openEditFavouriteFoodFragment(FavouriteFood favouriteFood) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(FavouriteFoodConstants.FAVOURITE_FOOD_ID_PARAMETER, favouriteFood.getId());
+
+        EditFavouriteFoodFragment editFavouriteFoodFragment = new EditFavouriteFoodFragment();
+        editFavouriteFoodFragment.setArguments(arguments);
+        openFragment(editFavouriteFoodFragment, true);
+    }
 
     @Override
     public void openFavouriteFoodListSelectionFragment(long mealTypeId) {

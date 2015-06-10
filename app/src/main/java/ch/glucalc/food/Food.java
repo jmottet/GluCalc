@@ -81,4 +81,14 @@ public class Food {
     return name;
   }
 
+    @Override
+    public boolean equals(final Object obj){
+        if(obj instanceof Food){
+            final Food other = (Food) obj;
+            return other.getId() == this.getId();
+        } else{
+            return false;
+        }
+    }
+
 }

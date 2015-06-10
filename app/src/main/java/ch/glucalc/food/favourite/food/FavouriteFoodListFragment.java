@@ -39,6 +39,8 @@ public class FavouriteFoodListFragment extends ListFragment {
 
         public void openFavouriteFoodListSelectionFragment(long mealTypeId);
 
+        public void openEditFavouriteFoodFragment(FavouriteFood favouriteFood);
+
     }
 
     @Override
@@ -114,8 +116,7 @@ public class FavouriteFoodListFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
 
         if (!selectionBean.isModeMultiSelection()) {
-            Toast.makeText(getActivity().getApplicationContext(), "Edition clicked!", Toast.LENGTH_SHORT).show();
-            //mCallback.openEditMealTypeFragment(currentFavouriteFood);
+            mCallback.openEditFavouriteFoodFragment(currentFavouriteFood);
         } else {
             if (!currentFavouriteFood.isSelected()) {
                 v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));

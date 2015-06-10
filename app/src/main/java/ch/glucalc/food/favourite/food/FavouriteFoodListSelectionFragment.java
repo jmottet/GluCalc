@@ -61,6 +61,7 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
     private static float sideIndexY;
     private int indexListSize;
     private SearchView mSearchView;
+    private final List<Long> foodsNotSelectable = new ArrayList<>();
 
     private final SelectionBean selectionBean = new SelectionBean();
 
@@ -112,6 +113,13 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
         setHasOptionsMenu(true);
         selectionBean.setNumberItemSelected(0);
         selectionBean.setModeMultiSelection(true);
+
+        // Initialize the food not selectable
+        List<FavouriteFood> favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFavouriteFoods(getMealTypeId());
+        for (FavouriteFood favouriteFood : favouriteFoods) {
+            foodsNotSelectable.add(favouriteFood.getFoodId());
+        }
+
     }
 
     @Override
@@ -120,7 +128,7 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
         super.onCreateOptionsMenu(menu, inflater);
         selectionBean.setmMenu(menu);
         inflater.inflate(R.menu.search_food_menu, menu);
-        inflater.inflate(R.menu.add_menu, menu);
+        inflater.inflate(R.menu.accept_menu, menu);
         MenuItem menuItem =  menu.findItem(R.id.search_food);
 
         mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
@@ -149,7 +157,7 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         log("FavouriteFoodListSelectionFragment.onOptionsItemSelected");
         switch (item.getItemId()) {
-            case R.id.add:
+            case R.id.save:
                 addAction();
                 mCallback.openFavouriteFoodListFragment(getMealTypeId());
                 return true;
@@ -172,14 +180,14 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
                 currentFood.setSelected(true);
                 selectionBean.addOneToNumberItemSelected();
                 if (selectionBean.getNumberItemSelected() == 1) {
-                    selectionBean.getmMenu().findItem(R.id.add).setVisible(true);
+                    selectionBean.getmMenu().findItem(R.id.save).setVisible(true);
                 }
             } else {
                 v.setBackground(null);
                 currentFood.setSelected(false);
                 selectionBean.substractOneToNumberItemSelected();
                 if (selectionBean.getNumberItemSelected() == 0) {
-                    selectionBean.getmMenu().findItem(R.id.add).setVisible(false);
+                    selectionBean.getmMenu().findItem(R.id.save).setVisible(false);
                 }
             }
         }
@@ -303,20 +311,21 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
         }
         adapter.setRows(rows);
         setListAdapter(adapter);
+        View view = getView();
+        if (view !=  null) {
+            view.setOnTouchListener(new OnTouchListener() {
 
-        getView().setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mGestureDetector.onTouchEvent(event)) {
-                    return true;
-                } else {
-                    return false;
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (mGestureDetector.onTouchEvent(event)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
-            }
-        });
-
-        updateList();
+            });
+            updateList();
+        }
     }
 
     private List<Food> populateFoods(boolean filtered, String nameCriteria) {
@@ -326,6 +335,11 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
         } else {
             result = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext())
                     .loadFoodsFilteredByName(nameCriteria);
+        }
+
+        for (Long foodId : foodsNotSelectable) {
+            Food foodToRemove = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFood(foodId);
+            result.remove(foodToRemove);
         }
         return result;
     }
@@ -421,16 +435,17 @@ public class FavouriteFoodListSelectionFragment extends ListFragment implements 
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
+        log("FavouriteFoodListSelectionFragment.onQueryTextChange");
+        initList(true, newText);
         return true;
     }
 
     private void initMenuVisibility() {
         selectionBean.getmMenu().findItem(R.id.search_food).setVisible(true);
         if (selectionBean.getNumberItemSelected() == 0) {
-            selectionBean.getmMenu().findItem(R.id.add).setVisible(false);
+            selectionBean.getmMenu().findItem(R.id.save).setVisible(false);
         } else {
-            selectionBean.getmMenu().findItem(R.id.add).setVisible(true);
+            selectionBean.getmMenu().findItem(R.id.save).setVisible(true);
         }
     }
 

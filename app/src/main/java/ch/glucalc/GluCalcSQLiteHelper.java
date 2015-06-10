@@ -248,7 +248,6 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
       food.setCarbonhydrate(cursor.getFloat(4));
       food.setCategoryId(cursor.getLong(5));
       foods.add(food);
-        System.out.println("Food Id : " + food.getId());
     }
     return foods;
   }
@@ -270,8 +269,35 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     return foods;
   }
 
-  public boolean existFoodFromCategory(Long categoryId) {
-    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+    public List<Food> loadFoodsWhichAreNotFavourite(List<Long> foodsToExclude) {
+        StringBuilder clauseIn = new StringBuilder();
+        boolean first = true;
+        for (Long foodToExclude : foodsToExclude) {
+            if (!first) {
+                clauseIn.append(",");
+            } else {
+                first = false;
+            }
+            clauseIn.append(foodToExclude);
+        }
+        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+                FoodTable.COLUMN_ID + " NOT IN (" + clauseIn.toString() + ")",null, null, null, null);
+        final List<Food> foods = new ArrayList<Food>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final Food food = new Food();
+            food.setId(cursor.getLong(0));
+            food.setName(cursor.getString(1));
+            food.setQuantity(cursor.getFloat(2));
+            food.setUnit(cursor.getString(3));
+            food.setCarbonhydrate(cursor.getFloat(4));
+            food.setCategoryId(cursor.getLong(5));
+            foods.add(food);
+        }
+        return foods;
+    }
+
+    public boolean existFoodFromCategory(Long categoryId) {
+          final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
         FoodTable.COLUMN_FK_CATEGORY + " = ?", new String[] { String.valueOf(categoryId) }, null, null, null);
     return cursor.getCount() > 0;
   }
@@ -483,7 +509,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
             values.put(FavouriteFoodTable.COLUMN_FK_MEAL_TYPE, favouriteFood.getMealTypeId());
             values.put(FavouriteFoodTable.COLUMN_FK_FOOD, favouriteFood.getFoodId());
-            values.put(FavouriteFoodTable.COLUMN_CARBONHYDRATE, favouriteFood.getQuantity());
+            values.put(FavouriteFoodTable.COLUMN_CARBONHYDRATE, favouriteFood.getCarbonhydrate());
             values.put(FavouriteFoodTable.COLUMN_QUANTITY, favouriteFood.getQuantity());
             db.update(FavouriteFoodTable.TABLE_NAME, values, FavouriteFoodTable.COLUMN_ID + " = ?",
                     new String[] { String.valueOf(favouriteFood.getId()) });
@@ -521,6 +547,25 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         }
         sortFavouriteFoods(favouriteFoods);
         return favouriteFoods;
+    }
+
+    public FavouriteFood loadFavouriteFood(long favouriteFoodId) {
+        FavouriteFood result = null;
+
+        final String whereClause = FavouriteFoodTable.COLUMN_ID + "=?";
+        final String[] whereArgs = { String.valueOf(favouriteFoodId) };
+
+        final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
+        if (cursor.moveToNext()) {
+            result = new FavouriteFood();
+            result.setId(cursor.getLong(0));
+            result.setMealTypeId(cursor.getLong(1));
+            result.setFoodId(cursor.getLong(2));
+            result.setQuantity(cursor.getFloat(3));
+            result.setCarbonhydrate(cursor.getFloat(4));
+        }
+        return result;
     }
 
     public List<FavouriteFood> loadFavouriteFoods() {
