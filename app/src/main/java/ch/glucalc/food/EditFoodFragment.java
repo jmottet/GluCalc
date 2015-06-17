@@ -129,7 +129,7 @@ public class EditFoodFragment extends Fragment {
         log("EditFoodFragment.initFieldsAndButtonForCreation");
         newFoodName = (EditText) layout.findViewById(R.id.food_edittext);
         newFoodCategorySpinner = (Spinner) layout.findViewById(R.id.food_category_spinner);
-        newFoodCarbonHydrate = (EditText) layout.findViewById(R.id.food_carbonhydrate_edittext);
+        newFoodCarbonHydrate = (EditText) layout.findViewById(R.id.food_carbohydrate_edittext);
         newFoodQuantity = (EditText) layout.findViewById(R.id.food_quantity_edittext);
         newFoodUnit = (EditText) layout.findViewById(R.id.food_unit_edittext);
         populateSpinner(null);
@@ -139,7 +139,7 @@ public class EditFoodFragment extends Fragment {
         log("EditFoodFragment.initFieldsAndButtonForEdition");
         newFoodName = (EditText) layout.findViewById(R.id.food_edittext);
         newFoodCategorySpinner = (Spinner) layout.findViewById(R.id.food_category_spinner);
-        newFoodCarbonHydrate = (EditText) layout.findViewById(R.id.food_carbonhydrate_edittext);
+        newFoodCarbonHydrate = (EditText) layout.findViewById(R.id.food_carbohydrate_edittext);
         newFoodQuantity = (EditText) layout.findViewById(R.id.food_quantity_edittext);
         newFoodUnit = (EditText) layout.findViewById(R.id.food_unit_edittext);
 

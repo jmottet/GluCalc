@@ -103,7 +103,7 @@ public class ExportActivity extends Activity {
     sb.append(CSV_SEPARATOR);
     sb.append(getString(R.string.export_food_column));
     sb.append(CSV_SEPARATOR);
-    sb.append(getString(R.string.export_carbonhydrate_column));
+    sb.append(getString(R.string.export_carbohydrate_column));
     sb.append(CSV_SEPARATOR);
     sb.append(getString(R.string.export_quantity_column));
     sb.append(CSV_SEPARATOR);

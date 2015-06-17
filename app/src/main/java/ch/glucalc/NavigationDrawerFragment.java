@@ -98,6 +98,8 @@ public class NavigationDrawerFragment extends Fragment {
         public void openCategoryFoodListFragment();
 
         public void openFavouriteFoodMealTypeListSelectionFragment();
+
+        public void openInsulinOverviewMealTypeListSelectionFragment();
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -311,6 +313,7 @@ public class NavigationDrawerFragment extends Fragment {
                 case CHECK_MEAL_DIARY_IDX:
                     break;
                 case CHECK_INSULIN_OVERVIEW_IDX:
+                    mCallback.openInsulinOverviewMealTypeListSelectionFragment();
                     break;
                 case CHECK_INSULIN_RATIO_IDX:
                     break;

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.Food;
@@ -25,7 +28,7 @@ public class EditFavouriteFoodFragment extends Fragment {
     private static String TAG = "GluCalc";
 
     private EditText favouriteFoodQuantity;
-    private EditText favouriteFoodCarbonhydrate;
+    private EditText favouriteFoodCarbohydrate;
     private FavouriteFood favouriteFood;
     private Food food;
 
@@ -82,12 +85,13 @@ public class EditFavouriteFoodFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.save:
                 initFavouriteFoodFromFields();
-                //    DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
-                //} else {
+                if (favouriteFood.areSomeMandatoryFieldsMissing()) {
+                    DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
+                } else {
                     saveFavouriteFood();
                     log("EditFoodFragment.onClick : DONE");
                     mCallback.openFavouriteFoodListFragment(favouriteFood.getMealTypeId());
-                //}
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -103,10 +107,63 @@ public class EditFavouriteFoodFragment extends Fragment {
         log("EditFoodFragment.initFieldsAndButtonForEdition");
 
         favouriteFoodQuantity = (EditText) layout.findViewById(R.id.favourite_food_quantity_edittext);
-        favouriteFoodCarbonhydrate = (EditText) layout.findViewById(R.id.favourite_food_carbonhydrate_edittext);
+        favouriteFoodCarbohydrate = (EditText) layout.findViewById(R.id.favourite_food_carbohydrate_edittext);
+
+        favouriteFoodQuantity.addTextChangedListener(new TextWatcher() {
+
+             public void afterTextChanged(Editable s) {
+                 Float newFoodQuantityAsFloat = null;
+                 try {
+                     newFoodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
+                 } catch (final NumberFormatException nfe) {
+                 }
+
+
+                 if (mustFieldBeComputed()) {
+                     Float result = newFoodQuantityAsFloat * food.getCarbonhydrate() / food.getQuantity();
+                     favouriteFoodCarbohydrate.setText(String.valueOf(result));
+                 }
+             }
+
+             public void beforeTextChanged(CharSequence s, int start,
+                                           int count, int after) {
+             }
+
+             public void onTextChanged(CharSequence s, int start,
+                                       int before, int count) {
+
+             }
+         });
+
+        favouriteFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Float newFoodCarbohydrateAsFloat = null;
+                try {
+                    newFoodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
+                } catch (final NumberFormatException nfe) {
+                }
+
+
+                if (mustFieldBeComputed()) {
+                    Float result = newFoodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate();
+                    favouriteFoodQuantity.setText(String.valueOf(result));
+
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
 
         updateFieldText(favouriteFoodQuantity, String.valueOf(favouriteFood.getQuantity()));
-        updateFieldText(favouriteFoodCarbonhydrate, String.valueOf(favouriteFood.getCarbonhydrate()));
+        updateFieldText(favouriteFoodCarbohydrate, String.valueOf(favouriteFood.getCarbonhydrate()));
 
         TextView favourite_food_quantity_unit = (TextView) layout.findViewById(R.id.favourite_food_quantity_unit_textview);
         favourite_food_quantity_unit.setText(food.getUnit());
@@ -117,13 +174,33 @@ public class EditFavouriteFoodFragment extends Fragment {
         TextView selected_food_quantity = (TextView) layout.findViewById(R.id.favourite_food_selected_food_quantity_value_textview);
         selected_food_quantity.setText(String.valueOf(food.getQuantity()));
 
-        TextView selected_food_carbonhydrate = (TextView) layout.findViewById(R.id.favourite_food_selected_food_carbonhydrate_value_textview);
-        selected_food_carbonhydrate.setText(String.valueOf(food.getCarbonhydrate()));
+        TextView selected_food_carbohydrate = (TextView) layout.findViewById(R.id.favourite_food_selected_food_carbohydrate_value_textview);
+        selected_food_carbohydrate.setText(String.valueOf(food.getCarbonhydrate()));
 
         TextView selected_food_unit = (TextView) layout.findViewById(R.id.favourite_food_selected_food_unit_value_textview);
         selected_food_unit.setText(food.getUnit());
 
 
+    }
+
+    private boolean mustFieldBeComputed() {
+        boolean result = false;
+        Float foodQuantityAsFloat = null;
+        try {
+            foodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+
+
+
+        Float foodCarbohydrateAsFloat = null;
+        try {
+            foodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
+        } catch (final NumberFormatException nfe) {
+            return false;
+        }
+        return foodQuantityAsFloat != (foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate());
     }
 
     private void updateFieldText(EditText editText, String text) {
@@ -140,7 +217,6 @@ public class EditFavouriteFoodFragment extends Fragment {
 
     private void saveFavouriteFood() {
         GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateFavouriteFood(favouriteFood);
-        //propagateResultForEdition();
     }
 
     private void initFavouriteFoodFromFields() {
@@ -149,13 +225,15 @@ public class EditFavouriteFoodFragment extends Fragment {
             final Float newFoodQuantityAsFloat = Float.valueOf(newFoodQuantityText);
             favouriteFood.setQuantity(newFoodQuantityAsFloat);
         } catch (final NumberFormatException nfe) {
+            favouriteFood.setQuantity(null);
         }
 
-        final String newFoodCarbonHydrateText = favouriteFoodCarbonhydrate.getText().toString();
+        final String newFoodCarbonHydrateText = favouriteFoodCarbohydrate.getText().toString();
         try {
             final Float newFoodCarbonHydrateAsFloat = Float.valueOf(newFoodCarbonHydrateText);
             favouriteFood.setCarbonhydrate(newFoodCarbonHydrateAsFloat);
         } catch (final NumberFormatException nfe) {
+            favouriteFood.setCarbonhydrate(null);
         }
     }
 

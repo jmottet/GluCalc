@@ -26,6 +26,7 @@ import ch.glucalc.food.category.EditCategoryFoodFragment;
 import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.food.favourite.food.FavouriteFoodConstants;
 import ch.glucalc.food.favourite.food.FavouriteFoodListFragment;
+import ch.glucalc.insulin.InsulinOverviewMealTypeListSelectionFragment;
 import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.type.EditMealTypeFragment;
 import ch.glucalc.meal.type.MealType;
@@ -183,6 +184,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void openFavouriteFoodMealTypeListSelectionFragment() {
         openFragment(new FavouriteFoodMealTypeListSelectionFragment(), false);
+    }
+
+    @Override
+    public void openInsulinOverviewMealTypeListSelectionFragment() {
+        openFragment(new InsulinOverviewMealTypeListSelectionFragment(), false);
     }
 
     @Override

@@ -34,17 +34,17 @@
         />
     	
     <TextView
-	    android:id="@+id/food_carbonhydrate_textview"
+	    android:id="@+id/food_carbohydrate_textview"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/edit_food_carbonhydrate"
+	    android:text="@string/edit_food_carbohydrate"
 	    android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/food_carbonhydrate_edittext"
+        android:id="@+id/food_carbohydrate_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_food_carbonhydrate_hint" 
+        android:hint="@string/enter_food_carbohydrate_hint" 
         android:inputType="numberDecimal">
     </EditText>
     
