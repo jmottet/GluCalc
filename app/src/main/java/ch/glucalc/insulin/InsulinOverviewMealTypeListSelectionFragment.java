@@ -24,13 +24,13 @@ public class InsulinOverviewMealTypeListSelectionFragment extends ListFragment {
 
     private InsulinOverviewMealTypeAdapter mealTypeAdapter;
 
-    private OnMealTypeFavouriteFood mCallback;
+    private OnMealTypeInsulinOverview mCallback;
 
 
     // Container Activity must implement this interface
-    public interface OnMealTypeFavouriteFood {
+    public interface OnMealTypeInsulinOverview {
 
-        public void openFavouriteFoodListFragment(long mealTypeId);
+        public void openInsulinOverviewMealTypeFragment(long mealTypeId);
 
     }
 
@@ -45,7 +45,7 @@ public class InsulinOverviewMealTypeListSelectionFragment extends ListFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            //mCallback = (OnMealTypeFavouriteFood) activity;
+            mCallback = (OnMealTypeInsulinOverview) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnMealTypeFavouriteFood");
@@ -72,8 +72,7 @@ public class InsulinOverviewMealTypeListSelectionFragment extends ListFragment {
         final MealType currentMealType = (MealType) getListView().getItemAtPosition(position);
 
         super.onListItemClick(l, v, position, id);
-        //mCallback.openFavouriteFoodListFragment(currentMealType.getId());
-        Toast.makeText(getActivity(), "Item clicked!", Toast.LENGTH_SHORT).show();
+        mCallback.openInsulinOverviewMealTypeFragment(currentMealType.getId());
     }
 
     @Override

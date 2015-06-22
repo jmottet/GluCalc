@@ -120,7 +120,7 @@ public class EditFavouriteFoodFragment extends Fragment {
 
 
                  if (mustFieldBeComputed()) {
-                     Float result = newFoodQuantityAsFloat * food.getCarbonhydrate() / food.getQuantity();
+                     Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
                      favouriteFoodCarbohydrate.setText(String.valueOf(result));
                  }
              }
@@ -146,7 +146,7 @@ public class EditFavouriteFoodFragment extends Fragment {
 
 
                 if (mustFieldBeComputed()) {
-                    Float result = newFoodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate();
+                    Float result = (newFoodCarbohydrateAsFloat != null ?  newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
                     favouriteFoodQuantity.setText(String.valueOf(result));
 
                 }
@@ -189,7 +189,7 @@ public class EditFavouriteFoodFragment extends Fragment {
         try {
             foodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return false;
+            return true;
         }
 
 
@@ -198,7 +198,7 @@ public class EditFavouriteFoodFragment extends Fragment {
         try {
             foodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return false;
+            return true;
         }
         return foodQuantityAsFloat != (foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate());
     }
