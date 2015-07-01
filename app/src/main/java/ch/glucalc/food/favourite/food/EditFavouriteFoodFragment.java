@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import ch.glucalc.DecimalDigitsInputFilter;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
@@ -109,6 +111,9 @@ public class EditFavouriteFoodFragment extends Fragment {
         favouriteFoodQuantity = (EditText) layout.findViewById(R.id.favourite_food_quantity_edittext);
         favouriteFoodCarbohydrate = (EditText) layout.findViewById(R.id.favourite_food_carbohydrate_edittext);
 
+        //favouriteFoodQuantity.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
+        //favouriteFoodCarbohydrate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
+
         favouriteFoodQuantity.addTextChangedListener(new TextWatcher() {
 
              public void afterTextChanged(Editable s) {
@@ -121,7 +126,7 @@ public class EditFavouriteFoodFragment extends Fragment {
 
                  if (mustFieldBeComputed()) {
                      Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
-                     favouriteFoodCarbohydrate.setText(String.valueOf(result));
+                     favouriteFoodCarbohydrate.setText(format(result));
                  }
              }
 
@@ -147,7 +152,7 @@ public class EditFavouriteFoodFragment extends Fragment {
 
                 if (mustFieldBeComputed()) {
                     Float result = (newFoodCarbohydrateAsFloat != null ?  newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
-                    favouriteFoodQuantity.setText(String.valueOf(result));
+                    favouriteFoodQuantity.setText(format(result));
 
                 }
             }
@@ -200,7 +205,7 @@ public class EditFavouriteFoodFragment extends Fragment {
         } catch (final NumberFormatException nfe) {
             return true;
         }
-        return foodQuantityAsFloat != (foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate());
+        return !(format(foodQuantityAsFloat).equals(format(foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate())));
     }
 
     private void updateFieldText(EditText editText, String text) {
@@ -235,6 +240,10 @@ public class EditFavouriteFoodFragment extends Fragment {
         } catch (final NumberFormatException nfe) {
             favouriteFood.setCarbonhydrate(null);
         }
+    }
+
+    private String format(float number) {
+        return String.format("%.2f", number).replaceAll(",",".");
     }
 
 //    private void propagateResultForEdition() {

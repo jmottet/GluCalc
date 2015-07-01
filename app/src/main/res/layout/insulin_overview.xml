@@ -172,4 +172,131 @@
             android:textSize="10sp"/>
     </LinearLayout>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10sp"
+        >
+        <TextView
+            android:id="@+id/insulin_overview_recap_glycemia_first_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right" />
+        <TextView
+            android:id="@+id/insulin_overview_recap_insulin_first_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/insulin_overview_recap_glycemia_second_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right" />
+        <TextView
+            android:id="@+id/insulin_overview_recap_insulin_second_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/insulin_overview_recap_glycemia_third_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right" />
+        <TextView
+            android:id="@+id/insulin_overview_recap_insulin_third_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/insulin_overview_recap_glycemia_fourth_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right" />
+        <TextView
+            android:id="@+id/insulin_overview_recap_insulin_fourth_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/insulin_overview_recap_glycemia_fifth_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right" />
+        <TextView
+            android:id="@+id/insulin_overview_recap_insulin_fifth_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/insulin_overview_recap_glycemia_sixth_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="right" />
+        <TextView
+            android:id="@+id/insulin_overview_recap_insulin_sixth_textview"
+            android:paddingRight="20sp"
+            android:layout_width="180sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
 </LinearLayout>
