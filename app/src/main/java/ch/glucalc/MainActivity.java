@@ -31,7 +31,9 @@ import ch.glucalc.food.favourite.food.FavouriteFoodListSelectionFragment;
 import ch.glucalc.food.favourite.food.FavouriteFoodMealTypeListSelectionFragment;
 import ch.glucalc.insulin.InsulinOverviewMealTypeFragment;
 import ch.glucalc.insulin.InsulinOverviewMealTypeListSelectionFragment;
+import ch.glucalc.meal.NewMealConstants;
 import ch.glucalc.meal.NewMealFragment;
+import ch.glucalc.meal.NewMealSecondStepFragment;
 import ch.glucalc.meal.type.EditMealTypeFragment;
 import ch.glucalc.meal.type.MealType;
 import ch.glucalc.meal.type.MealTypeConstants;
@@ -41,7 +43,9 @@ import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.OnNavigationItemSelected, CategoryFoodListFragment.OnCategoryFoodEdition,
-        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition, FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition, EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview  {
+        EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition,
+        FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
+        EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep {
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
@@ -60,10 +64,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
         int count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
-        System.out.println(count);
-        insertFavouriteFoodsIfNone();
-        count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
-        System.out.println(count);
+        //System.out.println(count);
+        //insertFavouriteFoodsIfNone();
+        //count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
+        //System.out.println(count);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -310,6 +314,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         InsulinOverviewMealTypeFragment insulinOverviewMealTypeFragment = new InsulinOverviewMealTypeFragment();
         insulinOverviewMealTypeFragment.setArguments(arguments);
         openFragment(insulinOverviewMealTypeFragment, true);
+    }
+
+    @Override
+    public void openNewMealSecondStepFragment(long mealTypeId, float newMealCarbohydrate, boolean favouriteFood) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, mealTypeId);
+        arguments.putFloat(NewMealConstants.NEW_MEAL_CARBOHYDRATE_PARAMETER, newMealCarbohydrate);
+        arguments.putBoolean(NewMealConstants.NEW_MEAL_WITH_FAVOURITE_FOOD_PARAMETER, favouriteFood);
+
+        NewMealSecondStepFragment newMealSecondStepFragment = new NewMealSecondStepFragment();
+        newMealSecondStepFragment.setArguments(arguments);
+        openFragment(newMealSecondStepFragment, true);
     }
 
     private void openFragment(Fragment fragment, boolean backAvailable) {

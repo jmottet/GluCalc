@@ -20,17 +20,60 @@
 
     <TextView
         android:id="@+id/new_meal_carbonhydrate_textview"
+        android:paddingTop="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/edit_new_meal_carbohydrate"
         android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/category_edittext"
-        android:layout_width="match_parent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_new_meal_carbohydrate_hint"
-        android:inputType="text">
-    </EditText>
+        android:weightSum="1">
+        <EditText
+            android:id="@+id/new_meal_carbonhydrate_edittext"
+            android:layout_height="wrap_content"
+            android:layout_width="266dp"
+            android:hint="@string/enter_new_meal_carbohydrate_hint"
+            android:inputType="numberDecimal">
+        </EditText>
 
+        <TextView
+            android:id="@+id/new_meal_carbonhydrate_unit_textview"
+            android:layout_width="40sp"
+            android:layout_height="32dp"
+            android:textSize="20sp"
+            android:text="@string/new_meal_carbohydrate_unit"
+            android:layout_weight="0.80" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <Switch
+            android:id="@+id/favourite_food_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp"
+            android:switchMinWidth="56dp"
+            android:text="@string/favourite_food_switch"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/favourite_food_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/favourite_food_switch"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="ON"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 </LinearLayout>

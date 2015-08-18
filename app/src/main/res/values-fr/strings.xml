@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Application -->
+    <string name="app_name">GluCalc</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="search_title">Rechercher un enregistrement</string>
+    <string name="search_food_hint">Rechercher un aliment</string>
+    <string name="add_title">Ajouter un nouvel enregistrement</string>
+    <string name="delete_title">Effacer un enregistrement</string>
+    <string name="select_title">Selectionner un enregistrement</string>
+    <string name="select_performed_title">Selection de l\'enregistrement effectuée</string>
+    <string name="save_title">Sauvegarder l\'enregistrement\'</string>
+    <string name="next_title">Suiv.</string>
+
+    <!-- Left Menu Main Categories -->
+    <string-array name="left_menu_items_array">
+        <item>Nouveau repas</item>
+        <item>Aliment</item>
+        <item>Contrôle</item>
+        <item>Paramètres</item>
+        <item>Exporter</item>
+        <item>A propos de Glucalc</item>
+    </string-array>
+
+    <!-- Left Menu Subcategories -->
+
+    <string-array name="left_submenu_report_items_array">
+        <item>Journal des repas</item>
+        <item>Aperçu Insuline</item>
+        <item>Insuline Ratio</item>
+    </string-array>
+
+    <string-array name="left_submenu_settings_items_array">
+        <item>Repas et Insuline</item>
+        <item>Aliments favoris</item>
+        <item>Catégorie d\'aliment</item>
+        <item>Protection par code</item>
+        <item>Alertes</item>
+        <item>Configuration initiale</item>
+        <item>Réinitialisation</item>
+    </string-array>
+
+    <string-array name="left_submenu_about_items_array">
+        <item>Conditions d\'utilisation</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- Edit new meal -->
+    <string name="enter_new_meal_type_hint">Saisir un type de repas</string>
+    <string name="edit_new_meal_type">Type de repas</string>
+    <string name="enter_new_meal_carbohydrate_hint">Saisir une quantité de glucides</string>
+    <string name="edit_new_meal_carbohydrate">Glucides</string>
+    <string name="new_meal_carbohydrate_unit">[mmol/l]</string>
+    <string name="favourite_food_switch">Aliment favoris</string>
+
+    <!-- New meal second step -->
+    <string name="new_meal_second_step_carbohydrate">Glucides</string>
+    <string name="new_meal_second_step_insulin">Insuline</string>
+    <string name="new_meal_second_step_glycemia">Glycémie</string>
+
+    <!-- Edit category food -->
+    <string name="edit_category_food">Catégorie :</string>
+    <string name="enter_category_hint">Saisir une catégorie d\'aliment</string>
+    <string name="selected">Sélectionné</string>
+
+    <!-- Edit food -->
+    <string name="edit_food">Aliment :</string>
+    <string name="enter_food_hint">Saisir un nom d\'aliment</string>
+
+    <string name="edit_food_category">Catégorie :</string>
+
+    <string name="edit_food_carbohydrate">Glucide :</string>
+    <string name="enter_food_carbohydrate_hint">Saisie une quantité de glucides</string>
+
+    <string name="edit_food_quantity">Quantité :</string>
+    <string name="enter_food_quantity_hint">Saisir une quantité d\'aliment</string>
+
+    <string name="edit_food_unit">Unité de mesure :</string>
+    <string name="enter_food_unit_hint">Saisir une unité de mesure</string>
+
+    <!-- Edit favourite food -->
+    <string name="edit_favourite_food_quantity">Quantité :</string>
+    <string name="enter_favourite_food_quantity_hint">Saisir une quantité d\'aliment</string>
+
+    <string name="edit_favourite_food_carbohydrate">Glucide :</string>
+    <string name="enter_favourite_food_carbohydrate_hint">Saisir une quantité d\'aliment</string>
+
+    <string name="edit_favourite_food_carbohydrate_quantity">g</string>
+
+    <string name="edit_favourite_food_selected_food">Aliment sélectionné :</string>
+    <string name="edit_favourite_food_selected_food_name">Aliment :</string>
+    <string name="edit_favourite_food_selected_food_quantity">Quantité :</string>
+    <string name="edit_favourite_food_selected_food_carbohydrate">Glucide :</string>
+    <string name="edit_favourite_food_selected_food_unit">Unité de mesure :</string>
+
+    <!-- Edit meal type -->
+    <string name="enter_meal_type_name_hint">Saisir un type de repas</string>
+    <string name="edit_meal_type_name">Type de repas</string>
+    <string name="enter_meal_type_food_target_hint">Saisir une cible alimentaire</string>
+    <string name="edit_meal_type_food_target">Cible alimentaire</string>
+    <string name="enter_meal_type_glycemia_target_hint">Saisir une cible de glycémie</string>
+    <string name="edit_meal_type_glycemia_target">Cible de glycémie</string>
+    <string name="enter_meal_type_insulin_sensitivity_hint">Saisir le facteur de sensibilité à l\'insuline</string>
+    <string name="edit_meal_type_insulin_sensitivity">Facteur de sensibilité à l\'insuline</string>
+    <string name="enter_meal_type_insulin_hint">Saisir une quantité d\'insuline pour 10g de glucides</string>
+    <string name="edit_meal_type_insulin">Insuline</string>
+
+    <!-- Insulin Overview -->
+    <string name="insulin_overview_target_food_unit">[g]</string>
+    <string name="insulin_overview_sensitivity_unit">[mmol/l]</string>
+    <string name="insulin_overview_glycemia_target_unit">[mmol/l]</string>
+    <string name="insulin_overview_insulin_unit">[UI/l0 g]</string>
+    <string name="insulin_overview_recap_glycemia">Glycémie</string>
+    <string name="insulin_overview_recap_insulin">Insuline</string>
+    <string name="insulin_overview_recap_glycemia_unit">[mmol/l]</string>
+    <string name="insulin_overview_recap_insulin_unit">UI</string>
+
+    <!-- Button Labels -->
+    <string name="save_button_string">Sauvegarder</string>
+
+    <!-- Dialog Messages -->
+    <string name="dialog_error_title">Erreur</string>
+    <string name="dialog_error_fields_missing">Veuillez renseigner tous les champs</string>
+    <string name="dialog_error_categories_missing">Veuillez créer une catégorie d\'aliment</string>
+
+    <string name="dialog_confirm_title">Confirmer</string>
+    <string name="dialog_confirm_category_delete_cascade">Cette catégorie contient des aliments, cette action va tous les supprimer. Voulez-vous continuer ?</string>
+    <string name="dialog_confirm_food_import">Attention, tous les aliments existants vont être supprimés. Les aliments du fichiers sélectionné vont être importés. Voulez-vous continuer ?</string>
+
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_yes">Oui</string>
+    <string name="dialog_button_cancel">Annuler</string>
+
+    <string name="imported_food">Aliments importés : {0}</string>
+    <string name="imported_food_failed">Echec de l\'import des aliments!</string>
+    <string name="export_category_column">Catégorie</string>
+    <string name="export_food_column">Aliment</string>
+    <string name="export_carbohydrate_column">Glucide</string>
+    <string name="export_quantity_column">Quantité</string>
+    <string name="export_unit_column">Unité</string>
+    <string name="export_food_title">Exporter les aliments à partir de Glucalc</string>
+    <string name="export_email_chooser_title">Email personalisé à l\'aide de...</string>
+    <string name="exported_food_failed">Problème lors de la création du fichier attaché</string>
+    <string name="exported_food_successfully">Aliments exportés avec succès!</string>
+</resources>

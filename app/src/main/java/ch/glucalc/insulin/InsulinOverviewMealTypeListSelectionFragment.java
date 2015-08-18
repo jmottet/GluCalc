@@ -30,7 +30,7 @@ public class InsulinOverviewMealTypeListSelectionFragment extends ListFragment {
     // Container Activity must implement this interface
     public interface OnMealTypeInsulinOverview {
 
-        public void openInsulinOverviewMealTypeFragment(long mealTypeId);
+        void openInsulinOverviewMealTypeFragment(long mealTypeId);
 
     }
 
