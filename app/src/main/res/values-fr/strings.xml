@@ -60,6 +60,10 @@
     <string name="new_meal_second_step_carbohydrate">Glucides</string>
     <string name="new_meal_second_step_insulin">Insuline</string>
     <string name="new_meal_second_step_glycemia">Glycémie</string>
+    <string name="new_meal_second_step_modify">Modifier</string>
+    <string name="new_meal_second_step_add"> + </string>
+    <string name="new_meal_second_step_food">Aliment</string>
+    <string name="new_meal_second_step_quantity">Quantity</string>
 
     <!-- Edit category food -->
     <string name="edit_category_food">Catégorie :</string>

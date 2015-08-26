@@ -1,5 +1,6 @@
 package ch.glucalc.meal;
 
+import android.app.FragmentTransaction;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,6 +32,19 @@ public class NewMealSecondStepFragment extends Fragment {
         log("NewMealSecondStepFragment.onCreate");
         View layout = inflater.inflate(R.layout.new_meal_second_step_view, container, false);
         initFields(layout);
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+
+        NewMealFoodListFragment newMealFoodListFragment = new NewMealFoodListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, getMealTypeId());
+        newMealFoodListFragment.setArguments(arguments);
+
+        fragmentTransaction.replace(R.id.new_meal_second_step_food_container, newMealFoodListFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
+
         return layout;
     }
 
