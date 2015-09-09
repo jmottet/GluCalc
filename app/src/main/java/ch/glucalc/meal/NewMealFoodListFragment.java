@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.glucalc.GluCalcSQLiteHelper;
@@ -19,6 +20,7 @@ import ch.glucalc.R;
 import ch.glucalc.beans.SelectionBean;
 import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.food.favourite.food.FavouriteFoodAdapter;
+import ch.glucalc.meal.diary.FoodDiary;
 import ch.glucalc.meal.type.MealTypeConstants;
 
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
@@ -28,9 +30,24 @@ public class NewMealFoodListFragment extends ListFragment {
 
     private static String TAG = "GluCalc";
 
-    private  FavouriteFoodAdapter favouriteFoodAdapter;
-    private List<FavouriteFood> favouriteFoods;
+    private  NewMealFoodAdapter newMealFoodAdapter;
 
+    private List<FoodDiary> newMealFoods = new ArrayList<>();
+
+    private OnNewMealFoodEdition mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnNewMealFoodEdition {
+
+        // public void openFavouriteFoodListSelectionFragment(long mealTypeId);
+
+        public void openEditNewMealFoodFragment(FoodDiary newMealFood);
+
+    }
+
+    public void setNewMealFoods(List<FoodDiary> newMealFoods) {
+        this.newMealFoods = newMealFoods;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -39,34 +56,32 @@ public class NewMealFoodListFragment extends ListFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
+            mCallback = (OnNewMealFoodEdition) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnMealTypeEdition");
+                    + " must implement OnNewMealFoodEdition");
         }
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         log("NewMealFoodListFragment.onCreate");
         super.onCreate(savedInstanceState);
 
-        // Load the mealTypes from the Database
-        favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFavouriteFoods(getMealTypeId());
-
         // Set the list adapter for this ListFragment
-        favouriteFoodAdapter = new FavouriteFoodAdapter(getActivity(), favouriteFoods);
-        setListAdapter(favouriteFoodAdapter);
+        newMealFoodAdapter = new NewMealFoodAdapter(getActivity(), newMealFoods);
+        setListAdapter(newMealFoodAdapter);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         log("NewMealFoodListFragment.onListItemClick");
-        final FavouriteFood currentFavouriteFood = (FavouriteFood) getListView().getItemAtPosition(position);
+        final FoodDiary currentNewMealFood = (FoodDiary) getListView().getItemAtPosition(position);
 
         super.onListItemClick(l, v, position, id);
 
         Toast.makeText(getActivity(), "Position clicked : " + position, Toast.LENGTH_LONG).show();
+        mCallback.openEditNewMealFoodFragment(currentNewMealFood);
     }
     @Override
     public void onDetach() {
@@ -113,12 +128,5 @@ public class NewMealFoodListFragment extends ListFragment {
         Log.i(TAG, msg);
     }
 
-
-    private void refreshFavouriteFoods() {
-        // Reload the favourite foods from the Database
-        favouriteFoods.clear();
-        favouriteFoods.addAll(GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFavouriteFoods(getMealTypeId()));
-        favouriteFoodAdapter.notifyDataSetChanged();
-    }
 
 }

@@ -11,8 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
+import ch.glucalc.food.favourite.food.FavouriteFood;
+import ch.glucalc.meal.diary.FoodDiary;
+import ch.glucalc.meal.diary.MealDiary;
 import ch.glucalc.meal.type.MealType;
 
 public class NewMealSecondStepFragment extends Fragment {
@@ -34,8 +40,42 @@ public class NewMealSecondStepFragment extends Fragment {
         initFields(layout);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        boolean alreadyExists = true;
+        MealDiary mealDiary = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealDiaryTemporary();
+        if (mealDiary == null) {
+            mealDiary = new MealDiary();
+            alreadyExists = false;
+        }
+
+        mealDiary.setMealTypeId(getMealTypeId());
+        mealDiary.setGlycemiaMeasured(getCarbohydrate());
+        if (alreadyExists) {
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).updateMealDiary(mealDiary);
+        } else {
+            long mealDiaryId = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).storeMealDiary(mealDiary);
+            mealDiary.setId(mealDiaryId);
+        }
 
         NewMealFoodListFragment newMealFoodListFragment = new NewMealFoodListFragment();
+        List<FoodDiary> foodDiaries;
+        if (!alreadyExists) {
+            if (isFavouriteFoodIncluded()) {
+
+                List<FavouriteFood> favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFavouriteFoods(getMealTypeId());
+                foodDiaries = new ArrayList<>(favouriteFoods.size());
+                for (FavouriteFood favouriteFood : favouriteFoods) {
+                    FoodDiary foodDiary = new FoodDiary(mealDiary.getId(), favouriteFood);
+                    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).storeFoodDiary(foodDiary);
+                    foodDiaries.add(foodDiary);
+                }
+            } else {
+                foodDiaries = new ArrayList<>();
+            }
+        } else {
+            //foodDiaries = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries((int) mealDiary.getId());
+            foodDiaries = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries();
+        }
+        newMealFoodListFragment.setNewMealFoods(foodDiaries);
         Bundle arguments = new Bundle();
         arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, getMealTypeId());
         newMealFoodListFragment.setArguments(arguments);

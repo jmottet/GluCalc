@@ -1,11 +1,10 @@
-package ch.glucalc.food.favourite.food;
+package ch.glucalc.meal;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,31 +16,33 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import ch.glucalc.DecimalDigitsInputFilter;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.Food;
+import ch.glucalc.meal.diary.FoodDiary;
 
-import static ch.glucalc.food.favourite.food.FavouriteFoodConstants.FAVOURITE_FOOD_ID_PARAMETER;
+import static ch.glucalc.meal.NewMealConstants.NEW_MEAL_FOOD_ID_PARAMETER;
 
-public class EditFavouriteFoodFragment extends Fragment {
+
+
+public class EditNewMealFoodFragment extends Fragment {
 
     private static String TAG = "GluCalc";
 
-    private EditText favouriteFoodQuantity;
-    private EditText favouriteFoodCarbohydrate;
-    private FavouriteFood favouriteFood;
+    private EditText newMealFoodQuantity;
+    private EditText newMealFoodCarbohydrate;
+    private FoodDiary newMealFood;
     private Food food;
 
-    private OnFavouriteFoodSaved mCallback;
+    //private OnNewMealFoodSaved mCallback;
 
     // Container Activity must implement this interface
-    public interface OnFavouriteFoodSaved {
-
-        public void openFavouriteFoodListFragment(long mealTypeId);
-
-    }
+//    public interface OnNewMealFoodSaved {
+//
+//        public void openNewMealFoodListFragment(long mealTypeId);
+//
+//    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -49,12 +50,12 @@ public class EditFavouriteFoodFragment extends Fragment {
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnFavouriteFoodSaved) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFavouriteFoodSaved");
-        }
+        //try {
+            //mCallback = (OnNewMealFoodSaved) activity;
+        //} catch (ClassCastException e) {
+        //    throw new ClassCastException(activity.toString()
+        //            + " must implement OnNewMealFoodSaved");
+        //}
     }
 
     @Override
@@ -62,20 +63,20 @@ public class EditFavouriteFoodFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        favouriteFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadFavouriteFood(getFavouriteFoodId());
-        food = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadFood(favouriteFood.getFoodId());
+        //newMealFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadnewMealFood(getnewMealFoodId());
+        //food = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadFood(newMealFood.getFoodId());
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        log("EditFavouriteFoodFragment.onCreateOptionsMenu");
+        log("EditNewMealFoodFragment.onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.accept_menu, menu);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        log("EditFavouriteFoodFragment.onCreate");
+        log("EditNewMealFoodFragment.onCreate");
         View layout = inflater.inflate(R.layout.edit_new_meal_food, container, false);
         initFieldsAndButtonForEdition(layout);
         return layout;
@@ -83,16 +84,16 @@ public class EditFavouriteFoodFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        log("EditFoodFragment.onOptionsItemSelected");
+        log("EditNewMealFoodFragment.onOptionsItemSelected");
         switch (item.getItemId()) {
             case R.id.save:
-                initFavouriteFoodFromFields();
-                if (favouriteFood.areSomeMandatoryFieldsMissing()) {
+                initNewMealFoodFromFields();
+                if (newMealFood.areSomeMandatoryFieldsMissing()) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
-                    saveFavouriteFood();
-                    log("EditFoodFragment.onClick : DONE");
-                    mCallback.openFavouriteFoodListFragment(favouriteFood.getMealTypeId());
+                    saveNewMealFood();
+                    log("EditNewMealFoodFragment.onClick : DONE");
+                    //mCallback.opennewMealFoodListFragment(newMealFood.getMealTypeId());
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -101,32 +102,32 @@ public class EditFavouriteFoodFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        log("EditFoodFragment.onDestroy");
+        log("EditNewMealFoodFragment.onDestroy");
         super.onDestroy();
     }
 
     private void initFieldsAndButtonForEdition(View layout) {
-        log("EditFoodFragment.initFieldsAndButtonForEdition");
+        log("EditNewMealFoodFragment.initFieldsAndButtonForEdition");
 
-        favouriteFoodQuantity = (EditText) layout.findViewById(R.id.favourite_food_quantity_edittext);
-        favouriteFoodCarbohydrate = (EditText) layout.findViewById(R.id.favourite_food_carbohydrate_edittext);
+        newMealFoodQuantity = (EditText) layout.findViewById(R.id.favourite_food_quantity_edittext);
+        newMealFoodCarbohydrate = (EditText) layout.findViewById(R.id.favourite_food_carbohydrate_edittext);
 
-        //favouriteFoodQuantity.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
-        //favouriteFoodCarbohydrate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
+        //newMealFoodQuantity.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
+        //newMealFoodCarbohydrate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
 
-        favouriteFoodQuantity.addTextChangedListener(new TextWatcher() {
+        newMealFoodQuantity.addTextChangedListener(new TextWatcher() {
 
              public void afterTextChanged(Editable s) {
                  Float newFoodQuantityAsFloat = null;
                  try {
-                     newFoodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
+                     newFoodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
                  } catch (final NumberFormatException nfe) {
                  }
 
 
                  if (mustFieldBeComputed()) {
                      Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
-                     favouriteFoodCarbohydrate.setText(format(result));
+                     newMealFoodCarbohydrate.setText(format(result));
                  }
              }
 
@@ -140,19 +141,19 @@ public class EditFavouriteFoodFragment extends Fragment {
              }
          });
 
-        favouriteFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
+        newMealFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
                 Float newFoodCarbohydrateAsFloat = null;
                 try {
-                    newFoodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
+                    newFoodCarbohydrateAsFloat = Float.valueOf(newMealFoodCarbohydrate.getText().toString());
                 } catch (final NumberFormatException nfe) {
                 }
 
 
                 if (mustFieldBeComputed()) {
                     Float result = (newFoodCarbohydrateAsFloat != null ?  newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
-                    favouriteFoodQuantity.setText(format(result));
+                    newMealFoodQuantity.setText(format(result));
 
                 }
             }
@@ -167,8 +168,8 @@ public class EditFavouriteFoodFragment extends Fragment {
             }
         });
 
-        updateFieldText(favouriteFoodQuantity, String.valueOf(favouriteFood.getQuantity()));
-        updateFieldText(favouriteFoodCarbohydrate, String.valueOf(favouriteFood.getCarbonhydrate()));
+        updateFieldText(newMealFoodQuantity, String.valueOf(newMealFood.getQuantity()));
+        updateFieldText(newMealFoodCarbohydrate, String.valueOf(newMealFood.getCarbohydrate()));
 
         TextView favourite_food_quantity_unit = (TextView) layout.findViewById(R.id.favourite_food_quantity_unit_textview);
         favourite_food_quantity_unit.setText(food.getUnit());
@@ -192,7 +193,7 @@ public class EditFavouriteFoodFragment extends Fragment {
         boolean result = false;
         Float foodQuantityAsFloat = null;
         try {
-            foodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
+            foodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
         } catch (final NumberFormatException nfe) {
             return true;
         }
@@ -201,7 +202,7 @@ public class EditFavouriteFoodFragment extends Fragment {
 
         Float foodCarbohydrateAsFloat = null;
         try {
-            foodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
+            foodCarbohydrateAsFloat = Float.valueOf(newMealFoodCarbohydrate.getText().toString());
         } catch (final NumberFormatException nfe) {
             return true;
         }
@@ -212,33 +213,33 @@ public class EditFavouriteFoodFragment extends Fragment {
         editText.setText(text);
     }
 
-    private long getFavouriteFoodId() {
-        return getArguments().getLong(FAVOURITE_FOOD_ID_PARAMETER);
+    private long getNewMealFoodId() {
+        return getArguments().getLong(NEW_MEAL_FOOD_ID_PARAMETER);
     }
 
     private void log(String msg) {
         Log.i(TAG, msg);
     }
 
-    private void saveFavouriteFood() {
-        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateFavouriteFood(favouriteFood);
+    private void saveNewMealFood() {
+        //GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateNewMealFood(newMealFood);
     }
 
-    private void initFavouriteFoodFromFields() {
-        final String newFoodQuantityText = favouriteFoodQuantity.getText().toString();
+    private void initNewMealFoodFromFields() {
+        final String newFoodQuantityText = newMealFoodQuantity.getText().toString();
         try {
             final Float newFoodQuantityAsFloat = Float.valueOf(newFoodQuantityText);
-            favouriteFood.setQuantity(newFoodQuantityAsFloat);
+            newMealFood.setQuantity(newFoodQuantityAsFloat);
         } catch (final NumberFormatException nfe) {
-            favouriteFood.setQuantity(null);
+            newMealFood.setQuantity(null);
         }
 
-        final String newFoodCarbonHydrateText = favouriteFoodCarbohydrate.getText().toString();
+        final String newFoodCarbonHydrateText = newMealFoodCarbohydrate.getText().toString();
         try {
             final Float newFoodCarbonHydrateAsFloat = Float.valueOf(newFoodCarbonHydrateText);
-            favouriteFood.setCarbonhydrate(newFoodCarbonHydrateAsFloat);
+            newMealFood.setCarbohydrate(newFoodCarbonHydrateAsFloat);
         } catch (final NumberFormatException nfe) {
-            favouriteFood.setCarbonhydrate(null);
+            newMealFood.setCarbohydrate(null);
         }
     }
 
@@ -248,7 +249,7 @@ public class EditFavouriteFoodFragment extends Fragment {
 
 //    private void propagateResultForEdition() {
 //        final Intent intent = new Intent();
-//        intent.putExtra(FavouriteFoodConstants.MODIFIED_ID_RESULT, getFavouriteFoodId());
+//        intent.putExtra(newMealFoodConstants.MODIFIED_ID_RESULT, getnewMealFoodId());
 //    }
 
 }

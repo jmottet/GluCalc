@@ -8,4 +8,6 @@ public class NewMealConstants {
 
   public static String NEW_MEAL_WITH_FAVOURITE_FOOD_PARAMETER = "newMealWithFavouriteFood";
 
+  public static String NEW_MEAL_FOOD_ID_PARAMETER = "newMealFoodId";
+
 }

@@ -31,9 +31,12 @@ import ch.glucalc.food.favourite.food.FavouriteFoodListSelectionFragment;
 import ch.glucalc.food.favourite.food.FavouriteFoodMealTypeListSelectionFragment;
 import ch.glucalc.insulin.InsulinOverviewMealTypeFragment;
 import ch.glucalc.insulin.InsulinOverviewMealTypeListSelectionFragment;
+import ch.glucalc.meal.EditNewMealFoodFragment;
 import ch.glucalc.meal.NewMealConstants;
+import ch.glucalc.meal.NewMealFoodListFragment;
 import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.NewMealSecondStepFragment;
+import ch.glucalc.meal.diary.FoodDiary;
 import ch.glucalc.meal.type.EditMealTypeFragment;
 import ch.glucalc.meal.type.MealType;
 import ch.glucalc.meal.type.MealTypeConstants;
@@ -45,7 +48,8 @@ import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.OnNavigationItemSelected, CategoryFoodListFragment.OnCategoryFoodEdition,
         EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition,
         FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
-        EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep {
+        EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
+        NewMealFoodListFragment.OnNewMealFoodEdition{
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
@@ -326,6 +330,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         NewMealSecondStepFragment newMealSecondStepFragment = new NewMealSecondStepFragment();
         newMealSecondStepFragment.setArguments(arguments);
         openFragment(newMealSecondStepFragment, true);
+    }
+
+    @Override
+    public void openEditNewMealFoodFragment(FoodDiary newMealFood) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_FOOD_ID_PARAMETER, newMealFood.getId());
+
+        EditNewMealFoodFragment editNewMealFoodFragment = new EditNewMealFoodFragment();
+        editNewMealFoodFragment.setArguments(arguments);
+        openFragment(editNewMealFoodFragment, true);
     }
 
     private void openFragment(Fragment fragment, boolean backAvailable) {

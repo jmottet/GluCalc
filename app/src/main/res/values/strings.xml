@@ -60,7 +60,7 @@
     <string name="new_meal_second_step_carbohydrate">Carbohydrate</string>
     <string name="new_meal_second_step_insulin">Insulin</string>
     <string name="new_meal_second_step_glycemia">Glycemia</string>
-    <string name="new_meal_second_step_add"> + </string>
+    <string name="new_meal_second_step_select">Select</string>
     <string name="new_meal_second_step_food">Food</string>
     <string name="new_meal_second_step_quantity">Quantity</string>
 

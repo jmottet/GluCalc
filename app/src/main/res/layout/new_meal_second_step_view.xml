@@ -125,33 +125,53 @@
         android:layout_height="wrap_content"
         android:background="@color/material_blue_grey_800"
         >
-        <Button
+        <!--<Button
             android:id="@+id/new_meal_second_step_modify_button"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="wrap_content"
-            android:text="@string/new_meal_second_step_modify"/>
+            android:text="@string/new_meal_second_step_modify"/> -->
         <TextView
             android:id="@+id/new_meal_second_step_food_title"
             android:layout_width="0dp"
             android:layout_weight="0.50"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:layout_height="fill_parent"
+            android:gravity="left|center_vertical"
             android:text="@string/new_meal_second_step_food"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            />
 
         <Button
+            android:id="@+id/new_meal_second_step_select_button"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="fill_parent"
+            android:text="@string/new_meal_second_step_select"
+            android:textColor="@color/accentColor"/>
+
+        <ImageButton
             android:id="@+id/new_meal_second_step_add_button"
             android:layout_width="0dp"
             android:layout_weight="0.25"
-            android:layout_height="wrap_content"
-            android:text="@string/new_meal_second_step_add"/>
+            android:layout_height="fill_parent"
+            android:src="@android:drawable/ic_menu_add"/>
+
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         >
+
+        <TextView
+            android:id="@+id/new_meal_second_step_food_quantity"
+            android:layout_width="0dp"
+            android:layout_weight="0.50"
+            android:layout_height="wrap_content"
+            android:text="@string/new_meal_second_step_quantity"
+            android:gravity="center"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/new_meal_second_step_food_carbohydrate"
@@ -162,14 +182,6 @@
             android:gravity="center"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/new_meal_second_step_food_quantity"
-            android:layout_width="0dp"
-            android:layout_weight="0.50"
-            android:layout_height="wrap_content"
-            android:text="@string/new_meal_second_step_quantity"
-            android:gravity="center"
-            android:textSize="12sp" />
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
