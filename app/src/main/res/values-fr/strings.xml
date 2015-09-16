@@ -64,6 +64,21 @@
     <string name="new_meal_second_step_food">Aliment</string>
     <string name="new_meal_second_step_quantity">Quantity</string>
 
+    <!-- Edit new meal food -->
+    <string name="edit_new_meal_food_quantity">Quantité :</string>
+    <string name="enter_new_meal_food_quantity_hint">Saisir une quantité d\'aliment</string>
+
+    <string name="edit_new_meal_food_carbohydrate">Glucide :</string>
+    <string name="enter_new_meal_food_carbohydrate_hint">Saisir une quantité d\'aliment</string>
+
+    <string name="edit_new_meal_food_carbohydrate_quantity">g</string>
+
+    <string name="edit_new_meal_food_selected_food">Aliment sélectionné :</string>
+    <string name="edit_new_meal_food_selected_food_name">Aliment :</string>
+    <string name="edit_new_meal_food_selected_food_quantity">Quantité :</string>
+    <string name="edit_new_meal_food_selected_food_carbohydrate">Glucide :</string>
+    <string name="edit_new_meal_food_selected_food_unit">Unité de mesure :</string>
+
     <!-- Edit category food -->
     <string name="edit_category_food">Catégorie :</string>
     <string name="enter_category_hint">Saisir une catégorie d\'aliment</string>

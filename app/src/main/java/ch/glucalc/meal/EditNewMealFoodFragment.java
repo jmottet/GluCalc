@@ -25,7 +25,6 @@ import ch.glucalc.meal.diary.FoodDiary;
 import static ch.glucalc.meal.NewMealConstants.NEW_MEAL_FOOD_ID_PARAMETER;
 
 
-
 public class EditNewMealFoodFragment extends Fragment {
 
     private static String TAG = "GluCalc";
@@ -35,14 +34,13 @@ public class EditNewMealFoodFragment extends Fragment {
     private FoodDiary newMealFood;
     private Food food;
 
-    //private OnNewMealFoodSaved mCallback;
+    private OnNewMealFoodSaved mCallback;
 
-    // Container Activity must implement this interface
-//    public interface OnNewMealFoodSaved {
-//
-//        public void openNewMealFoodListFragment(long mealTypeId);
-//
-//    }
+    public interface OnNewMealFoodSaved {
+
+        void openNewMealSecondStepFragment(long mealDiaryId);
+
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -50,12 +48,12 @@ public class EditNewMealFoodFragment extends Fragment {
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
-        //try {
-            //mCallback = (OnNewMealFoodSaved) activity;
-        //} catch (ClassCastException e) {
-        //    throw new ClassCastException(activity.toString()
-        //            + " must implement OnNewMealFoodSaved");
-        //}
+        try {
+            mCallback = (OnNewMealFoodSaved) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnNewMealFoodSaved");
+        }
     }
 
     @Override
@@ -63,8 +61,8 @@ public class EditNewMealFoodFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        //newMealFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadnewMealFood(getnewMealFoodId());
-        //food = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadFood(newMealFood.getFoodId());
+        newMealFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadFoodDiary(getNewMealFoodId());
+        food = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadFoodByName(newMealFood.getFoodName());
     }
 
     @Override
@@ -93,7 +91,7 @@ public class EditNewMealFoodFragment extends Fragment {
                 } else {
                     saveNewMealFood();
                     log("EditNewMealFoodFragment.onClick : DONE");
-                    //mCallback.opennewMealFoodListFragment(newMealFood.getMealTypeId());
+                    mCallback.openNewMealSecondStepFragment(newMealFood.getMealDiaryId());
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -109,37 +107,34 @@ public class EditNewMealFoodFragment extends Fragment {
     private void initFieldsAndButtonForEdition(View layout) {
         log("EditNewMealFoodFragment.initFieldsAndButtonForEdition");
 
-        newMealFoodQuantity = (EditText) layout.findViewById(R.id.favourite_food_quantity_edittext);
-        newMealFoodCarbohydrate = (EditText) layout.findViewById(R.id.favourite_food_carbohydrate_edittext);
-
-        //newMealFoodQuantity.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
-        //newMealFoodCarbohydrate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
+        newMealFoodQuantity = (EditText) layout.findViewById(R.id.new_meal_food_quantity_edittext);
+        newMealFoodCarbohydrate = (EditText) layout.findViewById(R.id.new_meal_food_carbohydrate_edittext);
 
         newMealFoodQuantity.addTextChangedListener(new TextWatcher() {
 
-             public void afterTextChanged(Editable s) {
-                 Float newFoodQuantityAsFloat = null;
-                 try {
-                     newFoodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
-                 } catch (final NumberFormatException nfe) {
-                 }
+            public void afterTextChanged(Editable s) {
+                Float newFoodQuantityAsFloat = null;
+                try {
+                    newFoodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
+                } catch (final NumberFormatException nfe) {
+                }
 
 
-                 if (mustFieldBeComputed()) {
-                     Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
-                     newMealFoodCarbohydrate.setText(format(result));
-                 }
-             }
+                if (mustFieldBeComputed()) {
+                    Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
+                    newMealFoodCarbohydrate.setText(format(result));
+                }
+            }
 
-             public void beforeTextChanged(CharSequence s, int start,
-                                           int count, int after) {
-             }
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
 
-             public void onTextChanged(CharSequence s, int start,
-                                       int before, int count) {
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
 
-             }
-         });
+            }
+        });
 
         newMealFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
 
@@ -152,7 +147,7 @@ public class EditNewMealFoodFragment extends Fragment {
 
 
                 if (mustFieldBeComputed()) {
-                    Float result = (newFoodCarbohydrateAsFloat != null ?  newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
+                    Float result = (newFoodCarbohydrateAsFloat != null ? newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
                     newMealFoodQuantity.setText(format(result));
 
                 }
@@ -171,22 +166,20 @@ public class EditNewMealFoodFragment extends Fragment {
         updateFieldText(newMealFoodQuantity, String.valueOf(newMealFood.getQuantity()));
         updateFieldText(newMealFoodCarbohydrate, String.valueOf(newMealFood.getCarbohydrate()));
 
-        TextView favourite_food_quantity_unit = (TextView) layout.findViewById(R.id.favourite_food_quantity_unit_textview);
-        favourite_food_quantity_unit.setText(food.getUnit());
+        TextView new_meal_food_quantity_unit = (TextView) layout.findViewById(R.id.new_meal_food_quantity_unit_textview);
+        new_meal_food_quantity_unit.setText(food.getUnit());
 
-        TextView selected_food_name = (TextView) layout.findViewById(R.id.favourite_food_selected_food_name_value_textview);
+        TextView selected_food_name = (TextView) layout.findViewById(R.id.new_meal_food_selected_food_name_value_textview);
         selected_food_name.setText(food.getName());
 
-        TextView selected_food_quantity = (TextView) layout.findViewById(R.id.favourite_food_selected_food_quantity_value_textview);
+        TextView selected_food_quantity = (TextView) layout.findViewById(R.id.new_meal_food_selected_food_quantity_value_textview);
         selected_food_quantity.setText(String.valueOf(food.getQuantity()));
 
-        TextView selected_food_carbohydrate = (TextView) layout.findViewById(R.id.favourite_food_selected_food_carbohydrate_value_textview);
+        TextView selected_food_carbohydrate = (TextView) layout.findViewById(R.id.new_meal_food_selected_food_carbohydrate_value_textview);
         selected_food_carbohydrate.setText(String.valueOf(food.getCarbonhydrate()));
 
-        TextView selected_food_unit = (TextView) layout.findViewById(R.id.favourite_food_selected_food_unit_value_textview);
+        TextView selected_food_unit = (TextView) layout.findViewById(R.id.new_meal_food_selected_food_unit_value_textview);
         selected_food_unit.setText(food.getUnit());
-
-
     }
 
     private boolean mustFieldBeComputed() {
@@ -197,7 +190,6 @@ public class EditNewMealFoodFragment extends Fragment {
         } catch (final NumberFormatException nfe) {
             return true;
         }
-
 
 
         Float foodCarbohydrateAsFloat = null;
@@ -222,7 +214,7 @@ public class EditNewMealFoodFragment extends Fragment {
     }
 
     private void saveNewMealFood() {
-        //GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateNewMealFood(newMealFood);
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateFoodDiary(newMealFood);
     }
 
     private void initNewMealFoodFromFields() {
@@ -244,12 +236,7 @@ public class EditNewMealFoodFragment extends Fragment {
     }
 
     private String format(float number) {
-        return String.format("%.2f", number).replaceAll(",",".");
+        return String.format("%.2f", number).replaceAll(",", ".");
     }
-
-//    private void propagateResultForEdition() {
-//        final Intent intent = new Intent();
-//        intent.putExtra(newMealFoodConstants.MODIFIED_ID_RESULT, getnewMealFoodId());
-//    }
 
 }

@@ -11,6 +11,7 @@ public class FoodDiary {
     private String unit;
     private Float carbohydrate = 0F;
     private long mealDiaryId;
+    private boolean selected = false;
 
     public FoodDiary() {
     }
@@ -69,6 +70,14 @@ public class FoodDiary {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public boolean areSomeMandatoryFieldsMissing() {

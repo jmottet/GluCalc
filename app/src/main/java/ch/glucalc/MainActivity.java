@@ -33,6 +33,7 @@ import ch.glucalc.insulin.InsulinOverviewMealTypeFragment;
 import ch.glucalc.insulin.InsulinOverviewMealTypeListSelectionFragment;
 import ch.glucalc.meal.EditNewMealFoodFragment;
 import ch.glucalc.meal.NewMealConstants;
+import ch.glucalc.meal.NewMealFoodDiaryListSelectionFragment;
 import ch.glucalc.meal.NewMealFoodListFragment;
 import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.NewMealSecondStepFragment;
@@ -49,7 +50,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         EditCategoryFoodFragment.OnCategoryFoodSaved, EditFoodFragment.OnFoodSaved, FoodListFragment.OnFoodEdition, EditMealTypeFragment.OnMealTypeSaved, MealTypeListFragment.OnMealTypeEdition,
         FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
-        NewMealFoodListFragment.OnNewMealFoodEdition{
+        NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
+        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition {
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
@@ -311,6 +313,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
+    public void openNewMealFoodDiaryListSelectionFragment(long mealDiaryId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiaryId);
+
+        NewMealFoodDiaryListSelectionFragment newMealFoodDiaryListSelectionFragment = new NewMealFoodDiaryListSelectionFragment();
+        newMealFoodDiaryListSelectionFragment.setArguments(arguments);
+        openFragment(newMealFoodDiaryListSelectionFragment, true);
+    }
+
+    @Override
     public void openInsulinOverviewMealTypeFragment(long mealTypeId) {
         Bundle arguments = new Bundle();
         arguments.putLong(MealTypeConstants.MEAL_TYPE_ID_PARAMETER, mealTypeId);
@@ -340,6 +352,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         EditNewMealFoodFragment editNewMealFoodFragment = new EditNewMealFoodFragment();
         editNewMealFoodFragment.setArguments(arguments);
         openFragment(editNewMealFoodFragment, true);
+    }
+
+    @Override
+    public void openNewMealSecondStepFragment(long mealDiaryId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiaryId);
+
+        NewMealSecondStepFragment newMealSecondStepFragment = new NewMealSecondStepFragment();
+        newMealSecondStepFragment.setArguments(arguments);
+        openFragment(newMealSecondStepFragment, true);
     }
 
     private void openFragment(Fragment fragment, boolean backAvailable) {

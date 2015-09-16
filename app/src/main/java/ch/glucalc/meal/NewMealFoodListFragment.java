@@ -36,12 +36,14 @@ public class NewMealFoodListFragment extends ListFragment {
 
     private OnNewMealFoodEdition mCallback;
 
+    private final SelectionBean selectionBean = new SelectionBean();
+
     // Container Activity must implement this interface
     public interface OnNewMealFoodEdition {
 
         // public void openFavouriteFoodListSelectionFragment(long mealTypeId);
 
-        public void openEditNewMealFoodFragment(FoodDiary newMealFood);
+        void openEditNewMealFoodFragment(FoodDiary newMealFood);
 
     }
 
@@ -71,17 +73,38 @@ public class NewMealFoodListFragment extends ListFragment {
         // Set the list adapter for this ListFragment
         newMealFoodAdapter = new NewMealFoodAdapter(getActivity(), newMealFoods);
         setListAdapter(newMealFoodAdapter);
+        selectionBean.setNumberItemSelected(0);
+        selectionBean.setModeMultiSelection(false);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         log("NewMealFoodListFragment.onListItemClick");
-        final FoodDiary currentNewMealFood = (FoodDiary) getListView().getItemAtPosition(position);
 
         super.onListItemClick(l, v, position, id);
+        final FoodDiary currentNewMealFood = (FoodDiary) getListView().getItemAtPosition(position);
 
-        Toast.makeText(getActivity(), "Position clicked : " + position, Toast.LENGTH_LONG).show();
-        mCallback.openEditNewMealFoodFragment(currentNewMealFood);
+        if (!selectionBean.isModeMultiSelection()) {
+            Toast.makeText(getActivity(), "Position clicked : " + position, Toast.LENGTH_LONG).show();
+            mCallback.openEditNewMealFoodFragment(currentNewMealFood);
+        } else {
+            if (!currentNewMealFood.isSelected()) {
+                v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
+                currentNewMealFood.setSelected(true);
+                selectionBean.addOneToNumberItemSelected();
+                if (selectionBean.getNumberItemSelected() == 1) {
+                    selectionBean.getmMenu().findItem(R.id.delete).setVisible(true);
+                }
+            } else {
+                v.setBackground(null);
+                currentNewMealFood.setSelected(false);
+                selectionBean.substractOneToNumberItemSelected();
+                if (selectionBean.getNumberItemSelected() == 0) {
+                    selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
+                }
+            }
+        }
+
     }
     @Override
     public void onDetach() {

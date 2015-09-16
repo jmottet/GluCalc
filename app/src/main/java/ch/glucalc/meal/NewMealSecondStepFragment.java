@@ -1,6 +1,6 @@
 package ch.glucalc.meal;
 
-import android.app.FragmentTransaction;
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,11 +28,56 @@ public class NewMealSecondStepFragment extends Fragment {
     private static String TAG = "GluCalc";
 
     private MealType mealType;
+    private MealDiary mealDiary = null;
+    private boolean alreadyExists = true;
+    private OnNewMealFoodDiaryAddition mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnNewMealFoodDiaryAddition {
+
+        void openNewMealFoodDiaryListSelectionFragment(long mealDiaryId);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnNewMealFoodDiaryAddition) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnNewMealFoodDiaryAddition");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mealType = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadMealType(getMealTypeId());
+
+        if (getNewMealDiaryId() == NewMealConstants.NEW_MEAL_DIARY_ID_DEFAULT) {
+            mealType = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).loadMealType(getMealTypeId());
+            mealDiary = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealDiaryTemporary();
+            if (mealDiary == null) {
+                mealDiary = new MealDiary();
+                alreadyExists = false;
+            }
+
+            mealDiary.setMealTypeId(getMealTypeId());
+            mealDiary.setGlycemiaMeasured(getCarbohydrate());
+
+            if (alreadyExists) {
+                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).updateMealDiary(mealDiary);
+            } else {
+                long mealDiaryId = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).storeMealDiary(mealDiary);
+                mealDiary.setId(mealDiaryId);
+            }
+        } else {
+            mealDiary = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealDiary(getNewMealDiaryId());
+            mealType = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealType(mealDiary.getMealTypeId());
+        }
+
     }
 
     @Override
@@ -40,28 +87,13 @@ public class NewMealSecondStepFragment extends Fragment {
         initFields(layout);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        boolean alreadyExists = true;
-        MealDiary mealDiary = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealDiaryTemporary();
-        if (mealDiary == null) {
-            mealDiary = new MealDiary();
-            alreadyExists = false;
-        }
-
-        mealDiary.setMealTypeId(getMealTypeId());
-        mealDiary.setGlycemiaMeasured(getCarbohydrate());
-        if (alreadyExists) {
-            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).updateMealDiary(mealDiary);
-        } else {
-            long mealDiaryId = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).storeMealDiary(mealDiary);
-            mealDiary.setId(mealDiaryId);
-        }
 
         NewMealFoodListFragment newMealFoodListFragment = new NewMealFoodListFragment();
         List<FoodDiary> foodDiaries;
         if (!alreadyExists) {
             if (isFavouriteFoodIncluded()) {
 
-                List<FavouriteFood> favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFavouriteFoods(getMealTypeId());
+                List<FavouriteFood> favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFavouriteFoods(mealDiary.getMealTypeId());
                 foodDiaries = new ArrayList<>(favouriteFoods.size());
                 for (FavouriteFood favouriteFood : favouriteFoods) {
                     FoodDiary foodDiary = new FoodDiary(mealDiary.getId(), favouriteFood);
@@ -72,12 +104,11 @@ public class NewMealSecondStepFragment extends Fragment {
                 foodDiaries = new ArrayList<>();
             }
         } else {
-            //foodDiaries = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries((int) mealDiary.getId());
             foodDiaries = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries();
         }
         newMealFoodListFragment.setNewMealFoods(foodDiaries);
         Bundle arguments = new Bundle();
-        arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, getMealTypeId());
+        arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, mealDiary.getMealTypeId());
         newMealFoodListFragment.setArguments(arguments);
 
         fragmentTransaction.replace(R.id.new_meal_second_step_food_container, newMealFoodListFragment);
@@ -114,106 +145,21 @@ public class NewMealSecondStepFragment extends Fragment {
 
 
         TextView glycemiaTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_glycemia_value_textview);
-        glycemiaTextView.setText(format(getCarbohydrate()));
+        glycemiaTextView.setText(format(mealDiary.getGlycemiaMeasured()));
         TextView glycemiaUnitTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_glycemia_unit_textview);
         glycemiaUnitTextView.setText("[mmol/l]");
 
-//        TextView targetFoodValue = (TextView) layout.findViewById(R.id.insulin_overview_target_food_value_textview);
-//        targetFoodValue.setText(String.valueOf(mealType.getFoodTarget()));
-//
-//        TextView sensitivityValue = (TextView) layout.findViewById(R.id.insulin_overview_insulin_sensitivity_value_textview);
-//        sensitivityValue.setText(String.valueOf(mealType.getInsulinSensitivity()));
-//
-//        TextView glycemiaTargetValue = (TextView) layout.findViewById(R.id.insulin_overview_glycemia_target_value_textview);
-//        glycemiaTargetValue.setText(String.valueOf(mealType.getGlycemiaTarget()));
-//
-//        TextView insulinValue = (TextView) layout.findViewById(R.id.insulin_overview_insulin_value_textview);
-//        insulinValue.setText(String.valueOf(mealType.getInsulin()));
-//
-//        float glycemiaMeasured = 0;
-//        TextView glycemiaFirstValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_first_textview);
-//        glycemiaFirstValue.setText(format(glycemiaMeasured));
-//
-//        TextView insulinFirstValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_first_textview);
-//        float bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        insulinFirstValue.setText(format(bolus));
-//
-//        glycemiaMeasured += 3;
-//        TextView glycemiaSecondValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_second_textview);
-//        glycemiaSecondValue.setText(format(glycemiaMeasured));
-//
-//        TextView insulinSecondValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_second_textview);
-//        bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        insulinSecondValue.setText(format(bolus));
-//
-//        glycemiaMeasured += 3;
-//        TextView glycemiaThirdValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_third_textview);
-//        bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        glycemiaThirdValue.setText(format(glycemiaMeasured));
-//
-//        TextView insulinThirdValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_third_textview);
-//        bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        insulinThirdValue.setText(format(bolus));
-//
-//        glycemiaMeasured += 3;
-//        TextView glycemiaFourthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_fourth_textview);
-//        glycemiaFourthValue.setText(format(glycemiaMeasured));
-//
-//        TextView insulinFourthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_fourth_textview);
-//        bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        insulinFourthValue.setText(format(bolus));
-//
-//        glycemiaMeasured += 3;
-//        TextView glycemiaFifthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_fifth_textview);
-//        glycemiaFifthValue.setText(format(glycemiaMeasured));
-//
-//        TextView insulinFifthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_fifth_textview);
-//        bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        insulinFifthValue.setText(format(bolus));
-//
-//        glycemiaMeasured += 3;
-//        TextView glycemiaSixthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_sixth_textview);
-//        glycemiaSixthValue.setText(format(glycemiaMeasured));
-//
-//        TextView insulinSixthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_sixth_textview);
-//        bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
-//        insulinSixthValue.setText(format(bolus));
-
-//        LinearLayout verticalLayout = (LinearLayout) layout.findViewById(R.id.insulin_overview_vertical_layout);
-//        LinearLayout horizontalLayout = getNewHorizontalLayout();
-//        verticalLayout.addView(horizontalLayout);
-//
-//        TextView leftTextViewRef = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_unit_title_textview);
-//        int paddingRight = leftTextViewRef.getPaddingRight();
-//        ViewGroup.LayoutParams leftLayoutParams = leftTextViewRef.getLayoutParams();
-//        TextView textViewLeft = getTextView(paddingRight, leftLayoutParams, "0.00");
-//        horizontalLayout.addView(textViewLeft);
-
-
+        final ImageButton addButton = (ImageButton) layout.findViewById(R.id.new_meal_second_step_add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mCallback.openNewMealFoodDiaryListSelectionFragment(mealDiary.getId());
+            }
+        });
     }
 
-//    private float getBolus(float glycemiaMeasured, float glycemiaTarget, float insulinPerTen, float carbohydrate, float sensitivityFactor) {
-//        return (insulinPerTen * carbohydrate / 10) + (glycemiaMeasured - glycemiaTarget) / sensitivityFactor;
-//
-//    }
-//    private String format(float number) {
-//        return String.format("%.2f", number).replaceAll(",",".");
-//    }
-//
-//    private LinearLayout getNewHorizontalLayout() {
-//        LinearLayout result = new LinearLayout(getActivity());
-//        result.setOrientation(LinearLayout.HORIZONTAL);
-//        result.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        return result;
-//    }
-//
-//    private TextView getTextView(int paddingRight, ViewGroup.LayoutParams layoutParams, String text) {
-//        TextView result = new TextView(getActivity());
-//        result.setPadding(0, 0, 120, 0);
-//        result.setText(text);
-//        result.setGravity(Gravity.LEFT);
-//        return result;
-//    }
+    private Long getNewMealDiaryId() {
+        return getArguments().getLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, NewMealConstants.NEW_MEAL_DIARY_ID_DEFAULT);
+    }
 
     private long getMealTypeId() {
         return getArguments().getLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER);
@@ -232,6 +178,6 @@ public class NewMealSecondStepFragment extends Fragment {
     }
 
     private String format(float number) {
-        return String.format("%.2f", number).replaceAll(",",".");
+        return String.format("%.2f", number).replaceAll(",", ".");
     }
 }

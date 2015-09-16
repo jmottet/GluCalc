@@ -1,15 +1,16 @@
 package ch.glucalc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodTable;
 import ch.glucalc.food.category.CategoryFood;
@@ -25,258 +26,262 @@ import ch.glucalc.meal.type.MealTypeTable;
 
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
-  private static final String DATABASE_NAME = "glucalc.db";
-  private static final int DATABASE_VERSION = 9;
+    private static final String DATABASE_NAME = "glucalc.db";
+    private static final int DATABASE_VERSION = 9;
 
-  private static GluCalcSQLiteHelper singleInstance;
+    private static GluCalcSQLiteHelper singleInstance;
 
-  private GluCalcSQLiteHelper(Context context) {
-    super(context, DATABASE_NAME, null, DATABASE_VERSION);
-  }
-
-  public static synchronized GluCalcSQLiteHelper getGluCalcSQLiteHelper(Context context) {
-    if (singleInstance == null) {
-      singleInstance = new GluCalcSQLiteHelper(context);
+    private GluCalcSQLiteHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-    return singleInstance;
-  }
 
-  @Override
-  public void onCreate(SQLiteDatabase db) {
-    db.execSQL(FoodTable.TABLE_CREATE);
-    db.execSQL(CategoryFoodTable.TABLE_CREATE);
-    db.execSQL(MealTypeTable.TABLE_CREATE);
-    db.execSQL(FavouriteFoodTable.TABLE_CREATE);
-    db.execSQL(MealDiaryTable.TABLE_CREATE);
-    db.execSQL(FoodDiaryTable.TABLE_CREATE);
-  }
-
-  @Override
-  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-
-    if (DATABASE_VERSION == 6) {
-      db.execSQL(FoodTable.TABLE_DROP);
-      db.execSQL(CategoryFoodTable.TABLE_DROP);
-      db.execSQL(MealTypeTable.TABLE_DROP);
-      onCreate(db);
-    } else if (DATABASE_VERSION > 6) {
-      db.execSQL(FavouriteFoodTable.TABLE_CREATE);
-    } else if (DATABASE_VERSION > 8) {
-      db.execSQL(MealDiaryTable.TABLE_CREATE);
-      db.execSQL(FoodDiaryTable.TABLE_CREATE);
+    public static synchronized GluCalcSQLiteHelper getGluCalcSQLiteHelper(Context context) {
+        if (singleInstance == null) {
+            singleInstance = new GluCalcSQLiteHelper(context);
+        }
+        return singleInstance;
     }
-  }
 
-  @Override
-  public void onConfigure(SQLiteDatabase db) {
-    db.setForeignKeyConstraintsEnabled(true);
-  }
-
-  /****** MEAL TYPE SECTION ******/
-
-  public void deleteMealType(Long mealTypeId) {
-    getWritableDatabase().delete(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMN_ID + " = ?",
-            new String[]{String.valueOf(mealTypeId)});
-  }
-
-  public void deleteMealTypes() {
-    getWritableDatabase().delete(MealTypeTable.TABLE_NAME, null, null);
-  }
-
-  public List<MealType> loadMealTypes() {
-    final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, null, null,
-        null, null, MealTypeTable.COLUMN_NAME);
-    final List<MealType> mealTypes = new ArrayList<MealType>(cursor.getCount());
-    while (cursor.moveToNext()) {
-      final MealType mealType = new MealType();
-      mealType.setId(cursor.getLong(0));
-      mealType.setName(cursor.getString(1));
-      mealType.setFoodTarget(cursor.getFloat(2));
-      mealType.setGlycemiaTarget(cursor.getFloat(3));
-      mealType.setInsulinSensitivity(cursor.getFloat(4));
-      mealType.setInsulin(cursor.getFloat(5));
-      mealTypes.add(mealType);
-        System.out.println("Meal Type Id : " + mealType.getId());
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(FoodTable.TABLE_CREATE);
+        db.execSQL(CategoryFoodTable.TABLE_CREATE);
+        db.execSQL(MealTypeTable.TABLE_CREATE);
+        db.execSQL(FavouriteFoodTable.TABLE_CREATE);
+        db.execSQL(MealDiaryTable.TABLE_CREATE);
+        db.execSQL(FoodDiaryTable.TABLE_CREATE);
     }
-    return mealTypes;
-  }
 
-  public MealType loadMealType(long mealTypeId) {
-    MealType result = null;
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-    final String whereClause = MealTypeTable.COLUMN_ID + "=?";
-    final String[] whereArgs = { String.valueOf(mealTypeId) };
 
-    final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, whereClause,
-        whereArgs, null, null, null);
-    if (cursor.moveToNext()) {
-      result = new MealType();
-      result.setId(cursor.getLong(0));
-      result.setName(cursor.getString(1));
-      result.setFoodTarget(cursor.getFloat(2));
-      result.setGlycemiaTarget(cursor.getFloat(3));
-      result.setInsulinSensitivity(cursor.getFloat(4));
-      result.setInsulin(cursor.getFloat(5));
+        if (DATABASE_VERSION == 6) {
+            db.execSQL(FoodTable.TABLE_DROP);
+            db.execSQL(CategoryFoodTable.TABLE_DROP);
+            db.execSQL(MealTypeTable.TABLE_DROP);
+            onCreate(db);
+        } else if (DATABASE_VERSION > 6) {
+            db.execSQL(FavouriteFoodTable.TABLE_CREATE);
+        } else if (DATABASE_VERSION > 8) {
+            db.execSQL(MealDiaryTable.TABLE_CREATE);
+            db.execSQL(FoodDiaryTable.TABLE_CREATE);
+        }
     }
-    return result;
-  }
 
-  public void storeMealTypes(List<MealType> mealTypes) {
-
-    final SQLiteDatabase db = getWritableDatabase();
-
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      for (final MealType mealType : mealTypes) {
-        values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
-        values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
-        values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
-        values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
-        values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
-        final long id = db.insert(FoodTable.TABLE_NAME, "", values);
-        mealType.setId(id);
-        values.clear();
-      }
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        db.setForeignKeyConstraintsEnabled(true);
     }
-  }
 
-  public long storeMealType(MealType mealType) {
-    long id = -1;
-    final SQLiteDatabase db = getWritableDatabase();
+    /******
+     * MEAL TYPE SECTION
+     ******/
 
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
-      values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
-      values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
-      values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
-      values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
-      id = db.insert(MealTypeTable.TABLE_NAME, "", values);
-      mealType.setId(id);
-      values.clear();
-
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+    public void deleteMealType(Long mealTypeId) {
+        getWritableDatabase().delete(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(mealTypeId)});
     }
-    return id;
-  }
 
-  public void updateMealType(MealType mealType) {
-
-    final SQLiteDatabase db = getWritableDatabase();
-    db.setForeignKeyConstraintsEnabled(true);
-
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
-      values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
-      values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
-      values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
-      values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
-      db.update(MealTypeTable.TABLE_NAME, values, MealTypeTable.COLUMN_ID + " = ?",
-              new String[]{String.valueOf(mealType.getId())});
-
-      values.clear();
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+    public void deleteMealTypes() {
+        getWritableDatabase().delete(MealTypeTable.TABLE_NAME, null, null);
     }
-  }
 
-  /****** FOOD SECTION ******/
-
-  public void store(List<Food> foods) {
-
-    final SQLiteDatabase db = getWritableDatabase();
-
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      for (final Food food : foods) {
-        values.put(FoodTable.COLUMN_NAME, food.getName());
-        values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
-        values.put(FoodTable.COLUMN_UNIT, food.getUnit());
-        values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
-        values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
-        final long id = db.insert(FoodTable.TABLE_NAME, "", values);
-        food.setId(id);
-        values.clear();
-      }
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+    public List<MealType> loadMealTypes() {
+        final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, null, null,
+                null, null, MealTypeTable.COLUMN_NAME);
+        final List<MealType> mealTypes = new ArrayList<MealType>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final MealType mealType = new MealType();
+            mealType.setId(cursor.getLong(0));
+            mealType.setName(cursor.getString(1));
+            mealType.setFoodTarget(cursor.getFloat(2));
+            mealType.setGlycemiaTarget(cursor.getFloat(3));
+            mealType.setInsulinSensitivity(cursor.getFloat(4));
+            mealType.setInsulin(cursor.getFloat(5));
+            mealTypes.add(mealType);
+            System.out.println("Meal Type Id : " + mealType.getId());
+        }
+        return mealTypes;
     }
-  }
 
-  public long store(Food food) {
-    long id = -1;
-    final SQLiteDatabase db = getWritableDatabase();
+    public MealType loadMealType(long mealTypeId) {
+        MealType result = null;
 
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
+        final String whereClause = MealTypeTable.COLUMN_ID + "=?";
+        final String[] whereArgs = {String.valueOf(mealTypeId)};
 
-      values.put(FoodTable.COLUMN_NAME, food.getName());
-      values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
-      values.put(FoodTable.COLUMN_UNIT, food.getUnit());
-      values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
-      values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
-      id = db.insert(FoodTable.TABLE_NAME, "", values);
-      food.setId(id);
-      values.clear();
-
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+        final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, whereClause,
+                whereArgs, null, null, null);
+        if (cursor.moveToNext()) {
+            result = new MealType();
+            result.setId(cursor.getLong(0));
+            result.setName(cursor.getString(1));
+            result.setFoodTarget(cursor.getFloat(2));
+            result.setGlycemiaTarget(cursor.getFloat(3));
+            result.setInsulinSensitivity(cursor.getFloat(4));
+            result.setInsulin(cursor.getFloat(5));
+        }
+        return result;
     }
-    return id;
-  }
 
-  public List<Food> loadFoods() {
-    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, null, null, null, null,
-        null);
-    final List<Food> foods = new ArrayList<Food>(cursor.getCount());
-    while (cursor.moveToNext()) {
-      final Food food = new Food();
-      food.setId(cursor.getLong(0));
-      food.setName(cursor.getString(1));
-      food.setQuantity(cursor.getFloat(2));
-      food.setUnit(cursor.getString(3));
-      food.setCarbonhydrate(cursor.getFloat(4));
-      food.setCategoryId(cursor.getLong(5));
-      foods.add(food);
-    }
-    return foods;
-  }
+    public void storeMealTypes(List<MealType> mealTypes) {
 
-  public List<Food> loadFoodsFilteredByName(String name) {
-    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
-        FoodTable.COLUMN_NAME + " LIKE ?", new String[] { "%" + name + "%" }, null, null, null);
-    final List<Food> foods = new ArrayList<Food>(cursor.getCount());
-    while (cursor.moveToNext()) {
-      final Food food = new Food();
-      food.setId(cursor.getLong(0));
-      food.setName(cursor.getString(1));
-      food.setQuantity(cursor.getFloat(2));
-      food.setUnit(cursor.getString(3));
-      food.setCarbonhydrate(cursor.getFloat(4));
-      food.setCategoryId(cursor.getLong(5));
-      foods.add(food);
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            for (final MealType mealType : mealTypes) {
+                values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
+                values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
+                values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
+                values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
+                values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
+                final long id = db.insert(FoodTable.TABLE_NAME, "", values);
+                mealType.setId(id);
+                values.clear();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
-    return foods;
-  }
+
+    public long storeMealType(MealType mealType) {
+        long id = -1;
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
+            values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
+            values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
+            values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
+            values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
+            id = db.insert(MealTypeTable.TABLE_NAME, "", values);
+            mealType.setId(id);
+            values.clear();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return id;
+    }
+
+    public void updateMealType(MealType mealType) {
+
+        final SQLiteDatabase db = getWritableDatabase();
+        db.setForeignKeyConstraintsEnabled(true);
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(MealTypeTable.COLUMN_NAME, mealType.getName());
+            values.put(MealTypeTable.COLUMN_FOOD_TARGET, mealType.getFoodTarget());
+            values.put(MealTypeTable.COLUMN_GLYCEMIA_TARGET, mealType.getGlycemiaTarget());
+            values.put(MealTypeTable.COLUMN_INSULIN_SENSITIVITY, mealType.getInsulinSensitivity());
+            values.put(MealTypeTable.COLUMN_INSULIN, mealType.getInsulin());
+            db.update(MealTypeTable.TABLE_NAME, values, MealTypeTable.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(mealType.getId())});
+
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /******
+     * FOOD SECTION
+     ******/
+
+    public void store(List<Food> foods) {
+
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            for (final Food food : foods) {
+                values.put(FoodTable.COLUMN_NAME, food.getName());
+                values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
+                values.put(FoodTable.COLUMN_UNIT, food.getUnit());
+                values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
+                values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
+                final long id = db.insert(FoodTable.TABLE_NAME, "", values);
+                food.setId(id);
+                values.clear();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public long store(Food food) {
+        long id = -1;
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(FoodTable.COLUMN_NAME, food.getName());
+            values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
+            values.put(FoodTable.COLUMN_UNIT, food.getUnit());
+            values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
+            values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
+            id = db.insert(FoodTable.TABLE_NAME, "", values);
+            food.setId(id);
+            values.clear();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return id;
+    }
+
+    public List<Food> loadFoods() {
+        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, null, null, null, null,
+                null);
+        final List<Food> foods = new ArrayList<Food>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final Food food = new Food();
+            food.setId(cursor.getLong(0));
+            food.setName(cursor.getString(1));
+            food.setQuantity(cursor.getFloat(2));
+            food.setUnit(cursor.getString(3));
+            food.setCarbonhydrate(cursor.getFloat(4));
+            food.setCategoryId(cursor.getLong(5));
+            foods.add(food);
+        }
+        return foods;
+    }
+
+    public List<Food> loadFoodsFilteredByName(String name) {
+        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+                FoodTable.COLUMN_NAME + " LIKE ?", new String[]{"%" + name + "%"}, null, null, null);
+        final List<Food> foods = new ArrayList<Food>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final Food food = new Food();
+            food.setId(cursor.getLong(0));
+            food.setName(cursor.getString(1));
+            food.setQuantity(cursor.getFloat(2));
+            food.setUnit(cursor.getString(3));
+            food.setCarbonhydrate(cursor.getFloat(4));
+            food.setCategoryId(cursor.getLong(5));
+            foods.add(food);
+        }
+        return foods;
+    }
 
     public List<Food> loadFoodsWhichAreNotFavourite(List<Long> foodsToExclude) {
         StringBuilder clauseIn = new StringBuilder();
@@ -290,7 +295,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
             clauseIn.append(foodToExclude);
         }
         final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
-                FoodTable.COLUMN_ID + " NOT IN (" + clauseIn.toString() + ")",null, null, null, null);
+                FoodTable.COLUMN_ID + " NOT IN (" + clauseIn.toString() + ")", null, null, null, null);
         final List<Food> foods = new ArrayList<Food>(cursor.getCount());
         while (cursor.moveToNext()) {
             final Food food = new Food();
@@ -306,182 +311,204 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public boolean existFoodFromCategory(Long categoryId) {
-          final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
-        FoodTable.COLUMN_FK_CATEGORY + " = ?", new String[] { String.valueOf(categoryId) }, null, null, null);
-    return cursor.getCount() > 0;
-  }
-
-  public void deleteFoods() {
-    getWritableDatabase().delete(FoodTable.TABLE_NAME, null, null);
-  }
-
-  public void deleteFoodsFromSameCategory(Long withCategoryId) {
-    getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_FK_CATEGORY + " = ?",
-        new String[] { String.valueOf(withCategoryId) });
-  }
-
-  public void deleteFood(Long foodId) {
-    getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_ID + " = ?",
-        new String[] { String.valueOf(foodId) });
-  }
-
-  public void updateFood(Food food) {
-
-    final SQLiteDatabase db = getWritableDatabase();
-    db.setForeignKeyConstraintsEnabled(true);
-
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      values.put(FoodTable.COLUMN_NAME, food.getName());
-      values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
-      values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
-      values.put(FoodTable.COLUMN_UNIT, food.getUnit());
-      values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
-      db.update(FoodTable.TABLE_NAME, values, FoodTable.COLUMN_ID + " = ?",
-          new String[] { String.valueOf(food.getId()) });
-
-      values.clear();
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+                FoodTable.COLUMN_FK_CATEGORY + " = ?", new String[]{String.valueOf(categoryId)}, null, null, null);
+        return cursor.getCount() > 0;
     }
-  }
 
-  public Food loadFood(long foodId) {
-    Food result = null;
-
-    final String whereClause = FoodTable.COLUMN_ID + "=?";
-    final String[] whereArgs = { String.valueOf(foodId) };
-
-    final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
-        null, null, null);
-    if (cursor.moveToNext()) {
-      result = new Food();
-      result.setId(cursor.getLong(0));
-      result.setName(cursor.getString(1));
-      result.setQuantity(cursor.getFloat(2));
-      result.setUnit(cursor.getString(3));
-      result.setCarbonhydrate(cursor.getFloat(4));
-      result.setCategoryId(cursor.getLong(5));
+    public void deleteFoods() {
+        getWritableDatabase().delete(FoodTable.TABLE_NAME, null, null);
     }
-    return result;
-  }
 
-  /****** CATEGORIES OF FOOD SECTION ******/
-
-  public void storeCategories(List<CategoryFood> categories) {
-
-    final SQLiteDatabase db = getWritableDatabase();
-
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      for (final CategoryFood categoryFood : categories) {
-        values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
-
-        final long id = db.insert(CategoryFoodTable.TABLE_NAME, "", values);
-        categoryFood.setId(id);
-        values.clear();
-      }
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+    public void deleteFoodsFromSameCategory(Long withCategoryId) {
+        getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_FK_CATEGORY + " = ?",
+                new String[]{String.valueOf(withCategoryId)});
     }
-  }
 
-  public long storeCategory(CategoryFood categoryFood) {
-    long id = -1;
-    final SQLiteDatabase db = getWritableDatabase();
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
-
-      values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
-      id = db.insert(CategoryFoodTable.TABLE_NAME, "", values);
-      categoryFood.setId(id);
-      values.clear();
-
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+    public void deleteFood(Long foodId) {
+        getWritableDatabase().delete(FoodTable.TABLE_NAME, FoodTable.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(foodId)});
     }
-    return id;
-  }
 
-  public void updateCategory(CategoryFood categoryFood) {
+    public void updateFood(Food food) {
 
-    final SQLiteDatabase db = getWritableDatabase();
+        final SQLiteDatabase db = getWritableDatabase();
+        db.setForeignKeyConstraintsEnabled(true);
 
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
 
-      values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
-      db.update(CategoryFoodTable.TABLE_NAME, values, CategoryFoodTable.COLUMN_ID + " = ?",
-              new String[]{String.valueOf(categoryFood.getId())});
+            values.put(FoodTable.COLUMN_NAME, food.getName());
+            values.put(FoodTable.COLUMN_CARBONHYDRATE, food.getCarbonhydrate());
+            values.put(FoodTable.COLUMN_QUANTITY, food.getQuantity());
+            values.put(FoodTable.COLUMN_UNIT, food.getUnit());
+            values.put(FoodTable.COLUMN_FK_CATEGORY, food.getCategoryId());
+            db.update(FoodTable.TABLE_NAME, values, FoodTable.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(food.getId())});
 
-      values.clear();
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
-  }
 
-  public boolean isCategoryOfFoodEmpty() {
-    final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
-            null, null, null, CategoryFoodTable.COLUMN_NAME);
-    return cursor.getCount() == 0;
-  }
+    public Food loadFood(long foodId) {
+        Food result = null;
 
-  public List<CategoryFood> loadCategoriesOfFood() {
-    final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
-        null, null, null, CategoryFoodTable.COLUMN_NAME);
-    final List<CategoryFood> categories = new ArrayList<CategoryFood>(cursor.getCount());
-    while (cursor.moveToNext()) {
-      final CategoryFood categoryFood = new CategoryFood();
-      categoryFood.setId(cursor.getLong(0));
-      categoryFood.setName(cursor.getString(1));
-      categories.add(categoryFood);
+        final String whereClause = FoodTable.COLUMN_ID + "=?";
+        final String[] whereArgs = {String.valueOf(foodId)};
+
+        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
+                null, null, null);
+        if (cursor.moveToNext()) {
+            result = new Food();
+            result.setId(cursor.getLong(0));
+            result.setName(cursor.getString(1));
+            result.setQuantity(cursor.getFloat(2));
+            result.setUnit(cursor.getString(3));
+            result.setCarbonhydrate(cursor.getFloat(4));
+            result.setCategoryId(cursor.getLong(5));
+        }
+        return result;
     }
-    return categories;
-  }
 
-  public CategoryFood loadCategoryOfFood(long categoryFoodId) {
-    CategoryFood result = null;
+    public Food loadFoodByName(String foodName) {
+        Food result = null;
 
-    final String whereClause = CategoryFoodTable.COLUMN_ID + "=?";
-    final String[] whereArgs = { String.valueOf(categoryFoodId) };
+        final String whereClause = FoodTable.COLUMN_NAME + "=?";
+        final String[] whereArgs = {foodName};
 
-    final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS,
-        whereClause, whereArgs, null, null, null);
-    if (cursor.moveToNext()) {
-      result = new CategoryFood();
-      result.setId(cursor.getLong(0));
-      result.setName(cursor.getString(1));
+        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
+                null, null, null);
+        if (cursor.moveToNext()) {
+            result = new Food();
+            result.setId(cursor.getLong(0));
+            result.setName(cursor.getString(1));
+            result.setQuantity(cursor.getFloat(2));
+            result.setUnit(cursor.getString(3));
+            result.setCarbonhydrate(cursor.getFloat(4));
+            result.setCategoryId(cursor.getLong(5));
+        }
+        return result;
     }
-    return result;
-  }
 
-  public void deleteCategoriesOfFood() {
-    getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, null, null);
-  }
+    /******
+     * CATEGORIES OF FOOD SECTION
+     ******/
 
-  public void deleteCategory(Long categoryId) {
-    getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMN_ID + " = ?",
-        new String[] { String.valueOf(categoryId) });
-  }
+    public void storeCategories(List<CategoryFood> categories) {
+
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            for (final CategoryFood categoryFood : categories) {
+                values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
+
+                final long id = db.insert(CategoryFoodTable.TABLE_NAME, "", values);
+                categoryFood.setId(id);
+                values.clear();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public long storeCategory(CategoryFood categoryFood) {
+        long id = -1;
+        final SQLiteDatabase db = getWritableDatabase();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
+            id = db.insert(CategoryFoodTable.TABLE_NAME, "", values);
+            categoryFood.setId(id);
+            values.clear();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return id;
+    }
+
+    public void updateCategory(CategoryFood categoryFood) {
+
+        final SQLiteDatabase db = getWritableDatabase();
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(CategoryFoodTable.COLUMN_NAME, categoryFood.getName());
+            db.update(CategoryFoodTable.TABLE_NAME, values, CategoryFoodTable.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(categoryFood.getId())});
+
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public boolean isCategoryOfFoodEmpty() {
+        final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
+                null, null, null, CategoryFoodTable.COLUMN_NAME);
+        return cursor.getCount() == 0;
+    }
+
+    public List<CategoryFood> loadCategoriesOfFood() {
+        final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
+                null, null, null, CategoryFoodTable.COLUMN_NAME);
+        final List<CategoryFood> categories = new ArrayList<CategoryFood>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final CategoryFood categoryFood = new CategoryFood();
+            categoryFood.setId(cursor.getLong(0));
+            categoryFood.setName(cursor.getString(1));
+            categories.add(categoryFood);
+        }
+        return categories;
+    }
+
+    public CategoryFood loadCategoryOfFood(long categoryFoodId) {
+        CategoryFood result = null;
+
+        final String whereClause = CategoryFoodTable.COLUMN_ID + "=?";
+        final String[] whereArgs = {String.valueOf(categoryFoodId)};
+
+        final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
+        if (cursor.moveToNext()) {
+            result = new CategoryFood();
+            result.setId(cursor.getLong(0));
+            result.setName(cursor.getString(1));
+        }
+        return result;
+    }
+
+    public void deleteCategoriesOfFood() {
+        getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, null, null);
+    }
+
+    public void deleteCategory(Long categoryId) {
+        getWritableDatabase().delete(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(categoryId)});
+    }
 
 
-
-/****** FAVOURITE FOOD SECTION ******/
+    /******
+     * FAVOURITE FOOD SECTION
+     ******/
 
 // addFavouriteFood
 // removeFavouriteFood
 // List<Food> loadFavouriteFoods
-
     public void deleteFavouriteFoods() {
         getWritableDatabase().delete(FavouriteFoodTable.TABLE_NAME, null, null);
     }
@@ -536,7 +563,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
     public List<FavouriteFood> loadFavouriteFoods(long mealTypeId) {
         final String whereClause = FavouriteFoodTable.COLUMN_FK_MEAL_TYPE + "=?";
-        final String[] whereArgs = { String.valueOf(mealTypeId) };
+        final String[] whereArgs = {String.valueOf(mealTypeId)};
 
         final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
                 whereClause, whereArgs, null, null, null);
@@ -562,7 +589,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         FavouriteFood result = null;
 
         final String whereClause = FavouriteFoodTable.COLUMN_ID + "=?";
-        final String[] whereArgs = { String.valueOf(favouriteFoodId) };
+        final String[] whereArgs = {String.valueOf(favouriteFoodId)};
 
         final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
                 whereClause, whereArgs, null, null, null);
@@ -602,185 +629,258 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     private void sortFavouriteFoods(List<FavouriteFood> favouriteFoods) {
         Collections.sort(favouriteFoods, new Comparator<FavouriteFood>() {
 
-          @Override
-          public int compare(FavouriteFood lhs, FavouriteFood rhs) {
-            return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
-          }
+            @Override
+            public int compare(FavouriteFood lhs, FavouriteFood rhs) {
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+            }
         });
     }
 
-  /****** MEAL DIARY SECTION ******/
+    /******
+     * MEAL DIARY SECTION
+     ******/
 
-  public long storeMealDiary(MealDiary mealDiary) {
-    long id = -1;
-    final SQLiteDatabase db = getWritableDatabase();
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
+    public long storeMealDiary(MealDiary mealDiary) {
+        long id = -1;
+        final SQLiteDatabase db = getWritableDatabase();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
 
-      values.put(MealDiaryTable.COLUMN_MEAL_DATE, mealDiary.getMealDate());
-      values.put(MealDiaryTable.COLUMN_GLYCEMIA_MEASURED, mealDiary.getGlycemiaMeasured());
-      values.put(MealDiaryTable.COLUMN_CARBOHYDRATE_TOTAL, mealDiary.getCarbohydrateTotal());
-      values.put(MealDiaryTable.COLUMN_BOLUS_CALCULATED, mealDiary.getBolusCalculated());
-      values.put(MealDiaryTable.COLUMN_BOLUS_GIVEN, mealDiary.getBolusGiven());
-      int temporary = 0;
-      if (mealDiary.getTemporary()) {
-        temporary = 1;
-      }
-      values.put(MealDiaryTable.COLUMN_TEMPORARY, temporary);
-      values.put(MealDiaryTable.COLUMN_FK_MEAL_TYPE, mealDiary.getMealTypeId());
+            values.put(MealDiaryTable.COLUMN_MEAL_DATE, mealDiary.getMealDate());
+            values.put(MealDiaryTable.COLUMN_GLYCEMIA_MEASURED, mealDiary.getGlycemiaMeasured());
+            values.put(MealDiaryTable.COLUMN_CARBOHYDRATE_TOTAL, mealDiary.getCarbohydrateTotal());
+            values.put(MealDiaryTable.COLUMN_BOLUS_CALCULATED, mealDiary.getBolusCalculated());
+            values.put(MealDiaryTable.COLUMN_BOLUS_GIVEN, mealDiary.getBolusGiven());
+            int temporary = 0;
+            if (mealDiary.getTemporary()) {
+                temporary = 1;
+            }
+            values.put(MealDiaryTable.COLUMN_TEMPORARY, temporary);
+            values.put(MealDiaryTable.COLUMN_FK_MEAL_TYPE, mealDiary.getMealTypeId());
 
-      id = db.insert(MealDiaryTable.TABLE_NAME, "", values);
-      mealDiary.setId(id);
-      values.clear();
+            id = db.insert(MealDiaryTable.TABLE_NAME, "", values);
+            mealDiary.setId(id);
+            values.clear();
 
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return id;
     }
-    return id;
-  }
 
-  public void updateMealDiary(MealDiary mealDiary) {
+    public void updateMealDiary(MealDiary mealDiary) {
 
-    final SQLiteDatabase db = getWritableDatabase();
+        final SQLiteDatabase db = getWritableDatabase();
 
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
 
-      values.put(MealDiaryTable.COLUMN_MEAL_DATE, mealDiary.getMealDate());
-      values.put(MealDiaryTable.COLUMN_GLYCEMIA_MEASURED, mealDiary.getGlycemiaMeasured());
-      values.put(MealDiaryTable.COLUMN_CARBOHYDRATE_TOTAL, mealDiary.getCarbohydrateTotal());
-      values.put(MealDiaryTable.COLUMN_BOLUS_CALCULATED, mealDiary.getBolusCalculated());
-      values.put(MealDiaryTable.COLUMN_BOLUS_GIVEN, mealDiary.getBolusGiven());
-      int temporary = 0;
-      if (mealDiary.getTemporary()) {
-        temporary = 1;
-      }
-      values.put(MealDiaryTable.COLUMN_TEMPORARY, temporary);
-      values.put(MealDiaryTable.COLUMN_FK_MEAL_TYPE, mealDiary.getMealTypeId());
+            values.put(MealDiaryTable.COLUMN_MEAL_DATE, mealDiary.getMealDate());
+            values.put(MealDiaryTable.COLUMN_GLYCEMIA_MEASURED, mealDiary.getGlycemiaMeasured());
+            values.put(MealDiaryTable.COLUMN_CARBOHYDRATE_TOTAL, mealDiary.getCarbohydrateTotal());
+            values.put(MealDiaryTable.COLUMN_BOLUS_CALCULATED, mealDiary.getBolusCalculated());
+            values.put(MealDiaryTable.COLUMN_BOLUS_GIVEN, mealDiary.getBolusGiven());
+            int temporary = 0;
+            if (mealDiary.getTemporary()) {
+                temporary = 1;
+            }
+            values.put(MealDiaryTable.COLUMN_TEMPORARY, temporary);
+            values.put(MealDiaryTable.COLUMN_FK_MEAL_TYPE, mealDiary.getMealTypeId());
 
-      db.update(MealDiaryTable.TABLE_NAME, values, MealDiaryTable.COLUMN_ID + " = ?",
-              new String[]{String.valueOf(mealDiary.getId())});
-      values.clear();
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+            db.update(MealDiaryTable.TABLE_NAME, values, MealDiaryTable.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(mealDiary.getId())});
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
-  }
 
-  public MealDiary loadMealDiaryTemporary() {
-    MealDiary result = null;
+    public MealDiary loadMealDiaryTemporary() {
+        MealDiary result = null;
 
-    final String whereClause = MealDiaryTable.COLUMN_TEMPORARY + "=?";
-    final String[] whereArgs = { "1" };
+        final String whereClause = MealDiaryTable.COLUMN_TEMPORARY + "=?";
+        final String[] whereArgs = {"1"};
 
-    final Cursor cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
-            whereClause, whereArgs, null, null, null);
+        final Cursor cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
 
-    if (cursor.moveToNext()) {
-      result = new MealDiary();
-      result.setId(cursor.getLong(0));
-      result.setMealDate(cursor.getString(1));
-      result.setGlycemiaMeasured(cursor.getFloat(2));
-      result.setCarbohydrateTotal(cursor.getFloat(3));
-      result.setBolusCalculated(cursor.getFloat(4));
-      result.setBolusGiven(cursor.getFloat(5));
-      int temporary = cursor.getInt(6);
+        if (cursor.moveToNext()) {
+            result = new MealDiary();
+            result.setId(cursor.getLong(0));
+            result.setMealDate(cursor.getString(1));
+            result.setGlycemiaMeasured(cursor.getFloat(2));
+            result.setCarbohydrateTotal(cursor.getFloat(3));
+            result.setBolusCalculated(cursor.getFloat(4));
+            result.setBolusGiven(cursor.getFloat(5));
+            int temporary = cursor.getInt(6);
 
-      if (temporary == 0) {
-        result.setTemporary(false);
-      } else if (temporary == 1) {
-        result.setTemporary(true);
-      }
+            if (temporary == 0) {
+                result.setTemporary(false);
+            } else if (temporary == 1) {
+                result.setTemporary(true);
+            }
+            result.setMealTypeId(cursor.getLong(7));
+        }
+        return result;
     }
-    return result;
-  }
 
-  /****** FOOD DIARY SECTION ******/
+    public MealDiary loadMealDiary(long mealDiaryId) {
+        MealDiary result = null;
 
-  public long storeFoodDiary(FoodDiary foodDiary) {
-    long id = -1;
-    final SQLiteDatabase db = getWritableDatabase();
-    final ContentValues values = new ContentValues();
-    try {
-      db.beginTransaction();
+        final String whereClause = MealDiaryTable.COLUMN_ID + "=?";
+        final String[] whereArgs = { String.valueOf(mealDiaryId)};
 
-      values.put(FoodDiaryTable.COLUMN_FOOD_NAME, foodDiary.getFoodName());
-      values.put(FoodDiaryTable.COLUMN_QUANTITY, foodDiary.getQuantity());
-      values.put(FoodDiaryTable.COLUMN_UNIT, foodDiary.getUnit());
-      values.put(FoodDiaryTable.COLUMN_CARBOHYDRATE, foodDiary.getCarbohydrate());
-      values.put(FoodDiaryTable.COLUMN_FK_MEAL_DIARY, foodDiary.getMealDiaryId());
+        final Cursor cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
 
-      id = db.insert(FoodDiaryTable.TABLE_NAME, "", values);
-      foodDiary.setId(id);
-      values.clear();
+        if (cursor.moveToNext()) {
+            result = new MealDiary();
+            result.setId(cursor.getLong(0));
+            result.setMealDate(cursor.getString(1));
+            result.setGlycemiaMeasured(cursor.getFloat(2));
+            result.setCarbohydrateTotal(cursor.getFloat(3));
+            result.setBolusCalculated(cursor.getFloat(4));
+            result.setBolusGiven(cursor.getFloat(5));
+            int temporary = cursor.getInt(6);
 
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
+            if (temporary == 0) {
+                result.setTemporary(false);
+            } else if (temporary == 1) {
+                result.setTemporary(true);
+            }
+            result.setMealTypeId(cursor.getLong(7));
+        }
+        return result;
     }
-    return id;
-  }
 
-  public List<FoodDiary> loadFoodDiaries(int mealDiaryId) {
+    /******
+     * FOOD DIARY SECTION
+     ******/
 
-    final String whereClause = FoodDiaryTable.COLUMN_FK_MEAL_DIARY + "=?";
-    final String[] whereArgs = { String.valueOf(mealDiaryId) };
+    public long storeFoodDiary(FoodDiary foodDiary) {
+        long id = -1;
+        final SQLiteDatabase db = getWritableDatabase();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
 
-    final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
-            whereClause, whereArgs, null, null, null);
+            values.put(FoodDiaryTable.COLUMN_FOOD_NAME, foodDiary.getFoodName());
+            values.put(FoodDiaryTable.COLUMN_QUANTITY, foodDiary.getQuantity());
+            values.put(FoodDiaryTable.COLUMN_UNIT, foodDiary.getUnit());
+            values.put(FoodDiaryTable.COLUMN_CARBOHYDRATE, foodDiary.getCarbohydrate());
+            values.put(FoodDiaryTable.COLUMN_FK_MEAL_DIARY, foodDiary.getMealDiaryId());
 
-    final List<FoodDiary> foodDiaries = new ArrayList<FoodDiary>(cursor.getCount());
-    while (cursor.moveToNext()) {
-      final FoodDiary foodDiary = new FoodDiary();
+            id = db.insert(FoodDiaryTable.TABLE_NAME, "", values);
+            foodDiary.setId(id);
+            values.clear();
 
-      //COLUMN_ID, COLUMN_FOOD_NAME, COLUMN_QUANTITY, COLUMN_UNIT, COLUMN_CARBOHYDRATE,
-      //COLUMN_FK_MEAL_DIARY};
-      foodDiary.setId(cursor.getLong(0));
-      foodDiary.setFoodName(cursor.getString(1));
-      foodDiary.setQuantity(cursor.getFloat(2));
-      foodDiary.setUnit(cursor.getString(3));
-      foodDiary.setCarbohydrate(cursor.getFloat(4));
-      foodDiary.setMealDiaryId(cursor.getInt(5));
-
-      foodDiaries.add(foodDiary);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        return id;
     }
-    sortFoodDiary(foodDiaries);
-    return foodDiaries;
-  }
 
-  public List<FoodDiary> loadFoodDiaries() {
+    public void updateFoodDiary(FoodDiary foodDiary) {
 
-    final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
-            null, null, null, null, null);
+        final SQLiteDatabase db = getWritableDatabase();
 
-    final List<FoodDiary> foodDiaries = new ArrayList<>(cursor.getCount());
-    while (cursor.moveToNext()) {
-      final FoodDiary foodDiary = new FoodDiary();
-
-      foodDiary.setId(cursor.getLong(0));
-      foodDiary.setFoodName(cursor.getString(1));
-      foodDiary.setQuantity(cursor.getFloat(2));
-      foodDiary.setUnit(cursor.getString(3));
-      foodDiary.setCarbohydrate(cursor.getFloat(4));
-      foodDiary.setMealDiaryId(cursor.getInt(5));
-
-      foodDiaries.add(foodDiary);
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+            values.put(FoodDiaryTable.COLUMN_FK_MEAL_DIARY, foodDiary.getMealDiaryId());
+            values.put(FoodDiaryTable.COLUMN_FOOD_NAME, foodDiary.getFoodName());
+            values.put(FoodDiaryTable.COLUMN_CARBOHYDRATE, foodDiary.getCarbohydrate());
+            values.put(FoodDiaryTable.COLUMN_QUANTITY, foodDiary.getQuantity());
+            db.update(FoodDiaryTable.TABLE_NAME, values, FoodDiaryTable.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(foodDiary.getId())});
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
-    sortFoodDiary(foodDiaries);
-    return foodDiaries;
-  }
 
-  private void sortFoodDiary(List<FoodDiary> foodDiaries) {
-    Collections.sort(foodDiaries, new Comparator<FoodDiary>() {
+    public List<FoodDiary> loadFoodDiaries(long mealDiaryId) {
 
-      @Override
-      public int compare(FoodDiary lhs, FoodDiary rhs) {
-        return lhs.getFoodName().toLowerCase().compareTo(rhs.getFoodName().toLowerCase());
-      }
-    });
-  }
+        final String whereClause = FoodDiaryTable.COLUMN_FK_MEAL_DIARY + "=?";
+        final String[] whereArgs = {String.valueOf(mealDiaryId)};
+
+        final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
+
+        final List<FoodDiary> foodDiaries = new ArrayList<FoodDiary>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final FoodDiary foodDiary = new FoodDiary();
+
+            //COLUMN_ID, COLUMN_FOOD_NAME, COLUMN_QUANTITY, COLUMN_UNIT, COLUMN_CARBOHYDRATE,
+            //COLUMN_FK_MEAL_DIARY};
+            foodDiary.setId(cursor.getLong(0));
+            foodDiary.setFoodName(cursor.getString(1));
+            foodDiary.setQuantity(cursor.getFloat(2));
+            foodDiary.setUnit(cursor.getString(3));
+            foodDiary.setCarbohydrate(cursor.getFloat(4));
+            foodDiary.setMealDiaryId(cursor.getInt(5));
+
+            foodDiaries.add(foodDiary);
+        }
+        sortFoodDiary(foodDiaries);
+        return foodDiaries;
+    }
+
+    public List<FoodDiary> loadFoodDiaries() {
+
+        final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
+                null, null, null, null, null);
+
+        final List<FoodDiary> foodDiaries = new ArrayList<>(cursor.getCount());
+        while (cursor.moveToNext()) {
+            final FoodDiary foodDiary = new FoodDiary();
+
+            foodDiary.setId(cursor.getLong(0));
+            foodDiary.setFoodName(cursor.getString(1));
+            foodDiary.setQuantity(cursor.getFloat(2));
+            foodDiary.setUnit(cursor.getString(3));
+            foodDiary.setCarbohydrate(cursor.getFloat(4));
+            foodDiary.setMealDiaryId(cursor.getInt(5));
+
+            foodDiaries.add(foodDiary);
+        }
+        sortFoodDiary(foodDiaries);
+        return foodDiaries;
+    }
+
+    public FoodDiary loadFoodDiary(Long foodDiaryId) {
+        FoodDiary result = null;
+
+        final String whereClause = FoodDiaryTable.COLUMN_ID + "=?";
+        final String[] whereArgs = {String.valueOf(foodDiaryId)};
+
+        final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
+                whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToNext()) {
+            result = new FoodDiary();
+            result.setId(cursor.getLong(0));
+            result.setFoodName(cursor.getString(1));
+            result.setCarbohydrate(cursor.getFloat(4));
+            result.setMealDiaryId(cursor.getInt(5));
+        }
+        return result;
+    }
+
+    private void sortFoodDiary(List<FoodDiary> foodDiaries) {
+        Collections.sort(foodDiaries, new Comparator<FoodDiary>() {
+
+            @Override
+            public int compare(FoodDiary lhs, FoodDiary rhs) {
+                return lhs.getFoodName().toLowerCase().compareTo(rhs.getFoodName().toLowerCase());
+            }
+        });
+    }
 
 }

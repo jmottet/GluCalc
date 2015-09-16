@@ -11,22 +11,22 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/favourite_food_quantity_textview"
+            android:id="@+id/new_meal_food_quantity_textview"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_quantity"
+            android:text="@string/edit_new_meal_food_quantity"
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/favourite_food_quantity_edittext"
+            android:id="@+id/new_meal_food_quantity_edittext"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_favourite_food_quantity_hint"
+            android:hint="@string/enter_new_meal_food_quantity_hint"
             android:inputType="numberDecimal">
         </EditText>
 
         <TextView
-            android:id="@+id/favourite_food_quantity_unit_textview"
+            android:id="@+id/new_meal_food_quantity_unit_textview"
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
@@ -38,33 +38,33 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/favourite_food_carbohydrate_textview"
+            android:id="@+id/new_meal_food_carbohydrate_textview"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_carbohydrate"
+            android:text="@string/edit_new_meal_food_carbohydrate"
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/favourite_food_carbohydrate_edittext"
+            android:id="@+id/new_meal_food_carbohydrate_edittext"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_favourite_food_carbohydrate_hint"
+            android:hint="@string/enter_new_meal_food_carbohydrate_hint"
             android:inputType="numberDecimal">
         </EditText>
 
         <TextView
-            android:id="@+id/favourite_food_carbohydrate_unit_textview"
+            android:id="@+id/new_meal_food_carbohydrate_unit_textview"
             android:layout_width="40sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_carbohydrate_quantity"
+            android:text="@string/edit_new_meal_food_carbohydrate_quantity"
             android:textSize="20sp" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/favourite_food_selected_food_textview"
+        android:id="@+id/new_meal_food_selected_food_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/edit_favourite_food_selected_food"
+        android:text="@string/edit_new_meal_food_selected_food"
         android:textSize="20sp"
         android:layout_marginTop="20sp"
         android:layout_marginBottom="20sp"
@@ -76,14 +76,14 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/favourite_food_selected_food_name_textview"
+            android:id="@+id/new_meal_food_selected_food_name_textview"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_selected_food_name"
+            android:text="@string/edit_new_meal_food_selected_food_name"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/favourite_food_selected_food_name_value_textview"
+            android:id="@+id/new_meal_food_selected_food_name_value_textview"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
@@ -95,14 +95,14 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/favourite_food_selected_food_quantity_textview"
+            android:id="@+id/new_meal_food_selected_food_quantity_textview"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_selected_food_quantity"
+            android:text="@string/edit_new_meal_food_selected_food_quantity"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/favourite_food_selected_food_quantity_value_textview"
+            android:id="@+id/new_meal_food_selected_food_quantity_value_textview"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
@@ -114,14 +114,14 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/favourite_food_selected_food_carbohydrate_textview"
+            android:id="@+id/new_meal_food_selected_food_carbohydrate_textview"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_selected_food_carbohydrate"
+            android:text="@string/edit_new_meal_food_selected_food_carbohydrate"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/favourite_food_selected_food_carbohydrate_value_textview"
+            android:id="@+id/new_meal_food_selected_food_carbohydrate_value_textview"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
@@ -132,14 +132,14 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/favourite_food_selected_food_unit_textview"
+            android:id="@+id/new_meal_food_selected_food_unit_textview"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_favourite_food_selected_food_unit"
+            android:text="@string/edit_new_meal_food_selected_food_unit"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/favourite_food_selected_food_unit_value_textview"
+            android:id="@+id/new_meal_food_selected_food_unit_value_textview"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
