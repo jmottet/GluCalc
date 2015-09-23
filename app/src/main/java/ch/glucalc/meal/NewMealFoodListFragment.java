@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.R;
 import ch.glucalc.beans.SelectionBean;
+import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.food.favourite.food.FavouriteFoodAdapter;
 import ch.glucalc.meal.diary.FoodDiary;
@@ -37,6 +39,8 @@ public class NewMealFoodListFragment extends ListFragment {
     private OnNewMealFoodEdition mCallback;
 
     private final SelectionBean selectionBean = new SelectionBean();
+
+    private ImageButton deleteButton;
 
     // Container Activity must implement this interface
     public interface OnNewMealFoodEdition {
@@ -93,19 +97,33 @@ public class NewMealFoodListFragment extends ListFragment {
                 currentNewMealFood.setSelected(true);
                 selectionBean.addOneToNumberItemSelected();
                 if (selectionBean.getNumberItemSelected() == 1) {
-                    selectionBean.getmMenu().findItem(R.id.delete).setVisible(true);
+                    deleteButton.setVisibility(View.VISIBLE);
                 }
             } else {
                 v.setBackground(null);
                 currentNewMealFood.setSelected(false);
                 selectionBean.substractOneToNumberItemSelected();
                 if (selectionBean.getNumberItemSelected() == 0) {
-                    selectionBean.getmMenu().findItem(R.id.delete).setVisible(false);
+                    deleteButton.setVisibility(View.INVISIBLE);
                 }
             }
         }
 
     }
+
+    public void setSectionMode(boolean mode) {
+        if (mode) {
+            selectionBean.setModeMultiSelection(true);
+        } else {
+            selectionBean.setModeMultiSelection(false);
+            selectionBean.setNumberItemSelected(0);
+        }
+    }
+
+    public void setDeleteButton(ImageButton aDeleteButton) {
+        deleteButton = aDeleteButton;
+    }
+
     @Override
     public void onDetach() {
         log("NewMealFoodListFragment.onDetach");
@@ -142,6 +160,41 @@ public class NewMealFoodListFragment extends ListFragment {
         super.onStart();
     }
 
+    public void deleteAction() {
+        selectionBean.resetIdsToDelete();
+        for (final FoodDiary foodDiary : newMealFoods) {
+            if (foodDiary.isSelected()) {
+                selectionBean.addIdToDelete(foodDiary.getId());
+            }
+        }
+
+        for (final Long foodDiaryId : selectionBean.getIdsToDelete()) {
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).deleteFoodDiary(foodDiaryId);
+        }
+
+        refreshFoodDiaries();
+    }
+
+    private void refreshFoodDiaries() {
+        // Reload the categories from the Database
+        newMealFoods.clear();
+        newMealFoods.addAll(GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries(getMealTypeId()));
+        newMealFoodAdapter.notifyDataSetChanged();
+    }
+
+    public void initList() {
+        selectionBean.resetIdsToDelete();
+        selectionBean.setNumberItemSelected(0);
+        newMealFoodAdapter.notifyDataSetChanged();
+    }
+
+    public float getCarbohydrateTotal() {
+        float result = 0;
+        for (final FoodDiary foodDiary : newMealFoods) {
+            result += foodDiary.getCarbohydrate();
+        }
+        return result;
+    }
 
     private long getMealTypeId() {
         return getArguments().getLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, FAKE_DEFAULT_ID);

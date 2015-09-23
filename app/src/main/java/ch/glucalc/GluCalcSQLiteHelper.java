@@ -873,6 +873,11 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public void deleteFoodDiary(Long foodDiaryId) {
+        getWritableDatabase().delete(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(foodDiaryId)});
+    }
+
     private void sortFoodDiary(List<FoodDiary> foodDiaries) {
         Collections.sort(foodDiaries, new Comparator<FoodDiary>() {
 

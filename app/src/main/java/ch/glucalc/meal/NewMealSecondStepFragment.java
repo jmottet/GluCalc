@@ -32,6 +32,10 @@ public class NewMealSecondStepFragment extends Fragment {
     private boolean alreadyExists = true;
     private OnNewMealFoodDiaryAddition mCallback;
 
+    private TextView carbohydrateTextView;
+
+    private NewMealFoodListFragment newMealFoodListFragment;
+
     // Container Activity must implement this interface
     public interface OnNewMealFoodDiaryAddition {
 
@@ -84,11 +88,12 @@ public class NewMealSecondStepFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         log("NewMealSecondStepFragment.onCreate");
         View layout = inflater.inflate(R.layout.new_meal_second_step_view, container, false);
+        newMealFoodListFragment = new NewMealFoodListFragment();
+
         initFields(layout);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        NewMealFoodListFragment newMealFoodListFragment = new NewMealFoodListFragment();
         List<FoodDiary> foodDiaries;
         if (!alreadyExists) {
             if (isFavouriteFoodIncluded()) {
@@ -104,7 +109,7 @@ public class NewMealSecondStepFragment extends Fragment {
                 foodDiaries = new ArrayList<>();
             }
         } else {
-            foodDiaries = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries();
+            foodDiaries = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries(mealDiary.getId());
         }
         newMealFoodListFragment.setNewMealFoods(foodDiaries);
         Bundle arguments = new Bundle();
@@ -115,6 +120,8 @@ public class NewMealSecondStepFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
+
+        computeCarbohydrateTotal();
 
         return layout;
     }
@@ -131,8 +138,9 @@ public class NewMealSecondStepFragment extends Fragment {
         TextView mealTypeTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_meal_type_textview);
         mealTypeTextView.setText(mealType.getName());
 
-        TextView carbohydrateTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_carbohydrate_value_textview);
+        carbohydrateTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_carbohydrate_value_textview);
         carbohydrateTextView.setText("0.00");
+
         TextView carbohydrateUnitTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_carbohydrate_unit_textview);
         carbohydrateUnitTextView.setText("[g]");
 
@@ -150,11 +158,62 @@ public class NewMealSecondStepFragment extends Fragment {
         glycemiaUnitTextView.setText("[mmol/l]");
 
         final ImageButton addButton = (ImageButton) layout.findViewById(R.id.new_meal_second_step_add_button);
+        final ImageButton deleteButton = (ImageButton) layout.findViewById(R.id.new_meal_second_step_delete_button);
+        final Button selectButton = (Button) layout.findViewById(R.id.new_meal_second_step_select_button);
+        final ImageButton unselectButton = (ImageButton) layout.findViewById(R.id.new_meal_second_step_unselect_button);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mCallback.openNewMealFoodDiaryListSelectionFragment(mealDiary.getId());
+                computeCarbohydrateTotal();
             }
         });
+        addButton.setVisibility(View.VISIBLE);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                newMealFoodListFragment.deleteAction();
+                computeCarbohydrateTotal();
+
+                newMealFoodListFragment.setSectionMode(false);
+                unselectButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+                selectButton.setVisibility(View.VISIBLE);
+                addButton.setVisibility(View.VISIBLE);
+            }
+        });
+        deleteButton.setVisibility(View.INVISIBLE);
+        newMealFoodListFragment.setDeleteButton(deleteButton);
+
+        selectButton.setVisibility(View.VISIBLE);
+
+        unselectButton.setVisibility(View.INVISIBLE);
+
+        selectButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                newMealFoodListFragment.setSectionMode(true);
+                selectButton.setVisibility(View.INVISIBLE);
+                unselectButton.setVisibility(View.VISIBLE);
+                addButton.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        unselectButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                newMealFoodListFragment.setSectionMode(false);
+                unselectButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+                selectButton.setVisibility(View.VISIBLE);
+                addButton.setVisibility(View.VISIBLE);
+                newMealFoodListFragment.initList();
+            }
+        });
+
+    }
+
+    private void computeCarbohydrateTotal() {
+        carbohydrateTextView.setText(format(newMealFoodListFragment.getCarbohydrateTotal()));
+
     }
 
     private Long getNewMealDiaryId() {

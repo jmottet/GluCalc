@@ -141,6 +141,18 @@
             android:text="@string/new_meal_second_step_food"
             android:textSize="20sp"
             />
+<!--
+        <item android:id="@+id/selection_performed"
+            android:title="@string/select_performed_title"
+            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            app:showAsAction="collapseActionView|ifRoom"
+            />
+
+        <item android:id="@+id/delete"
+            android:title="@string/delete_title"
+            android:icon="@android:drawable/ic_menu_delete"
+            app:showAsAction="collapseActionView|ifRoom"
+            /> -->
 
         <Button
             android:id="@+id/new_meal_second_step_select_button"
@@ -151,11 +163,25 @@
             android:textColor="@color/accentColor"/>
 
         <ImageButton
+            android:id="@+id/new_meal_second_step_unselect_button"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="fill_parent"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <ImageButton
             android:id="@+id/new_meal_second_step_add_button"
             android:layout_width="0dp"
             android:layout_weight="0.25"
             android:layout_height="fill_parent"
             android:src="@android:drawable/ic_menu_add"/>
+
+        <ImageButton
+            android:id="@+id/new_meal_second_step_delete_button"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:layout_height="fill_parent"
+            android:src="@android:drawable/ic_menu_delete"/>
 
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
