@@ -104,7 +104,7 @@ public class NewMealFoodListFragment extends ListFragment {
                 currentNewMealFood.setSelected(false);
                 selectionBean.substractOneToNumberItemSelected();
                 if (selectionBean.getNumberItemSelected() == 0) {
-                    deleteButton.setVisibility(View.INVISIBLE);
+                    deleteButton.setVisibility(View.GONE);
                 }
             }
         }

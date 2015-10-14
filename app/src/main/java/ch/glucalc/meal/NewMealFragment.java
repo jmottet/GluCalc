@@ -24,6 +24,7 @@ import java.util.List;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.MainActivity;
 import ch.glucalc.R;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodConstants;
@@ -109,6 +110,8 @@ public class NewMealFragment extends Fragment {
         View layout = inflater.inflate(R.layout.new_meal_view, container, false);
 
         newMealCarbonhydrate = (EditText) layout.findViewById(R.id.new_meal_carbonhydrate_edittext);
+        TextView newMealCarbonhydrateUnit = (TextView) layout.findViewById(R.id.new_meal_carbonhydrate_unit_textview);
+        newMealCarbonhydrateUnit.setText(MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel());
 
         mealTypeSpinner = (Spinner) layout.findViewById(R.id.new_meal_type_spinner);
         populateSpinner(null);

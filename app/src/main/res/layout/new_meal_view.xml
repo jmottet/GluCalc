@@ -44,7 +44,6 @@
             android:layout_width="40sp"
             android:layout_height="32dp"
             android:textSize="20sp"
-            android:text="@string/new_meal_carbohydrate_unit"
             android:layout_weight="0.80" />
     </LinearLayout>
 
@@ -63,7 +62,8 @@
             android:layout_marginTop="20dp"
             android:switchMinWidth="56dp"
             android:text="@string/favourite_food_switch"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:checked="false" />
 
         <TextView
             android:id="@+id/favourite_food_status"

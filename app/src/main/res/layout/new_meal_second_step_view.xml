@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         >
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/new_meal_second_step_carbohydrate_container"
             android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_weight=".33"
@@ -74,6 +75,7 @@
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/new_meal_second_step_insulin_container"
             android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_weight=".33"
@@ -97,20 +99,21 @@
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/new_meal_second_step_glycemia_container"
             android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_weight=".33"
             android:layout_height="wrap_content"
             >
             <TextView
-                android:id="@+id/new_meal_second_step_glycemia_value_textview"
+                android:id="@+id/new_meal_third_step_glycemia_value_textview"
                 android:layout_width="0dp"
                 android:layout_weight=".60"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/new_meal_second_step_glycemia_unit_textview"
+                android:id="@+id/new_meal_third_step_glycemia_unit_textview"
                 android:layout_width="0dp"
                 android:layout_weight=".40"
                 android:layout_height="wrap_content"

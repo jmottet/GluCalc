@@ -37,6 +37,7 @@ import ch.glucalc.meal.NewMealFoodDiaryListSelectionFragment;
 import ch.glucalc.meal.NewMealFoodListFragment;
 import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.NewMealSecondStepFragment;
+import ch.glucalc.meal.NewMealThirdStepFragment;
 import ch.glucalc.meal.diary.FoodDiary;
 import ch.glucalc.meal.type.EditMealTypeFragment;
 import ch.glucalc.meal.type.MealType;
@@ -51,10 +52,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
-        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition {
+        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStep, NewMealThirdStepFragment.OnNewMealSaved {
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
+
+    public static EnumBloodGlucose GLOBAL_BLOOD_GLUCOSE = EnumBloodGlucose.MMOL_L;
 
     @Override
     public void onBackPressed() {
@@ -364,6 +367,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         openFragment(newMealSecondStepFragment, true);
     }
 
+    @Override
+    public void openNewMealThirdStepFragment(long mealDiaryId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiaryId);
+
+        NewMealThirdStepFragment newMealThirdStepFragment = new NewMealThirdStepFragment();
+        newMealThirdStepFragment.setArguments(arguments);
+        openFragment(newMealThirdStepFragment, true);
+    }
+
     private void openFragment(Fragment fragment, boolean backAvailable) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -378,4 +391,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         // Commit the transaction
         transaction.commit();
     }
+
+
 }

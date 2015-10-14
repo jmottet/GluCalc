@@ -53,7 +53,6 @@
     <string name="edit_new_meal_type">Meal type</string>
     <string name="enter_new_meal_carbohydrate_hint">Enter a carbohydrate</string>
     <string name="edit_new_meal_carbohydrate">Carbohydrate</string>
-    <string name="new_meal_carbohydrate_unit">[mmol/l]</string>
     <string name="favourite_food_switch">Favourite food</string>
 
     <!-- New meal second step -->
@@ -63,6 +62,15 @@
     <string name="new_meal_second_step_select">Select</string>
     <string name="new_meal_second_step_food">Food</string>
     <string name="new_meal_second_step_quantity">Quantity</string>
+
+    <!-- New meal third step -->
+    <string name="new_meal_third_step_title">Adjust Insulin</string>
+    <string name="new_meal_third_step_carbohydrate">Carbohydrate</string>
+    <string name="new_meal_third_step_insulin">Insulin</string>
+    <string name="new_meal_third_step_glycemia">Glycemia</string>
+    <string name="new_meal_third_step_bolus_given">Given</string>
+    <string name="new_meal_third_step_bolus_unit">[UI]</string>
+    <string name="send_meal_switch">Send the meal</string>
 
     <!-- Edit new meal food -->
     <string name="edit_new_meal_food_quantity">Quantity :</string>
