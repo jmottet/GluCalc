@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ch.glucalc.food.EditFoodFragment;
@@ -39,6 +40,10 @@ import ch.glucalc.meal.NewMealFragment;
 import ch.glucalc.meal.NewMealSecondStepFragment;
 import ch.glucalc.meal.NewMealThirdStepFragment;
 import ch.glucalc.meal.diary.FoodDiary;
+import ch.glucalc.meal.display.MealDiaryConstants;
+import ch.glucalc.meal.display.MealDiaryFirstStepFragment;
+import ch.glucalc.meal.display.MealDiarySecondStepFragment;
+import ch.glucalc.meal.display.MealDiaryThirdStepFragment;
 import ch.glucalc.meal.type.EditMealTypeFragment;
 import ch.glucalc.meal.type.MealType;
 import ch.glucalc.meal.type.MealTypeConstants;
@@ -52,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
-        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStep, NewMealThirdStepFragment.OnNewMealSaved {
+        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStep, NewMealThirdStepFragment.OnNewMealSaved, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary {
 
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
@@ -73,10 +78,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
         int count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
-        //System.out.println(count);
-        //insertFavouriteFoodsIfNone();
-        //count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
-        //System.out.println(count);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -89,50 +90,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         /* Set up the navigation bar which is the left menu */
         drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-    }
-
-    private void insertFavouriteFoodsIfNone() {
-        // Breakfast
-        Integer mealTypeId = 1;
-        List<FavouriteFood> favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods(mealTypeId);
-        if (favouriteFoods.isEmpty()) {
-            List<Integer> foodIds = new ArrayList<>();
-            foodIds.add(1);
-            foodIds.add(2);
-            foodIds.add(3);
-            foodIds.add(4);
-            for (FavouriteFood newFavouriteFood : getNewFavouriteFoods(mealTypeId, foodIds)) {
-                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeFavouriteFood(newFavouriteFood);
-            }
-        }
-        // Dinner
-        mealTypeId = 2;
-        favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods(mealTypeId);
-        if (favouriteFoods.isEmpty()) {
-            List<Integer> foodIds = new ArrayList<>();
-            foodIds.add(5);
-            foodIds.add(6);
-            foodIds.add(7);
-            foodIds.add(8);
-            for (FavouriteFood newFavouriteFood : getNewFavouriteFoods(mealTypeId, foodIds)) {
-                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeFavouriteFood(newFavouriteFood);
-            }
-        }
-
-        // Lunch
-        mealTypeId = 3;
-        favouriteFoods = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods(mealTypeId);
-        if (favouriteFoods.isEmpty()) {
-            List<Integer> foodIds = new ArrayList<>();
-            foodIds.add(10);
-            foodIds.add(11);
-            foodIds.add(12);
-            foodIds.add(13);
-            foodIds.add(14);
-            for (FavouriteFood newFavouriteFood : getNewFavouriteFoods(mealTypeId, foodIds)) {
-                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeFavouriteFood(newFavouriteFood);
-            }
-        }
     }
 
     private List<FavouriteFood> getNewFavouriteFoods(int mealTypeId, List<Integer> foodIds) {
@@ -203,6 +160,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void openInsulinOverviewMealTypeListSelectionFragment() {
         openFragment(new InsulinOverviewMealTypeListSelectionFragment(), false);
+    }
+
+    @Override
+    public void openMealDiaryFirstStepFragment() {
+        openFragment(new MealDiaryFirstStepFragment(), false);
     }
 
     @Override
@@ -377,6 +339,24 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         openFragment(newMealThirdStepFragment, true);
     }
 
+    @Override
+    public void openMealDiarySecondStep(String date) {
+        Bundle arguments = new Bundle();
+        arguments.putString(MealDiaryConstants.MEAL_DIARY_DATE_PARAMETER, date);
+        MealDiarySecondStepFragment mealDiarySecondStepFragment = new MealDiarySecondStepFragment();
+        mealDiarySecondStepFragment.setArguments(arguments);
+        openFragment(mealDiarySecondStepFragment, true);
+    }
+
+    @Override
+    public void openMealDiaryThirdStep(long mealDiaryId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(MealDiaryConstants.MEAL_DIARY_ID_PARAMETER, mealDiaryId);
+        MealDiaryThirdStepFragment mealDiaryThirdStepFragment = new MealDiaryThirdStepFragment();
+        mealDiaryThirdStepFragment.setArguments(arguments);
+        openFragment(mealDiaryThirdStepFragment, true);
+    }
+
     private void openFragment(Fragment fragment, boolean backAvailable) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -391,6 +371,4 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         // Commit the transaction
         transaction.commit();
     }
-
-
 }

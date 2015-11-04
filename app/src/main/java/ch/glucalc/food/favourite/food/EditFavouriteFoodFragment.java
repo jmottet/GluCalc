@@ -76,7 +76,7 @@ public class EditFavouriteFoodFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         log("EditFavouriteFoodFragment.onCreate");
-        View layout = inflater.inflate(R.layout.edit_new_meal_food, container, false);
+        View layout = inflater.inflate(R.layout.edit_favourite_food, container, false);
         initFieldsAndButtonForEdition(layout);
         return layout;
     }

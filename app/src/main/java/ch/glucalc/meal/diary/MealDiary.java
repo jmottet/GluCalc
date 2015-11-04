@@ -86,4 +86,5 @@ public class MealDiary {
     public boolean areSomeMandatoryFieldsMissing() {
         return false;
     }
+
 }

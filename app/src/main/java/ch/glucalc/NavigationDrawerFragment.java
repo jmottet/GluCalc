@@ -46,10 +46,9 @@ public class NavigationDrawerFragment extends Fragment {
     private static final int SETTINGS_MEALS_AND_INSULIN_IDX = 0;
     private static final int SETTINGS_FAVOURITE_FOODS_IDX = 1;
     private static final int SETTINGS_FOOD_CATEGORIES_IDX = 2;
-    private static final int SETTINGS_PASSWORD_LOCK_IDX = 3;
-    private static final int SETTINGS_ALERTS_IDX = 4;
-    private static final int SETTINGS_INITIAL_SETUP_IDX = 5;
-    private static final int SETTINGS_RESET_IDX = 6;
+    private static final int SETTINGS_ALERTS_IDX = 3;
+    private static final int SETTINGS_INITIAL_SETUP_IDX = 4;
+    private static final int SETTINGS_RESET_IDX = 5;
 
     /* Sub categories of About menu */
     private static final int ABOUT_TERMS_OF_USE_IDX = 0;
@@ -100,6 +99,8 @@ public class NavigationDrawerFragment extends Fragment {
         public void openFavouriteFoodMealTypeListSelectionFragment();
 
         public void openInsulinOverviewMealTypeListSelectionFragment();
+
+        public void openMealDiaryFirstStepFragment();
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -276,7 +277,7 @@ public class NavigationDrawerFragment extends Fragment {
         List<MenuChildItem> subSettings = new ArrayList<MenuChildItem>();
         final List<String> subSettingsTitles = Arrays.asList(getResources().getStringArray(
                 R.array.left_submenu_settings_items_array));
-        Integer[] subSettingsImageResources = {R.drawable.ic_submenu_meals_and_insulin, R.drawable.ic_submenu_favourite_foods, R.drawable.ic_submenu_food_categories, R.drawable.ic_submenu_password_lock, R.drawable.ic_submenu_alerts, R.drawable.ic_submenu_initial_setup, R.drawable.ic_submenu_reset};
+        Integer[] subSettingsImageResources = {R.drawable.ic_submenu_meals_and_insulin, R.drawable.ic_submenu_favourite_foods, R.drawable.ic_submenu_food_categories, R.drawable.ic_submenu_alerts, R.drawable.ic_submenu_initial_setup, R.drawable.ic_submenu_reset};
         for(int i=0; i < subSettingsTitles.size(); i++) {
             MenuChildItem menuChildItem = new MenuChildItem();
             menuChildItem.setTitle(subSettingsTitles.get(i));
@@ -311,6 +312,7 @@ public class NavigationDrawerFragment extends Fragment {
         } else if (groupPosition == CHECK_MENU_IDX) {
             switch (childPosition) {
                 case CHECK_MEAL_DIARY_IDX:
+                    mCallback.openMealDiaryFirstStepFragment();
                     break;
                 case CHECK_INSULIN_OVERVIEW_IDX:
                     mCallback.openInsulinOverviewMealTypeListSelectionFragment();
@@ -330,8 +332,6 @@ public class NavigationDrawerFragment extends Fragment {
                     break;
                 case SETTINGS_FOOD_CATEGORIES_IDX:
                     mCallback.openCategoryFoodListFragment();
-                    break;
-                case SETTINGS_PASSWORD_LOCK_IDX:
                     break;
                 case SETTINGS_ALERTS_IDX:
                     break;

@@ -44,7 +44,7 @@ public class NewMealThirdStepFragment extends Fragment {
     private TextView sendMealStatus;
     private Switch sendMealSwitch;
     private TextView percentageOfDiffenrenceTextView;
-    private EditText bolusGivenEditText;
+    private TextView bolusGivenTextView ;
     private int percentageOfDiffenrence = 0;
     private OnNewMealSaved mCallback;
 
@@ -107,7 +107,7 @@ public class NewMealThirdStepFragment extends Fragment {
             case R.id.save:
                 // On sauve les données et on passe à l'écran 3 de la prise de repas
 
-                mealDiary.setBolusGiven(Float.valueOf(bolusGivenEditText.getText().toString()));
+                mealDiary.setBolusGiven(Float.valueOf(bolusGivenTextView.getText().toString()));
                 mealDiary.setTemporary(false);
                 GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealDiary(mealDiary);
                 mCallback.openNewMealFragment();
@@ -167,8 +167,8 @@ public class NewMealThirdStepFragment extends Fragment {
         TextView glycemiaUnitTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_glycemia_unit_textview);
         glycemiaUnitTextView.setText(MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel());
 
-        bolusGivenEditText = (EditText) layout.findViewById(R.id.new_meal_third_step_bolus_given_edittext);
-        bolusGivenEditText.setText(format(mealDiary.getBolusCalculated()));
+        bolusGivenTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_bolus_given_textview);
+        bolusGivenTextView .setText(format(mealDiary.getBolusCalculated()));
 
         percentageOfDiffenrenceTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_percentage_difference_textview);
 
@@ -197,7 +197,7 @@ public class NewMealThirdStepFragment extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 float newBolusGiven = mealDiary.getBolusCalculated() + (mealDiary.getBolusCalculated() * percentageOfDiffenrence / 100);
                 percentageOfDiffenrenceTextView.setText(format(percentageOfDiffenrence) + " %");
-                bolusGivenEditText.setText(format(newBolusGiven));
+                bolusGivenTextView .setText(format(newBolusGiven));
             }
         });
 

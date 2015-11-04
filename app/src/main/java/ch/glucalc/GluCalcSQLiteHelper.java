@@ -88,19 +88,26 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public List<MealType> loadMealTypes() {
-        final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, null, null,
-                null, null, MealTypeTable.COLUMN_NAME);
-        final List<MealType> mealTypes = new ArrayList<MealType>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final MealType mealType = new MealType();
-            mealType.setId(cursor.getLong(0));
-            mealType.setName(cursor.getString(1));
-            mealType.setFoodTarget(cursor.getFloat(2));
-            mealType.setGlycemiaTarget(cursor.getFloat(3));
-            mealType.setInsulinSensitivity(cursor.getFloat(4));
-            mealType.setInsulin(cursor.getFloat(5));
-            mealTypes.add(mealType);
-            System.out.println("Meal Type Id : " + mealType.getId());
+        Cursor cursor = null;
+        List<MealType> mealTypes = null;
+        try {
+            cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, null, null,
+                    null, null, MealTypeTable.COLUMN_NAME);
+            mealTypes = new ArrayList<MealType>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final MealType mealType = new MealType();
+                mealType.setId(cursor.getLong(0));
+                mealType.setName(cursor.getString(1));
+                mealType.setFoodTarget(cursor.getFloat(2));
+                mealType.setGlycemiaTarget(cursor.getFloat(3));
+                mealType.setInsulinSensitivity(cursor.getFloat(4));
+                mealType.setInsulin(cursor.getFloat(5));
+                mealTypes.add(mealType);
+                System.out.println("Meal Type Id : " + mealType.getId());
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
         return mealTypes;
     }
@@ -111,16 +118,23 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = MealTypeTable.COLUMN_ID + "=?";
         final String[] whereArgs = {String.valueOf(mealTypeId)};
 
-        final Cursor cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, whereClause,
-                whereArgs, null, null, null);
-        if (cursor.moveToNext()) {
-            result = new MealType();
-            result.setId(cursor.getLong(0));
-            result.setName(cursor.getString(1));
-            result.setFoodTarget(cursor.getFloat(2));
-            result.setGlycemiaTarget(cursor.getFloat(3));
-            result.setInsulinSensitivity(cursor.getFloat(4));
-            result.setInsulin(cursor.getFloat(5));
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, whereClause,
+                    whereArgs, null, null, null);
+            if (cursor.moveToNext()) {
+                result = new MealType();
+                result.setId(cursor.getLong(0));
+                result.setName(cursor.getString(1));
+                result.setFoodTarget(cursor.getFloat(2));
+                result.setGlycemiaTarget(cursor.getFloat(3));
+                result.setInsulinSensitivity(cursor.getFloat(4));
+                result.setInsulin(cursor.getFloat(5));
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
+
         }
         return result;
     }
@@ -250,35 +264,50 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public List<Food> loadFoods() {
-        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, null, null, null, null,
-                null);
-        final List<Food> foods = new ArrayList<Food>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final Food food = new Food();
-            food.setId(cursor.getLong(0));
-            food.setName(cursor.getString(1));
-            food.setQuantity(cursor.getFloat(2));
-            food.setUnit(cursor.getString(3));
-            food.setCarbonhydrate(cursor.getFloat(4));
-            food.setCategoryId(cursor.getLong(5));
-            foods.add(food);
+        Cursor cursor = null;
+        List<Food> foods = null;
+        try {
+            cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, null, null, null, null,
+                    null);
+            foods = new ArrayList<Food>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final Food food = new Food();
+                food.setId(cursor.getLong(0));
+                food.setName(cursor.getString(1));
+                food.setQuantity(cursor.getFloat(2));
+                food.setUnit(cursor.getString(3));
+                food.setCarbonhydrate(cursor.getFloat(4));
+                food.setCategoryId(cursor.getLong(5));
+                foods.add(food);
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
         return foods;
     }
 
     public List<Food> loadFoodsFilteredByName(String name) {
-        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
-                FoodTable.COLUMN_NAME + " LIKE ?", new String[]{"%" + name + "%"}, null, null, null);
-        final List<Food> foods = new ArrayList<Food>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final Food food = new Food();
-            food.setId(cursor.getLong(0));
-            food.setName(cursor.getString(1));
-            food.setQuantity(cursor.getFloat(2));
-            food.setUnit(cursor.getString(3));
-            food.setCarbonhydrate(cursor.getFloat(4));
-            food.setCategoryId(cursor.getLong(5));
-            foods.add(food);
+        Cursor cursor = null;
+        List<Food> foods = null;
+        try {
+            cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+                    FoodTable.COLUMN_NAME + " LIKE ?", new String[]{"%" + name + "%"}, null, null, null);
+            foods = new ArrayList<Food>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final Food food = new Food();
+                food.setId(cursor.getLong(0));
+                food.setName(cursor.getString(1));
+                food.setQuantity(cursor.getFloat(2));
+                food.setUnit(cursor.getString(3));
+                food.setCarbonhydrate(cursor.getFloat(4));
+                food.setCategoryId(cursor.getLong(5));
+                foods.add(food);
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
+
         }
         return foods;
     }
@@ -294,19 +323,29 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
             }
             clauseIn.append(foodToExclude);
         }
-        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
-                FoodTable.COLUMN_ID + " NOT IN (" + clauseIn.toString() + ")", null, null, null, null);
-        final List<Food> foods = new ArrayList<Food>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final Food food = new Food();
-            food.setId(cursor.getLong(0));
-            food.setName(cursor.getString(1));
-            food.setQuantity(cursor.getFloat(2));
-            food.setUnit(cursor.getString(3));
-            food.setCarbonhydrate(cursor.getFloat(4));
-            food.setCategoryId(cursor.getLong(5));
-            foods.add(food);
+
+        Cursor cursor = null;
+        List<Food> foods = null;
+        try {
+            cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS,
+                    FoodTable.COLUMN_ID + " NOT IN (" + clauseIn.toString() + ")", null, null, null, null);
+            foods = new ArrayList<Food>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final Food food = new Food();
+                food.setId(cursor.getLong(0));
+                food.setName(cursor.getString(1));
+                food.setQuantity(cursor.getFloat(2));
+                food.setUnit(cursor.getString(3));
+                food.setCarbonhydrate(cursor.getFloat(4));
+                food.setCategoryId(cursor.getLong(5));
+                foods.add(food);
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
+
         }
+
         return foods;
     }
 
@@ -360,17 +399,25 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = FoodTable.COLUMN_ID + "=?";
         final String[] whereArgs = {String.valueOf(foodId)};
 
-        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
-                null, null, null);
-        if (cursor.moveToNext()) {
-            result = new Food();
-            result.setId(cursor.getLong(0));
-            result.setName(cursor.getString(1));
-            result.setQuantity(cursor.getFloat(2));
-            result.setUnit(cursor.getString(3));
-            result.setCarbonhydrate(cursor.getFloat(4));
-            result.setCategoryId(cursor.getLong(5));
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
+                    null, null, null);
+            if (cursor.moveToNext()) {
+                result = new Food();
+                result.setId(cursor.getLong(0));
+                result.setName(cursor.getString(1));
+                result.setQuantity(cursor.getFloat(2));
+                result.setUnit(cursor.getString(3));
+                result.setCarbonhydrate(cursor.getFloat(4));
+                result.setCategoryId(cursor.getLong(5));
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
+
         }
+
         return result;
     }
 
@@ -380,16 +427,22 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = FoodTable.COLUMN_NAME + "=?";
         final String[] whereArgs = {foodName};
 
-        final Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
-                null, null, null);
-        if (cursor.moveToNext()) {
-            result = new Food();
-            result.setId(cursor.getLong(0));
-            result.setName(cursor.getString(1));
-            result.setQuantity(cursor.getFloat(2));
-            result.setUnit(cursor.getString(3));
-            result.setCarbonhydrate(cursor.getFloat(4));
-            result.setCategoryId(cursor.getLong(5));
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, FoodTable.COLUMNS, whereClause, whereArgs,
+                    null, null, null);
+            if (cursor.moveToNext()) {
+                result = new Food();
+                result.setId(cursor.getLong(0));
+                result.setName(cursor.getString(1));
+                result.setQuantity(cursor.getFloat(2));
+                result.setUnit(cursor.getString(3));
+                result.setCarbonhydrate(cursor.getFloat(4));
+                result.setCategoryId(cursor.getLong(5));
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
         return result;
     }
@@ -458,20 +511,36 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public boolean isCategoryOfFoodEmpty() {
-        final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
-                null, null, null, CategoryFoodTable.COLUMN_NAME);
-        return cursor.getCount() == 0;
+        Cursor cursor = null;
+        boolean result = true;
+        try {
+            cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
+                    null, null, null, CategoryFoodTable.COLUMN_NAME);
+            result = cursor.getCount() == 0;
+        } finally {
+            if(cursor != null)
+                cursor.close();
+        }
+        return result;
     }
 
     public List<CategoryFood> loadCategoriesOfFood() {
-        final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
-                null, null, null, CategoryFoodTable.COLUMN_NAME);
-        final List<CategoryFood> categories = new ArrayList<CategoryFood>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final CategoryFood categoryFood = new CategoryFood();
-            categoryFood.setId(cursor.getLong(0));
-            categoryFood.setName(cursor.getString(1));
-            categories.add(categoryFood);
+        Cursor cursor = null;
+        List<CategoryFood> categories = null;
+        try {
+
+            cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS, null,
+                    null, null, null, CategoryFoodTable.COLUMN_NAME);
+            categories = new ArrayList<CategoryFood>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final CategoryFood categoryFood = new CategoryFood();
+                categoryFood.setId(cursor.getLong(0));
+                categoryFood.setName(cursor.getString(1));
+                categories.add(categoryFood);
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
         return categories;
     }
@@ -482,12 +551,19 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = CategoryFoodTable.COLUMN_ID + "=?";
         final String[] whereArgs = {String.valueOf(categoryFoodId)};
 
-        final Cursor cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS,
-                whereClause, whereArgs, null, null, null);
-        if (cursor.moveToNext()) {
-            result = new CategoryFood();
-            result.setId(cursor.getLong(0));
-            result.setName(cursor.getString(1));
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(CategoryFoodTable.TABLE_NAME, CategoryFoodTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
+            if (cursor.moveToNext()) {
+                result = new CategoryFood();
+                result.setId(cursor.getLong(0));
+                result.setName(cursor.getString(1));
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
+
         }
         return result;
     }
@@ -590,39 +666,51 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
         final String whereClause = FavouriteFoodTable.COLUMN_ID + "=?";
         final String[] whereArgs = {String.valueOf(favouriteFoodId)};
-
-        final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
-                whereClause, whereArgs, null, null, null);
-        if (cursor.moveToNext()) {
-            result = new FavouriteFood();
-            result.setId(cursor.getLong(0));
-            result.setMealTypeId(cursor.getLong(1));
-            result.setFoodId(cursor.getLong(2));
-            result.setQuantity(cursor.getFloat(3));
-            result.setCarbonhydrate(cursor.getFloat(4));
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
+            if (cursor.moveToNext()) {
+                result = new FavouriteFood();
+                result.setId(cursor.getLong(0));
+                result.setMealTypeId(cursor.getLong(1));
+                result.setFoodId(cursor.getLong(2));
+                result.setQuantity(cursor.getFloat(3));
+                result.setCarbonhydrate(cursor.getFloat(4));
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
         return result;
     }
 
     public List<FavouriteFood> loadFavouriteFoods() {
+        Cursor cursor = null;
+        List<FavouriteFood> favouriteFoods = null;
+        try {
+            cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
+                    null, null, null, null, null);
 
-        final Cursor cursor = getReadableDatabase().query(FavouriteFoodTable.TABLE_NAME, FavouriteFoodTable.COLUMNS,
-                null, null, null, null, null);
+            favouriteFoods = new ArrayList<FavouriteFood>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final FavouriteFood favouriteFood = new FavouriteFood();
+                favouriteFood.setId(cursor.getLong(0));
+                favouriteFood.setMealTypeId(cursor.getLong(1));
+                favouriteFood.setFoodId(cursor.getLong(2));
+                favouriteFood.setQuantity(cursor.getFloat(3));
+                favouriteFood.setCarbonhydrate(cursor.getFloat(4));
 
-        final List<FavouriteFood> favouriteFoods = new ArrayList<FavouriteFood>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final FavouriteFood favouriteFood = new FavouriteFood();
-            favouriteFood.setId(cursor.getLong(0));
-            favouriteFood.setMealTypeId(cursor.getLong(1));
-            favouriteFood.setFoodId(cursor.getLong(2));
-            favouriteFood.setQuantity(cursor.getFloat(3));
-            favouriteFood.setCarbonhydrate(cursor.getFloat(4));
-
-            String foodName = loadFood(favouriteFood.getFoodId()).getName();
-            favouriteFood.setName(foodName);
-            favouriteFoods.add(favouriteFood);
+                String foodName = loadFood(favouriteFood.getFoodId()).getName();
+                favouriteFood.setName(foodName);
+                favouriteFoods.add(favouriteFood);
+            }
+            sortFavouriteFoods(favouriteFoods);
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
-        sortFavouriteFoods(favouriteFoods);
+
         return favouriteFoods;
     }
 
@@ -705,26 +793,33 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = MealDiaryTable.COLUMN_TEMPORARY + "=?";
         final String[] whereArgs = {"1"};
 
-        final Cursor cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
-                whereClause, whereArgs, null, null, null);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
 
-        if (cursor.moveToNext()) {
-            result = new MealDiary();
-            result.setId(cursor.getLong(0));
-            result.setMealDate(cursor.getString(1));
-            result.setGlycemiaMeasured(cursor.getFloat(2));
-            result.setCarbohydrateTotal(cursor.getFloat(3));
-            result.setBolusCalculated(cursor.getFloat(4));
-            result.setBolusGiven(cursor.getFloat(5));
-            int temporary = cursor.getInt(6);
+            if (cursor.moveToNext()) {
+                result = new MealDiary();
+                result.setId(cursor.getLong(0));
+                result.setMealDate(cursor.getString(1));
+                result.setGlycemiaMeasured(cursor.getFloat(2));
+                result.setCarbohydrateTotal(cursor.getFloat(3));
+                result.setBolusCalculated(cursor.getFloat(4));
+                result.setBolusGiven(cursor.getFloat(5));
+                int temporary = cursor.getInt(6);
 
-            if (temporary == 0) {
-                result.setTemporary(false);
-            } else if (temporary == 1) {
-                result.setTemporary(true);
+                if (temporary == 0) {
+                    result.setTemporary(false);
+                } else if (temporary == 1) {
+                    result.setTemporary(true);
+                }
+                result.setMealTypeId(cursor.getLong(7));
             }
-            result.setMealTypeId(cursor.getLong(7));
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
+
         return result;
     }
 
@@ -734,27 +829,120 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = MealDiaryTable.COLUMN_ID + "=?";
         final String[] whereArgs = { String.valueOf(mealDiaryId)};
 
-        final Cursor cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
-                whereClause, whereArgs, null, null, null);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
 
-        if (cursor.moveToNext()) {
-            result = new MealDiary();
-            result.setId(cursor.getLong(0));
-            result.setMealDate(cursor.getString(1));
-            result.setGlycemiaMeasured(cursor.getFloat(2));
-            result.setCarbohydrateTotal(cursor.getFloat(3));
-            result.setBolusCalculated(cursor.getFloat(4));
-            result.setBolusGiven(cursor.getFloat(5));
-            int temporary = cursor.getInt(6);
+            if (cursor.moveToNext()) {
+                result = new MealDiary();
+                result.setId(cursor.getLong(0));
+                result.setMealDate(cursor.getString(1));
+                result.setGlycemiaMeasured(cursor.getFloat(2));
+                result.setCarbohydrateTotal(cursor.getFloat(3));
+                result.setBolusCalculated(cursor.getFloat(4));
+                result.setBolusGiven(cursor.getFloat(5));
+                int temporary = cursor.getInt(6);
 
-            if (temporary == 0) {
-                result.setTemporary(false);
-            } else if (temporary == 1) {
-                result.setTemporary(true);
+                if (temporary == 0) {
+                    result.setTemporary(false);
+                } else if (temporary == 1) {
+                    result.setTemporary(true);
+                }
+                result.setMealTypeId(cursor.getLong(7));
             }
-            result.setMealTypeId(cursor.getLong(7));
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
+
         return result;
+    }
+
+    public List<MealDiary> loadMealDiariesStartingWith(String date) {
+
+        final String whereClause = MealDiaryTable.COLUMN_TEMPORARY + "=? and " + MealDiaryTable.COLUMN_MEAL_DATE + " LIKE ?";
+        final String[] whereArgs = { String.valueOf(0), date + "%"};
+        List<MealDiary> mealDiaries = null;
+        Cursor cursor = null;
+
+        try {
+            cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
+                    whereClause, whereArgs, null, null, MealDiaryTable.COLUMN_MEAL_DATE);
+
+            mealDiaries = new ArrayList<>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final MealDiary mealDiary = new MealDiary();
+                mealDiary.setId(cursor.getLong(0));
+                mealDiary.setMealDate(cursor.getString(1));
+                mealDiary.setGlycemiaMeasured(cursor.getFloat(2));
+                mealDiary.setCarbohydrateTotal(cursor.getFloat(3));
+                mealDiary.setBolusCalculated(cursor.getFloat(4));
+                mealDiary.setBolusGiven(cursor.getFloat(5));
+                int temporary = cursor.getInt(6);
+
+                if (temporary == 0) {
+                    mealDiary.setTemporary(false);
+                } else if (temporary == 1) {
+                    mealDiary.setTemporary(true);
+                }
+                mealDiary.setMealTypeId(cursor.getLong(7));
+                mealDiaries.add(mealDiary);
+            }
+            sortMealDiaries(mealDiaries);
+        } finally {
+            if(cursor != null)
+                cursor.close();
+        }
+        return mealDiaries;
+    }
+
+    public List<MealDiary> loadMealDiaries() {
+
+        final String whereClause = MealDiaryTable.COLUMN_TEMPORARY + "=?";
+        final String[] whereArgs = { String.valueOf(0)};
+
+        Cursor cursor = null;
+        List<MealDiary> mealDiaries = null;
+        try {
+            cursor = getReadableDatabase().query(MealDiaryTable.TABLE_NAME, MealDiaryTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
+
+            mealDiaries = new ArrayList<>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final MealDiary mealDiary = new MealDiary();
+                mealDiary.setId(cursor.getLong(0));
+                mealDiary.setMealDate(cursor.getString(1));
+                mealDiary.setGlycemiaMeasured(cursor.getFloat(2));
+                mealDiary.setCarbohydrateTotal(cursor.getFloat(3));
+                mealDiary.setBolusCalculated(cursor.getFloat(4));
+                mealDiary.setBolusGiven(cursor.getFloat(5));
+                int temporary = cursor.getInt(6);
+
+                if (temporary == 0) {
+                    mealDiary.setTemporary(false);
+                } else if (temporary == 1) {
+                    mealDiary.setTemporary(true);
+                }
+                mealDiary.setMealTypeId(cursor.getLong(7));
+                mealDiaries.add(mealDiary);
+            }
+            sortMealDiaries(mealDiaries);
+        } finally {
+            if(cursor != null)
+                cursor.close();
+        }
+        return mealDiaries;
+    }
+
+    private void sortMealDiaries(List<MealDiary> mealDiaries) {
+        Collections.sort(mealDiaries, new Comparator<MealDiary>() {
+
+            @Override
+            public int compare(MealDiary lhs, MealDiary rhs) {
+                return lhs.getMealDate().toLowerCase().compareTo(rhs.getMealDate().toLowerCase());
+            }
+        });
     }
 
     /******
@@ -809,48 +997,62 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
         final String whereClause = FoodDiaryTable.COLUMN_FK_MEAL_DIARY + "=?";
         final String[] whereArgs = {String.valueOf(mealDiaryId)};
+        List<FoodDiary> foodDiaries = null;
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
 
-        final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
-                whereClause, whereArgs, null, null, null);
+            foodDiaries = new ArrayList<FoodDiary>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final FoodDiary foodDiary = new FoodDiary();
 
-        final List<FoodDiary> foodDiaries = new ArrayList<FoodDiary>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final FoodDiary foodDiary = new FoodDiary();
+                //COLUMN_ID, COLUMN_FOOD_NAME, COLUMN_QUANTITY, COLUMN_UNIT, COLUMN_CARBOHYDRATE,
+                //COLUMN_FK_MEAL_DIARY};
+                foodDiary.setId(cursor.getLong(0));
+                foodDiary.setFoodName(cursor.getString(1));
+                foodDiary.setQuantity(cursor.getFloat(2));
+                foodDiary.setUnit(cursor.getString(3));
+                foodDiary.setCarbohydrate(cursor.getFloat(4));
+                foodDiary.setMealDiaryId(cursor.getInt(5));
 
-            //COLUMN_ID, COLUMN_FOOD_NAME, COLUMN_QUANTITY, COLUMN_UNIT, COLUMN_CARBOHYDRATE,
-            //COLUMN_FK_MEAL_DIARY};
-            foodDiary.setId(cursor.getLong(0));
-            foodDiary.setFoodName(cursor.getString(1));
-            foodDiary.setQuantity(cursor.getFloat(2));
-            foodDiary.setUnit(cursor.getString(3));
-            foodDiary.setCarbohydrate(cursor.getFloat(4));
-            foodDiary.setMealDiaryId(cursor.getInt(5));
-
-            foodDiaries.add(foodDiary);
+                foodDiaries.add(foodDiary);
+            }
+            sortFoodDiary(foodDiaries);
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
-        sortFoodDiary(foodDiaries);
         return foodDiaries;
     }
 
     public List<FoodDiary> loadFoodDiaries() {
 
-        final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
-                null, null, null, null, null);
+        Cursor cursor = null;
+        List<FoodDiary> foodDiaries = null;
+        try {
+            cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
+                    null, null, null, null, null);
 
-        final List<FoodDiary> foodDiaries = new ArrayList<>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            final FoodDiary foodDiary = new FoodDiary();
+            foodDiaries = new ArrayList<>(cursor.getCount());
+            while (cursor.moveToNext()) {
+                final FoodDiary foodDiary = new FoodDiary();
 
-            foodDiary.setId(cursor.getLong(0));
-            foodDiary.setFoodName(cursor.getString(1));
-            foodDiary.setQuantity(cursor.getFloat(2));
-            foodDiary.setUnit(cursor.getString(3));
-            foodDiary.setCarbohydrate(cursor.getFloat(4));
-            foodDiary.setMealDiaryId(cursor.getInt(5));
+                foodDiary.setId(cursor.getLong(0));
+                foodDiary.setFoodName(cursor.getString(1));
+                foodDiary.setQuantity(cursor.getFloat(2));
+                foodDiary.setUnit(cursor.getString(3));
+                foodDiary.setCarbohydrate(cursor.getFloat(4));
+                foodDiary.setMealDiaryId(cursor.getInt(5));
 
-            foodDiaries.add(foodDiary);
+                foodDiaries.add(foodDiary);
+            }
+            sortFoodDiary(foodDiaries);
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
-        sortFoodDiary(foodDiaries);
+
         return foodDiaries;
     }
 
@@ -860,16 +1062,23 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         final String whereClause = FoodDiaryTable.COLUMN_ID + "=?";
         final String[] whereArgs = {String.valueOf(foodDiaryId)};
 
-        final Cursor cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
-                whereClause, whereArgs, null, null, null);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMNS,
+                    whereClause, whereArgs, null, null, null);
 
-        if (cursor.moveToNext()) {
-            result = new FoodDiary();
-            result.setId(cursor.getLong(0));
-            result.setFoodName(cursor.getString(1));
-            result.setCarbohydrate(cursor.getFloat(4));
-            result.setMealDiaryId(cursor.getInt(5));
+            if (cursor.moveToNext()) {
+                result = new FoodDiary();
+                result.setId(cursor.getLong(0));
+                result.setFoodName(cursor.getString(1));
+                result.setCarbohydrate(cursor.getFloat(4));
+                result.setMealDiaryId(cursor.getInt(5));
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
         }
+
         return result;
     }
 
