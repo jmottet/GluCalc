@@ -97,7 +97,7 @@ public class NewMealSecondStepFragment extends Fragment {
             }
 
             mealDiary.setMealTypeId(getMealTypeId());
-            mealDiary.setGlycemiaMeasured(getCarbohydrate());
+            mealDiary.setGlycemiaMeasured(getBloodGlucose());
 
             if (alreadyExists) {
                 GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).updateMealDiary(mealDiary);
@@ -317,8 +317,8 @@ public class NewMealSecondStepFragment extends Fragment {
         return getArguments().getBoolean(NewMealConstants.NEW_MEAL_WITH_FAVOURITE_FOOD_PARAMETER);
     }
 
-    private float getCarbohydrate() {
-        return getArguments().getFloat(NewMealConstants.NEW_MEAL_CARBOHYDRATE_PARAMETER);
+    private float getBloodGlucose() {
+        return getArguments().getFloat(NewMealConstants.NEW_MEAL_BLOOD_GLUCOSE_PARAMETER);
     }
 
     private void log(String msg) {

@@ -23,7 +23,7 @@
         android:paddingTop="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/edit_new_meal_carbohydrate"
+        android:text="@string/edit_new_meal_blood_glucose"
         android:textSize="20sp" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,15 +32,15 @@
         android:layout_height="wrap_content"
         android:weightSum="1">
         <EditText
-            android:id="@+id/new_meal_carbonhydrate_edittext"
+            android:id="@+id/new_meal_blood_glucose_edittext"
             android:layout_height="wrap_content"
             android:layout_width="266dp"
-            android:hint="@string/enter_new_meal_carbohydrate_hint"
+            android:hint="@string/enter_new_meal_blood_glucose_hint"
             android:inputType="numberDecimal">
         </EditText>
 
         <TextView
-            android:id="@+id/new_meal_carbonhydrate_unit_textview"
+            android:id="@+id/new_meal_blood_glucose_unit_textview"
             android:layout_width="40sp"
             android:layout_height="32dp"
             android:textSize="20sp"

@@ -8,7 +8,7 @@ public class NewMealConstants {
 
   public static String NEW_MEAL_TYPE_ID_PARAMETER = "newMealTypeId";
 
-  public static String NEW_MEAL_CARBOHYDRATE_PARAMETER = "newMealCarbohydrate";
+  public static String NEW_MEAL_BLOOD_GLUCOSE_PARAMETER = "newMealBloodGlucose";
 
   public static String NEW_MEAL_WITH_FAVOURITE_FOOD_PARAMETER = "newMealWithFavouriteFood";
 

@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,9 +25,6 @@ import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
-import ch.glucalc.food.Food;
-import ch.glucalc.food.FoodConstants;
-import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.meal.type.MealType;
 
 
@@ -37,7 +33,7 @@ public class NewMealFragment extends Fragment {
 
     private static String TAG = "GluCalc";
 
-    private EditText newMealCarbonhydrate;
+    private EditText newMealBloodGlucose;
     private TextView favouriteFoodStatus;
     private Switch favouriteFoodSwitch;
 
@@ -49,7 +45,7 @@ public class NewMealFragment extends Fragment {
     // Container Activity must implement this interface
     public interface OnMealTypeInsulinSecondStep {
 
-        void openNewMealSecondStepFragment(long mealTypeId, float newMealCarbonhydrate, boolean favouriteFood);
+        void openNewMealSecondStepFragment(long mealTypeId, float newMealBloodGlucose, boolean favouriteFood);
 
     }
 
@@ -77,9 +73,9 @@ public class NewMealFragment extends Fragment {
                 if (areSomeMandatoryFieldsMissing()) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
-                    final String newFoodCarboHydrateText = newMealCarbonhydrate.getText().toString();
+                    final String newFoodBloodGlucoseText = newMealBloodGlucose.getText().toString();
                     try {
-                        final Float newMealCarboHydrateAsFloat = Float.valueOf(newFoodCarboHydrateText);
+                        final Float newMealBloodGlucoseAsFloat = Float.valueOf(newFoodBloodGlucoseText);
 
                         final int selectedItemPosition = mealTypeSpinner.getSelectedItemPosition();
                         long mealTypeIdSelected = -1;
@@ -92,7 +88,7 @@ public class NewMealFragment extends Fragment {
                             i++;
                         }
 
-                        mCallback.openNewMealSecondStepFragment(mealTypeIdSelected, newMealCarboHydrateAsFloat, favouriteFoodSwitch.isChecked());
+                        mCallback.openNewMealSecondStepFragment(mealTypeIdSelected, newMealBloodGlucoseAsFloat, favouriteFoodSwitch.isChecked());
                     } catch (final NumberFormatException nfe) {
                     }
                 }
@@ -109,9 +105,9 @@ public class NewMealFragment extends Fragment {
 
         View layout = inflater.inflate(R.layout.new_meal_view, container, false);
 
-        newMealCarbonhydrate = (EditText) layout.findViewById(R.id.new_meal_carbonhydrate_edittext);
-        TextView newMealCarbonhydrateUnit = (TextView) layout.findViewById(R.id.new_meal_carbonhydrate_unit_textview);
-        newMealCarbonhydrateUnit.setText(MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel());
+        newMealBloodGlucose = (EditText) layout.findViewById(R.id.new_meal_blood_glucose_edittext);
+        TextView newMealBloodGlucoseUnit = (TextView) layout.findViewById(R.id.new_meal_blood_glucose_unit_textview);
+        newMealBloodGlucoseUnit.setText(MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel());
 
         mealTypeSpinner = (Spinner) layout.findViewById(R.id.new_meal_type_spinner);
         populateSpinner(null);
@@ -234,7 +230,7 @@ public class NewMealFragment extends Fragment {
 
 
     private boolean areSomeMandatoryFieldsMissing() {
-        if (TextUtils.isEmpty(newMealCarbonhydrate.getText()) || mealTypeSpinner.getSelectedItemId() == 0) {
+        if (TextUtils.isEmpty(newMealBloodGlucose.getText()) || mealTypeSpinner.getSelectedItemId() == 0) {
             return true;
         }
         return false;

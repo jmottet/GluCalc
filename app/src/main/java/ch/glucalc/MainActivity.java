@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ch.glucalc.food.EditFoodFragment;
@@ -298,10 +297,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
-    public void openNewMealSecondStepFragment(long mealTypeId, float newMealCarbohydrate, boolean favouriteFood) {
+    public void openNewMealSecondStepFragment(long mealTypeId, float newMealBloodGlucose, boolean favouriteFood) {
         Bundle arguments = new Bundle();
         arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, mealTypeId);
-        arguments.putFloat(NewMealConstants.NEW_MEAL_CARBOHYDRATE_PARAMETER, newMealCarbohydrate);
+        arguments.putFloat(NewMealConstants.NEW_MEAL_BLOOD_GLUCOSE_PARAMETER, newMealBloodGlucose);
         arguments.putBoolean(NewMealConstants.NEW_MEAL_WITH_FAVOURITE_FOOD_PARAMETER, favouriteFood);
 
         NewMealSecondStepFragment newMealSecondStepFragment = new NewMealSecondStepFragment();
