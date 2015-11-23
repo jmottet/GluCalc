@@ -133,37 +133,37 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void openNewMealFragment() {
-        openFragment(new NewMealFragment(), false);
+        openFragment(new NewMealFragment(), true);
     }
 
     @Override
     public void openFoodListFragment() {
-        openFragment(new FoodListFragment(), false);
+        openFragment(new FoodListFragment(), true);
     }
 
     @Override
     public void openMealTypeListFragment() {
-        openFragment(new MealTypeListFragment(), false);
+        openFragment(new MealTypeListFragment(), true);
     }
 
     @Override
     public void openCategoryFoodListFragment() {
-        openFragment(new CategoryFoodListFragment(), false);
+        openFragment(new CategoryFoodListFragment(), true);
     }
 
     @Override
     public void openFavouriteFoodMealTypeListSelectionFragment() {
-        openFragment(new FavouriteFoodMealTypeListSelectionFragment(), false);
+        openFragment(new FavouriteFoodMealTypeListSelectionFragment(), true);
     }
 
     @Override
     public void openInsulinOverviewMealTypeListSelectionFragment() {
-        openFragment(new InsulinOverviewMealTypeListSelectionFragment(), false);
+        openFragment(new InsulinOverviewMealTypeListSelectionFragment(), true);
     }
 
     @Override
     public void openMealDiaryFirstStepFragment() {
-        openFragment(new MealDiaryFirstStepFragment(), false);
+        openFragment(new MealDiaryFirstStepFragment(), true);
     }
 
     @Override
@@ -213,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         EditFoodFragment editFoodFragment = new EditFoodFragment();
         editFoodFragment.setArguments(arguments);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         openFragment(editFoodFragment, true);
     }
 
