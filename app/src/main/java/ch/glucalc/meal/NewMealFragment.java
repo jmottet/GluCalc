@@ -83,7 +83,7 @@ public class NewMealFragment extends Fragment {
 
                         final int selectedItemPosition = mealTypeSpinner.getSelectedItemPosition();
                         long mealTypeIdSelected = -1;
-                        int i = 0;
+                        int i = 1;
                         for (final MealType mealType : mealTypes) {
                             if (i == selectedItemPosition) {
                                 mealTypeIdSelected = mealType.getId();
@@ -211,6 +211,9 @@ public class NewMealFragment extends Fragment {
         final int spinnerDdItem = android.R.layout.simple_spinner_dropdown_item;
 
         int currentPosition = 0;
+        // The first value is "empty"
+        mealTypeAdapter.add("");
+        currentPosition++;
         for (final MealType mealType : mealTypes) {
             if (mealTypeId != null && mealType.getId() == mealTypeId) {
                 selectedIndex = currentPosition;
@@ -231,7 +234,7 @@ public class NewMealFragment extends Fragment {
 
 
     private boolean areSomeMandatoryFieldsMissing() {
-        if (TextUtils.isEmpty(newMealCarbonhydrate.getText()) || mealTypeSpinner.getSelectedItemId() < 0) {
+        if (TextUtils.isEmpty(newMealCarbonhydrate.getText()) || mealTypeSpinner.getSelectedItemId() == 0) {
             return true;
         }
         return false;
