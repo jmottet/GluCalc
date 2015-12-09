@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -11,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.glucalc.about.AboutTermsFragment;
 import ch.glucalc.food.EditFoodFragment;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodConstants;
@@ -58,6 +61,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
         NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStep, NewMealThirdStepFragment.OnNewMealSaved, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary {
 
+    private static String TAG = "GluCalc";
+
     private Toolbar toolbar;
     NavigationDrawerFragment drawerFragment;
 
@@ -89,6 +94,33 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         /* Set up the navigation bar which is the left menu */
         drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch(action) {
+            case (MotionEvent.ACTION_DOWN) :
+                Log.i(TAG,"Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE) :
+                Log.i(TAG,"Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP) :
+                Log.i(TAG,"Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL) :
+                Log.i(TAG,"Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE) :
+                Log.i(TAG,"Movement occurred outside bounds " +
+                        "of current screen element");
+                return true;
+            default :
+                return super.onTouchEvent(event);
+        }
     }
 
     private List<FavouriteFood> getNewFavouriteFoods(int mealTypeId, List<Integer> foodIds) {
@@ -164,6 +196,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void openMealDiaryFirstStepFragment() {
         openFragment(new MealDiaryFirstStepFragment(), true);
+    }
+
+    @Override
+    public void openAboutTermsFragment() {
+        openFragment(new AboutTermsFragment(), true);
     }
 
     @Override

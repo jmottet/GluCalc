@@ -36,10 +36,7 @@ public class NewMealThirdStepFragment extends Fragment {
     private MealDiary mealDiary = null;
     private boolean alreadyExists = true;
 
-    private LinearLayout glycemiaContainer;
-    private LinearLayout carbohydrateContainer;
     private TextView carbohydrateTextView;
-    private TextView carbohydrateUnitTextView;
     private TextView insulinTextView;
     private TextView sendMealStatus;
     private Switch sendMealSwitch;
@@ -126,46 +123,34 @@ public class NewMealThirdStepFragment extends Fragment {
     private void initFields(View layout) {
         log("NewMealThirdStepFragment.initFieldsAndButtonForEdition");
 
-        carbohydrateContainer = (LinearLayout) layout.findViewById(R.id.new_meal_third_step_carbohydrate_container);
+        carbohydrateTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_carbohydrate_value_textview);
         if (mealDiary.getCarbohydrateTotal() > mealType.getFoodTarget() + 5) {
-            carbohydrateContainer.setBackgroundColor(ORANGE_COLOR);
+            carbohydrateTextView.setBackgroundColor(ORANGE_COLOR);
         } else {
-            carbohydrateContainer.setBackgroundColor(GREEN_COLOR);
+            carbohydrateTextView.setBackgroundColor(GREEN_COLOR);
         }
 
-        carbohydrateTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_carbohydrate_value_textview);
-        carbohydrateTextView.setText(format(mealDiary.getCarbohydrateTotal()));
-
-        carbohydrateUnitTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_carbohydrate_unit_textview);
-        carbohydrateUnitTextView.setText("[g]");
+        carbohydrateTextView.setText(format(mealDiary.getCarbohydrateTotal()) + " " + getCarbohydrateUnit());
 
         insulinTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_insulin_value_textview);
-        insulinTextView.setText(format(mealDiary.getBolusCalculated()));
+        insulinTextView.setText(format(mealDiary.getBolusCalculated()) + " " + getInsulinUnit());
         insulinTextView.setTypeface(null, Typeface.BOLD);
 
-        TextView insulinUnitTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_insulin_unit_textview);
-        insulinUnitTextView.setText("[UI]");
+        TextView bloodGlucoseTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_blood_glucose_value_textview);
+        bloodGlucoseTextView.setText(format(mealDiary.getGlycemiaMeasured()) + " " + getBloodGlucoseUnit());
 
-
-        TextView glycemiaTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_glycemia_value_textview);
-        glycemiaTextView.setText(format(mealDiary.getGlycemiaMeasured()));
-
-        glycemiaContainer = (LinearLayout) layout.findViewById(R.id.new_meal_third_step_glycemia_container);
         EnumColor color = MainActivity.GLOBAL_BLOOD_GLUCOSE.getColor(mealDiary.getGlycemiaMeasured());
         switch (color) {
             case GREEN:
-                glycemiaContainer.setBackgroundColor(GREEN_COLOR);
+                bloodGlucoseTextView.setBackgroundColor(GREEN_COLOR);
                 break;
             case RED:
-                glycemiaContainer.setBackgroundColor(RED_COLOR);
+                bloodGlucoseTextView.setBackgroundColor(RED_COLOR);
                 break;
             case ORANGE:
-                glycemiaContainer.setBackgroundColor(ORANGE_COLOR);
+                bloodGlucoseTextView.setBackgroundColor(ORANGE_COLOR);
                 break;
         }
-
-        TextView glycemiaUnitTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_glycemia_unit_textview);
-        glycemiaUnitTextView.setText(MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel());
 
         bolusGivenTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_bolus_given_textview);
         bolusGivenTextView .setText(format(mealDiary.getBolusCalculated()));
@@ -226,8 +211,18 @@ public class NewMealThirdStepFragment extends Fragment {
         } else {
             sendMealStatus.setText("OFF");
         }
+    }
 
+    public String getCarbohydrateUnit() {
+        return "[g]";
+    }
 
+    public String getInsulinUnit() {
+        return "[UI]";
+    }
+
+    public String getBloodGlucoseUnit() {
+        return MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel();
     }
 
     private Long getNewMealDiaryId() {

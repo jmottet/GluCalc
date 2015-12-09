@@ -17,110 +17,114 @@
         android:gravity="center"
         android:text="@string/new_meal_third_step_title"/>
 
+    <!-- Here new implementation -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-        <TextView
-            android:id="@+id/new_meal_third_step_carbohydrate_textview"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:text="@string/new_meal_third_step_carbohydrate"
-            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/new_meal_third_step_insulin_textview"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            android:text="@string/new_meal_third_step_insulin"
-            android:textSize="20sp" />
-        <TextView
-            android:id="@+id/new_meal_third_step_glycemia_textview"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:text="@string/new_meal_third_step_glycemia"
-            android:layout_height="wrap_content"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/new_meal_third_step_carbohydrate_container"
             android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
+            android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-        <TextView
-            android:id="@+id/new_meal_third_step_carbohydrate_value_textview"
-            android:layout_width="0dp"
-            android:layout_weight=".60"
-            android:layout_height="wrap_content"
-            android:textSize="16sp" />
+            <!-- 1ère ligne -->
 
-        <TextView
-            android:id="@+id/new_meal_third_step_carbohydrate_unit_textview"
-            android:layout_width="0dp"
-            android:layout_weight=".40"
-            android:layout_height="wrap_content"
-            android:textSize="12sp" />
+            <TextView
+                android:id="@+id/new_meal_third_step_carbohydrate_textview"
+                android:background="@color/myBackgroundColor"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="40dp"
+                android:layout_marginBottom="0.5sp"
+                android:layout_marginLeft="1sp"
+                android:layout_marginRight="0.5sp"
+                android:layout_marginTop="1sp"
+                android:text="@string/new_meal_second_step_carbohydrate"
+                android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/new_meal_third_step_insulin_textview"
+                android:background="@color/myBackgroundColor"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="40dp"
+                android:layout_marginBottom="0.5sp"
+                android:layout_marginLeft="0.5sp"
+                android:layout_marginRight="0.5sp"
+                android:layout_marginTop="1sp"
+                android:text="@string/new_meal_second_step_insulin"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/new_meal_third_step_glycemia_textview"
+                android:background="@color/myBackgroundColor"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="40dp"
+                android:layout_marginBottom="0.5sp"
+                android:layout_marginLeft="0.5sp"
+                android:layout_marginRight="1sp"
+                android:layout_marginTop="1sp"
+                android:text="@string/new_meal_second_step_blood_glucose"
+                android:textSize="14sp" />
         </LinearLayout>
+        <!-- 2ème ligne -->
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/new_meal_third_step_insulin_container"
             android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
+            android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
+            <TextView
+                android:id="@+id/new_meal_third_step_carbohydrate_value_textview"
+                android:background="@color/myBackgroundColor"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="30dp"
+                android:layout_marginBottom="1sp"
+                android:layout_marginLeft="1sp"
+                android:layout_marginRight="0.5sp"
+                android:layout_marginTop="0.5sp"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/new_meal_third_step_insulin_value_textview"
+                android:background="@color/myBackgroundColor"
+                android:gravity="center"
                 android:layout_width="0dp"
-                android:layout_weight=".60"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:layout_weight=".33"
+                android:layout_height="30dp"
+                android:layout_marginBottom="1sp"
+                android:layout_marginLeft="0.5sp"
+                android:layout_marginRight="0.5sp"
+                android:layout_marginTop="0.5sp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/new_meal_third_step_insulin_unit_textview"
+                android:id="@+id/new_meal_third_step_blood_glucose_value_textview"
+                android:background="@color/myBackgroundColor"
+                android:gravity="center"
                 android:layout_width="0dp"
-                android:layout_weight=".40"
-                android:layout_height="wrap_content"
-                android:textSize="12sp" />
-
+                android:layout_weight=".33"
+                android:layout_height="30dp"
+                android:layout_marginBottom="1sp"
+                android:layout_marginLeft="0.5sp"
+                android:layout_marginRight="1sp"
+                android:layout_marginTop="0.5sp"
+                android:textSize="14sp" />
         </LinearLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/new_meal_third_step_glycemia_container"
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_weight=".33"
-            android:layout_height="wrap_content"
-            >
-            <TextView
-                android:id="@+id/new_meal_third_step_glycemia_value_textview"
-                android:layout_width="0dp"
-                android:layout_weight=".60"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/new_meal_third_step_glycemia_unit_textview"
-                android:layout_width="0dp"
-                android:layout_weight=".40"
-                android:layout_height="wrap_content"
-                android:textSize="12sp" />
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

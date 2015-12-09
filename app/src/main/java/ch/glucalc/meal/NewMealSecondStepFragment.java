@@ -3,10 +3,12 @@ package ch.glucalc.meal;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +32,7 @@ import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.meal.diary.FoodDiary;
 import ch.glucalc.meal.diary.MealDiary;
 import ch.glucalc.meal.type.MealType;
+import ch.glucalc.util.ColorHelper;
 
 public class NewMealSecondStepFragment extends Fragment {
 
@@ -41,10 +44,7 @@ public class NewMealSecondStepFragment extends Fragment {
     private OnNewMealFoodDiaryAddition mCallback;
     private OnNewMealThirdStep mCallback2;
 
-    private LinearLayout glycemiaContainer;
-    private LinearLayout carbohydrateContainer;
     private TextView carbohydrateTextView;
-    private TextView carbohydrateUnitTextView;
     private TextView insulinTextView;
 
     private NewMealFoodListFragment newMealFoodListFragment;
@@ -52,6 +52,18 @@ public class NewMealSecondStepFragment extends Fragment {
     private static int ORANGE_COLOR = Color.parseColor("#FF6600");
     private static int GREEN_COLOR = Color.parseColor("#669900");
     private static int RED_COLOR = Color.parseColor("#FF0000");
+
+    public String getCarbohydrateUnit() {
+        return "[g]";
+    }
+
+    public String getInsulinUnit() {
+        return "[UI]";
+    }
+
+    public String getBloodGlucoseUnit() {
+        return MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel();
+    }
 
     // Container Activity must implement this interface
     public interface OnNewMealFoodDiaryAddition {
@@ -190,41 +202,28 @@ public class NewMealSecondStepFragment extends Fragment {
         TextView mealTypeTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_meal_type_textview);
         mealTypeTextView.setText(mealType.getName());
 
-        carbohydrateContainer = (LinearLayout) layout.findViewById(R.id.new_meal_second_step_carbohydrate_container);
-
         carbohydrateTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_carbohydrate_value_textview);
-        carbohydrateTextView.setText("0.00");
-
-        carbohydrateUnitTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_carbohydrate_unit_textview);
-        carbohydrateUnitTextView.setText("[g]");
+        carbohydrateTextView.setText("0.00" + " " + getCarbohydrateUnit());
 
         insulinTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_insulin_value_textview);
-        insulinTextView.setText("0.00");
+        insulinTextView.setText("0.00" + " " + getInsulinUnit());
         insulinTextView.setTypeface(null, Typeface.BOLD);
 
-        TextView insulinUnitTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_insulin_unit_textview);
-        insulinUnitTextView.setText("[UI]");
+        TextView bloodGlucoseTextView = (TextView) layout.findViewById(R.id.new_meal_second_step_blood_glucose_value_textview);
+        bloodGlucoseTextView.setText(format(mealDiary.getGlycemiaMeasured()) + " " + getBloodGlucoseUnit());
 
-
-        TextView glycemiaTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_glycemia_value_textview);
-        glycemiaTextView.setText(format(mealDiary.getGlycemiaMeasured()));
-
-        glycemiaContainer = (LinearLayout) layout.findViewById(R.id.new_meal_second_step_glycemia_container);
         EnumColor color = MainActivity.GLOBAL_BLOOD_GLUCOSE.getColor(mealDiary.getGlycemiaMeasured());
         switch (color) {
             case GREEN:
-                glycemiaContainer.setBackgroundColor(GREEN_COLOR);
+                bloodGlucoseTextView.setBackgroundColor(GREEN_COLOR);
                 break;
             case RED:
-                glycemiaContainer.setBackgroundColor(RED_COLOR);
+                bloodGlucoseTextView.setBackgroundColor(RED_COLOR);
                 break;
             case ORANGE:
-                glycemiaContainer.setBackgroundColor(ORANGE_COLOR);
+                bloodGlucoseTextView.setBackgroundColor(ORANGE_COLOR);
                 break;
         }
-
-        TextView glycemiaUnitTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_glycemia_unit_textview);
-        glycemiaUnitTextView.setText(MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel());
 
         final ImageButton addButton = (ImageButton) layout.findViewById(R.id.new_meal_second_step_add_button);
         final ImageButton deleteButton = (ImageButton) layout.findViewById(R.id.new_meal_second_step_delete_button);
@@ -285,19 +284,19 @@ public class NewMealSecondStepFragment extends Fragment {
         mealDiary.setCarbohydrateTotal(carbohydrateTotal);
 
         if (carbohydrateTotal > mealType.getFoodTarget() + 5) {
-            carbohydrateContainer.setBackgroundColor(ORANGE_COLOR);
+            carbohydrateTextView.setBackgroundColor(ORANGE_COLOR);
             String warningMessage = "La cible de glucose est dépassée de plus de 5 [g]";
             Toast.makeText(getActivity(), warningMessage, Toast.LENGTH_LONG).show();
         } else {
-            carbohydrateContainer.setBackgroundColor(GREEN_COLOR);
+            carbohydrateTextView.setBackgroundColor(GREEN_COLOR);
         }
-        carbohydrateTextView.setText(format(newMealFoodListFragment.getCarbohydrateTotal()));
+        carbohydrateTextView.setText(format(newMealFoodListFragment.getCarbohydrateTotal()) + " " + getCarbohydrateUnit());
     }
 
     private void computeBolus() {
         float bolus = getBolus(mealDiary.getGlycemiaMeasured(), mealType.getGlycemiaTarget(), mealType.getInsulin(), newMealFoodListFragment.getCarbohydrateTotal(), mealType.getInsulinSensitivity());
         mealDiary.setBolusCalculated(bolus);
-        insulinTextView.setText(format(bolus));
+        insulinTextView.setText(format(bolus) + " " + getInsulinUnit());
     }
 
     private float getBolus(float glycemiaMeasured, float glycemiaTarget, float insulinPerTen, float carbohydrate, float sensitivityFactor) {

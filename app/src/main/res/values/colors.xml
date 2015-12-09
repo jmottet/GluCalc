@@ -4,6 +4,7 @@
     <color name="primaryColor">#8d8e8c</color>
     <color name="primaryColorDark">#8cd200</color>
     <color name="accentColor">#FFFFFF</color>
+    <color name="myBackgroundColor">#FF303030</color>
     <!--<color name="accentColor">#50514F</color>-->
 
     <!-- remove later colors below -->

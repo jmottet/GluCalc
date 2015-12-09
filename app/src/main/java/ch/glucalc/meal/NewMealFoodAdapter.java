@@ -1,6 +1,8 @@
 package ch.glucalc.meal;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import ch.glucalc.R;
-import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.meal.diary.FoodDiary;
 
 public class NewMealFoodAdapter extends ArrayAdapter<FoodDiary> {
@@ -32,6 +33,7 @@ public class NewMealFoodAdapter extends ArrayAdapter<FoodDiary> {
         final FoodDiary newMealFood = values.get(position);
         final TextView textView = (TextView) rowView.findViewById(R.id.name);
         textView.setText(newMealFood.getFoodName());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
         final TextView textView2 = (TextView) rowView.findViewById(R.id.quantity);
         textView2.setText("" + newMealFood.getQuantity() + " g");
@@ -41,4 +43,5 @@ public class NewMealFoodAdapter extends ArrayAdapter<FoodDiary> {
 
         return rowView;
     }
+
 }

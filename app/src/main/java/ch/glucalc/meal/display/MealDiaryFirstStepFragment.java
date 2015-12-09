@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -24,9 +23,9 @@ import ch.glucalc.meal.diary.MealDiary;
  */
 public class MealDiaryFirstStepFragment extends ListFragment {
 
-    private static String TAG = "GluCalc";
-
     private OnMealDiaryDate mCallback;
+
+    private static String TAG = "GluCalc";
 
     private static DateFormat formatter = DateFormat.getDateInstance();
     private static SimpleDateFormat inputSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -38,7 +38,7 @@ android:orientation="vertical">
             android:layout_gravity="start"
             android:choiceMode="singleChoice"
             android:divider="@color/primaryColorDark"
-            android:dividerHeight="1dp"
+            android:dividerHeight="1sp"
             android:background="@color/white"
             android:groupIndicator="@null"/>
 

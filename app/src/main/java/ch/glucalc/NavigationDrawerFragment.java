@@ -101,6 +101,8 @@ public class NavigationDrawerFragment extends Fragment {
         public void openInsulinOverviewMealTypeListSelectionFragment();
 
         public void openMealDiaryFirstStepFragment();
+
+        public void openAboutTermsFragment();
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -348,6 +350,7 @@ public class NavigationDrawerFragment extends Fragment {
         } else if (groupPosition == ABOUT_MENU_IDX) {
             switch (childPosition) {
                 case ABOUT_TERMS_OF_USE_IDX:
+                    mCallback.openAboutTermsFragment();
                     break;
                 default:
                     break;
@@ -367,7 +370,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void setTitle(CharSequence title) {
-        Log.i("NavigationDrawerFragment", "setTitle");
+        Log.i("NAV_DRAW_FRAG", "setTitle");
 
         mTitle = title;
         mCallback.setToolbarTitle(mTitle);

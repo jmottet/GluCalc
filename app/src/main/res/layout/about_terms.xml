@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:columnCount="3"
+            android:background="@color/red"
+            >
+
+            <TextView
+                android:id="@+id/new_meal_second_step_carbohydrate_textview_NEW"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Carbohydrate"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/material_blue_grey_800"
+                android:layout_margin="2sp"
+                android:layout_gravity="fill"
+                android:gravity="center"
+                android:layout_row="0"
+                android:layout_column="0"/>
+
+            <TextView
+                android:id="@+id/new_meal_second_step_insulin_textview_NEW"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Insulin"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/material_blue_grey_800"
+                android:layout_gravity="fill"
+                android:layout_margin="2sp"
+                android:gravity="center"
+                android:layout_row="0"
+                android:layout_column="1"/>
+            <TextView
+                android:id="@+id/new_meal_second_step_glycemia_textview_NEW"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Blood glucose"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/material_blue_grey_800"
+                android:layout_gravity="fill"
+                android:layout_margin="2sp"
+                android:gravity="center"
+                android:layout_row="0"
+                android:layout_column="2"/>
+
+
+            <TextView
+                android:id="@+id/new_meal_second_step_carbohydrate_textview_VALUE"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="0.00 [g]"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/material_blue_grey_800"
+                android:layout_margin="2sp"
+                android:layout_gravity="fill"
+                android:gravity="center"
+                android:layout_row="1"
+                android:layout_column="0"/>
+
+            <TextView
+                android:id="@+id/new_meal_second_step_insulin_textview_VALUE"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="0.00 [UI]"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/material_blue_grey_800"
+                android:layout_gravity="fill"
+                android:layout_margin="2sp"
+                android:gravity="center"
+                android:layout_row="1"
+                android:layout_column="1"/>
+            <TextView
+                android:id="@+id/new_meal_second_step_glycemia_textview_VALUE"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="5.00 [mmol/l]"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:background="@color/material_blue_grey_800"
+                android:layout_gravity="fill"
+                android:layout_margin="2sp"
+                android:gravity="center"
+                android:layout_row="1"
+                android:layout_column="2"/>
+
+
+        </GridLayout>
+
+</LinearLayout>
