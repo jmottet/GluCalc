@@ -170,4 +170,23 @@
     <string name="export_email_chooser_title">Email custom data using...</string>
     <string name="exported_food_failed">Problem creating attachment</string>
     <string name="exported_food_successfully">Food exported successfully!</string>
+
+    <string name="export_new_meal_title">Export new meal from Glucalc</string>
+    <string name="export_new_meal_field1_date">Date</string>
+    <string name="export_new_meal_field2_time">Time</string>
+    <string name="export_new_meal_field3_meal">Meal</string>
+    <string name="export_new_meal_field4_insulin">Insulin</string>
+    <string name="export_new_meal_field5_insulin_given">Insulin given</string>
+    <string name="export_new_meal_field6_carbohydrate">Carbohydrate</string>
+    <string name="export_new_meal_field7_food_target">Food target</string>
+    <string name="export_new_meal_field8_blood_glucose">Blood glucose</string>
+    <string name="export_new_meal_field9a_food">Food</string>
+    <string name="export_new_meal_field9b_food_carbohydrate">Carbohydrate</string>
+
+    <string name="export_new_meal_inulin_unit">UI</string>
+    <string name="export_new_meal_blood_glucose_unit">[mmol/l]</string>
+    <string name="export_new_meal_carbohydrate_unit">g</string>
+    <string name="export_new_meal_food_carbohydrate_unit">[g]</string>
+
+    <string name="exported_new_meal_successfully">New meal exported successfully!</string>
 </resources>

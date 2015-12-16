@@ -1,6 +1,7 @@
 package ch.glucalc.meal;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ch.glucalc.EnumColor;
+import ch.glucalc.ExportActivity;
+import ch.glucalc.ExportNewMealActivity;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
@@ -107,6 +110,14 @@ public class NewMealThirdStepFragment extends Fragment {
                 mealDiary.setBolusGiven(Float.valueOf(bolusGivenTextView.getText().toString()));
                 mealDiary.setTemporary(false);
                 GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealDiary(mealDiary);
+
+                if (sendMealSwitch.isChecked()) {
+                    final Intent startIntent = new Intent(getActivity(), ExportNewMealActivity.class);
+                    startIntent.putExtra(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiary.getId());
+                    startActivity(startIntent);
+                }
+
+
                 mCallback.openNewMealFragment();
                 return true;
             default:
