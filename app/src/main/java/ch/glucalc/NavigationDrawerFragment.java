@@ -40,7 +40,6 @@ public class NavigationDrawerFragment extends Fragment {
     /* Sub categories of Check left menu */
     private static final int CHECK_MEAL_DIARY_IDX = 0;
     private static final int CHECK_INSULIN_OVERVIEW_IDX = 1;
-    private static final int CHECK_INSULIN_RATIO_IDX = 2;
 
     /* Sub categories of Settings left menu */
     private static final int SETTINGS_MEALS_AND_INSULIN_IDX = 0;
@@ -268,7 +267,7 @@ public class NavigationDrawerFragment extends Fragment {
         List<MenuChildItem> subReport = new ArrayList<MenuChildItem>();
         final List<String> subReportTitles = Arrays
                 .asList(getResources().getStringArray(R.array.left_submenu_report_items_array));
-        Integer[] subReportImageResources = {R.drawable.ic_submenu_meal_diary, R.drawable.ic_submenu_insulin_overview, R.drawable.ic_submenu_insulin_ratio};
+        Integer[] subReportImageResources = {R.drawable.ic_submenu_meal_diary, R.drawable.ic_submenu_insulin_overview};
         for(int i=0; i < subReportTitles.size(); i++) {
             MenuChildItem menuChildItem = new MenuChildItem();
             menuChildItem.setTitle(subReportTitles.get(i));
@@ -318,8 +317,6 @@ public class NavigationDrawerFragment extends Fragment {
                     break;
                 case CHECK_INSULIN_OVERVIEW_IDX:
                     mCallback.openInsulinOverviewMealTypeListSelectionFragment();
-                    break;
-                case CHECK_INSULIN_RATIO_IDX:
                     break;
                 default:
                     break;

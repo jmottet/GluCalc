@@ -73,7 +73,7 @@
                 android:layout_marginLeft="0.5sp"
                 android:layout_marginRight="1sp"
                 android:layout_marginTop="1sp"
-                android:text="@string/new_meal_second_step_blood_glucose"
+                android:text="@string/new_meal_third_step_blood_glucose"
                 android:textSize="14sp" />
         </LinearLayout>
         <!-- 2ème ligne -->

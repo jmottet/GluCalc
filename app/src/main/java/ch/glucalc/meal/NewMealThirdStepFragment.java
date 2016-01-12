@@ -15,15 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import ch.glucalc.EnumColor;
-import ch.glucalc.ExportActivity;
 import ch.glucalc.ExportNewMealActivity;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
@@ -144,7 +140,7 @@ public class NewMealThirdStepFragment extends Fragment {
         carbohydrateTextView.setText(format(mealDiary.getCarbohydrateTotal()) + " " + getCarbohydrateUnit());
 
         insulinTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_insulin_value_textview);
-        insulinTextView.setText(format(mealDiary.getBolusCalculated()) + " " + getInsulinUnit());
+        insulinTextView.setText(format(mealDiary.getBolusCalculated()) + " " + getBolusUnit());
         insulinTextView.setTypeface(null, Typeface.BOLD);
 
         TextView bloodGlucoseTextView = (TextView) layout.findViewById(R.id.new_meal_third_step_blood_glucose_value_textview);
@@ -200,8 +196,8 @@ public class NewMealThirdStepFragment extends Fragment {
         sendMealStatus = (TextView) layout.findViewById(R.id.send_meal_status);
         sendMealSwitch = (Switch) layout.findViewById(R.id.send_meal_switch);
 
-        //set the switch to ON
-        sendMealSwitch.setChecked(true);
+        //set the switch to OFF by default
+        sendMealSwitch.setChecked(false);
         //attach a listener to check for changes in state
         sendMealSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -228,8 +224,8 @@ public class NewMealThirdStepFragment extends Fragment {
         return "[g]";
     }
 
-    public String getInsulinUnit() {
-        return "[UI]";
+    public String getBolusUnit() {
+        return getResources().getString(R.string.new_meal_third_step_bolus_unit);
     }
 
     public String getBloodGlucoseUnit() {

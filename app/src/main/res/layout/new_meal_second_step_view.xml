@@ -43,7 +43,7 @@
                 android:layout_marginRight="0.5sp"
                 android:layout_marginTop="1sp"
                 android:text="@string/new_meal_second_step_carbohydrate"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/new_meal_second_step_insulin_textview"
@@ -58,7 +58,7 @@
                 android:layout_marginTop="1sp"
                 android:text="@string/new_meal_second_step_insulin"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_marginRight="1sp"
                 android:layout_marginTop="1sp"
                 android:text="@string/new_meal_second_step_blood_glucose"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
             </LinearLayout>
             <!-- 2ème ligne -->
 
@@ -94,7 +94,7 @@
                 android:layout_marginLeft="1sp"
                 android:layout_marginRight="0.5sp"
                 android:layout_marginTop="0.5sp"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/new_meal_second_step_insulin_value_textview"
@@ -108,7 +108,7 @@
                 android:layout_marginRight="0.5sp"
                 android:layout_marginTop="0.5sp"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_marginLeft="0.5sp"
                 android:layout_marginRight="1sp"
                 android:layout_marginTop="0.5sp"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -148,7 +148,7 @@
             android:layout_height="fill_parent"
             android:gravity="left|center_vertical"
             android:text="@string/new_meal_second_step_food"
-            android:textSize="14sp"
+            android:textSize="16sp"
             />
 <!--
         <item android:id="@+id/selection_performed"
@@ -206,7 +206,7 @@
             android:layout_height="20dp"
             android:text="@string/new_meal_second_step_quantity"
             android:gravity="right"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/new_meal_second_step_food_carbohydrate"
@@ -215,7 +215,7 @@
             android:layout_height="20dp"
             android:text="@string/new_meal_second_step_carbohydrate"
             android:gravity="right"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

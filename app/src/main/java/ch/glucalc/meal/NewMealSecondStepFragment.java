@@ -58,7 +58,7 @@ public class NewMealSecondStepFragment extends Fragment {
     }
 
     public String getInsulinUnit() {
-        return "[UI]";
+        return getResources().getString(R.string.new_meal_second_step_insulin_unit);
     }
 
     public String getBloodGlucoseUnit() {

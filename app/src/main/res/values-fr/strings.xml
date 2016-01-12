@@ -28,7 +28,6 @@
     <string-array name="left_submenu_report_items_array">
         <item>Journal des repas</item>
         <item>Aperçu Insuline</item>
-        <item>Insuline Ratio</item>
     </string-array>
 
     <string-array name="left_submenu_settings_items_array">
@@ -61,12 +60,13 @@
     <string name="new_meal_second_step_select">Sélect.</string>
     <string name="new_meal_second_step_food">Aliment</string>
     <string name="new_meal_second_step_quantity">Quantity</string>
+    <string name="new_meal_second_step_insulin_unit">[UI]</string>
 
     <!-- New meal third step -->
     <string name="new_meal_third_step_title">Ajuster Insuline</string>
     <string name="new_meal_third_step_carbohydrate">Glucides</string>
     <string name="new_meal_third_step_insulin">Insuline</string>
-    <string name="new_meal_third_step_glycemia">Glycémie</string>
+    <string name="new_meal_third_step_blood_glucose">Glycémie</string>
     <string name="new_meal_third_step_bolus_given">Administrée</string>
     <string name="new_meal_third_step_bolus_unit">[UI]</string>
     <string name="send_meal_switch">Transmettre le repas</string>

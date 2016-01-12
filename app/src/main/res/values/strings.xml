@@ -28,7 +28,6 @@
     <string-array name="left_submenu_report_items_array">
         <item>Meal Diary</item>
         <item>Insulin Overview</item>
-        <item>Insulin Ratio</item>
     </string-array>
 
     <string-array name="left_submenu_settings_items_array">
@@ -61,14 +60,15 @@
     <string name="new_meal_second_step_select">Select</string>
     <string name="new_meal_second_step_food">Food</string>
     <string name="new_meal_second_step_quantity">Quantity</string>
+    <string name="new_meal_second_step_insulin_unit">[IU]</string>
 
     <!-- New meal third step -->
     <string name="new_meal_third_step_title">Adjust Insulin</string>
     <string name="new_meal_third_step_carbohydrate">Carbohydrate</string>
     <string name="new_meal_third_step_insulin">Insulin</string>
-    <string name="new_meal_third_step_glycemia">Glycemia</string>
+    <string name="new_meal_third_step_blood_glucose">Blood glucose</string>
     <string name="new_meal_third_step_bolus_given">Given</string>
-    <string name="new_meal_third_step_bolus_unit">[UI]</string>
+    <string name="new_meal_third_step_bolus_unit">[IU]</string>
     <string name="send_meal_switch">Send the meal</string>
 
     <!-- Edit new meal food -->
@@ -137,11 +137,11 @@
     <string name="insulin_overview_target_food_unit">[g]</string>
     <string name="insulin_overview_sensitivity_unit">[mmol/l]</string>
     <string name="insulin_overview_glycemia_target_unit">[mmol/l]</string>
-    <string name="insulin_overview_insulin_unit">[UI/l0 g]</string>
+    <string name="insulin_overview_insulin_unit">[IU/l0 g]</string>
     <string name="insulin_overview_recap_glycemia">Glycemia</string>
     <string name="insulin_overview_recap_insulin">Insulin</string>
     <string name="insulin_overview_recap_glycemia_unit">[mmol/l]</string>
-    <string name="insulin_overview_recap_insulin_unit">UI</string>
+    <string name="insulin_overview_recap_insulin_unit">IU</string>
 
     <!-- Button Labels -->
     <string name="save_button_string">Save</string>
@@ -183,7 +183,7 @@
     <string name="export_new_meal_field9a_food">Food</string>
     <string name="export_new_meal_field9b_food_carbohydrate">Carbohydrate</string>
 
-    <string name="export_new_meal_inulin_unit">UI</string>
+    <string name="export_new_meal_inulin_unit">IU</string>
     <string name="export_new_meal_blood_glucose_unit">[mmol/l]</string>
     <string name="export_new_meal_carbohydrate_unit">g</string>
     <string name="export_new_meal_food_carbohydrate_unit">[g]</string>

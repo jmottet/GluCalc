@@ -33,7 +33,7 @@ public class NewMealFoodAdapter extends ArrayAdapter<FoodDiary> {
         final FoodDiary newMealFood = values.get(position);
         final TextView textView = (TextView) rowView.findViewById(R.id.name);
         textView.setText(newMealFood.getFoodName());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
         final TextView textView2 = (TextView) rowView.findViewById(R.id.quantity);
         textView2.setText("" + newMealFood.getQuantity() + " g");
