@@ -56,14 +56,14 @@ public class InsulinOverviewMealTypeFragment extends Fragment {
         TextView sensitivityValue = (TextView) layout.findViewById(R.id.insulin_overview_insulin_sensitivity_value_textview);
         sensitivityValue.setText(String.valueOf(mealType.getInsulinSensitivity()));
 
-        TextView glycemiaTargetValue = (TextView) layout.findViewById(R.id.insulin_overview_glycemia_target_value_textview);
+        TextView glycemiaTargetValue = (TextView) layout.findViewById(R.id.insulin_overview_blood_glucose_target_value_textview);
         glycemiaTargetValue.setText(String.valueOf(mealType.getGlycemiaTarget()));
 
         TextView insulinValue = (TextView) layout.findViewById(R.id.insulin_overview_insulin_value_textview);
         insulinValue.setText(String.valueOf(mealType.getInsulin()));
 
         float glycemiaMeasured = 0;
-        TextView glycemiaFirstValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_first_textview);
+        TextView glycemiaFirstValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_blood_glucose_first_textview);
         glycemiaFirstValue.setText(format(glycemiaMeasured));
 
         TextView insulinFirstValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_first_textview);
@@ -71,7 +71,7 @@ public class InsulinOverviewMealTypeFragment extends Fragment {
         insulinFirstValue.setText(format(bolus));
 
         glycemiaMeasured += 3;
-        TextView glycemiaSecondValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_second_textview);
+        TextView glycemiaSecondValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_blood_glucose_second_textview);
         glycemiaSecondValue.setText(format(glycemiaMeasured));
 
         TextView insulinSecondValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_second_textview);
@@ -79,7 +79,7 @@ public class InsulinOverviewMealTypeFragment extends Fragment {
         insulinSecondValue.setText(format(bolus));
 
         glycemiaMeasured += 3;
-        TextView glycemiaThirdValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_third_textview);
+        TextView glycemiaThirdValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_blood_glucose_third_textview);
         bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
         glycemiaThirdValue.setText(format(glycemiaMeasured));
 
@@ -88,7 +88,7 @@ public class InsulinOverviewMealTypeFragment extends Fragment {
         insulinThirdValue.setText(format(bolus));
 
         glycemiaMeasured += 3;
-        TextView glycemiaFourthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_fourth_textview);
+        TextView glycemiaFourthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_blood_glucose_fourth_textview);
         glycemiaFourthValue.setText(format(glycemiaMeasured));
 
         TextView insulinFourthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_fourth_textview);
@@ -96,7 +96,7 @@ public class InsulinOverviewMealTypeFragment extends Fragment {
         insulinFourthValue.setText(format(bolus));
 
         glycemiaMeasured += 3;
-        TextView glycemiaFifthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_fifth_textview);
+        TextView glycemiaFifthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_blood_glucose_fifth_textview);
         glycemiaFifthValue.setText(format(glycemiaMeasured));
 
         TextView insulinFifthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_fifth_textview);
@@ -104,24 +104,12 @@ public class InsulinOverviewMealTypeFragment extends Fragment {
         insulinFifthValue.setText(format(bolus));
 
         glycemiaMeasured += 3;
-        TextView glycemiaSixthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_sixth_textview);
+        TextView glycemiaSixthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_blood_glucose_sixth_textview);
         glycemiaSixthValue.setText(format(glycemiaMeasured));
 
         TextView insulinSixthValue = (TextView) layout.findViewById(R.id.insulin_overview_recap_insulin_sixth_textview);
         bolus = getBolus(glycemiaMeasured, mealType.getGlycemiaTarget(), mealType.getInsulin(), mealType.getFoodTarget(), mealType.getInsulinSensitivity());
         insulinSixthValue.setText(format(bolus));
-
-//        LinearLayout verticalLayout = (LinearLayout) layout.findViewById(R.id.insulin_overview_vertical_layout);
-//        LinearLayout horizontalLayout = getNewHorizontalLayout();
-//        verticalLayout.addView(horizontalLayout);
-//
-//        TextView leftTextViewRef = (TextView) layout.findViewById(R.id.insulin_overview_recap_glycemia_unit_title_textview);
-//        int paddingRight = leftTextViewRef.getPaddingRight();
-//        ViewGroup.LayoutParams leftLayoutParams = leftTextViewRef.getLayoutParams();
-//        TextView textViewLeft = getTextView(paddingRight, leftLayoutParams, "0.00");
-//        horizontalLayout.addView(textViewLeft);
-
-
     }
 
     private float getBolus(float glycemiaMeasured, float glycemiaTarget, float insulinPerTen, float carbohydrate, float sensitivityFactor) {

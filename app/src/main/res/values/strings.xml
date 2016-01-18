@@ -126,8 +126,8 @@
     <string name="edit_meal_type_name">Meal type</string>
     <string name="enter_meal_type_food_target_hint">Enter a food target</string>
     <string name="edit_meal_type_food_target">Food target</string>
-    <string name="enter_meal_type_glycemia_target_hint">Enter a glycemia target</string>
-    <string name="edit_meal_type_glycemia_target">Glycemia target</string>
+    <string name="enter_meal_type_blood_glucose_target_hint">Enter a blood glucose target</string>
+    <string name="edit_meal_type_blood_glucose_target">Blood glucose target</string>
     <string name="enter_meal_type_insulin_sensitivity_hint">Enter an insulin sensitivity</string>
     <string name="edit_meal_type_insulin_sensitivity">Sensitivity factor</string>
     <string name="enter_meal_type_insulin_hint">Enter an insulin</string>
@@ -136,11 +136,11 @@
     <!-- Insulin Overview -->
     <string name="insulin_overview_target_food_unit">[g]</string>
     <string name="insulin_overview_sensitivity_unit">[mmol/l]</string>
-    <string name="insulin_overview_glycemia_target_unit">[mmol/l]</string>
+    <string name="insulin_overview_blood_glucose_target_unit">[mmol/l]</string>
     <string name="insulin_overview_insulin_unit">[IU/l0 g]</string>
-    <string name="insulin_overview_recap_glycemia">Glycemia</string>
+    <string name="insulin_overview_recap_blood_glucose">Blood glucose</string>
     <string name="insulin_overview_recap_insulin">Insulin</string>
-    <string name="insulin_overview_recap_glycemia_unit">[mmol/l]</string>
+    <string name="insulin_overview_recap_blood_glucose_unit">[mmol/l]</string>
     <string name="insulin_overview_recap_insulin_unit">IU</string>
 
     <!-- Button Labels -->

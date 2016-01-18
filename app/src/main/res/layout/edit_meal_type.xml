@@ -39,14 +39,14 @@
 	    android:id="@+id/meal_type_glycemia_target_textview"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/edit_meal_type_glycemia_target"
+	    android:text="@string/edit_meal_type_blood_glucose_target"
 	    android:textSize="20sp" />
 
     <EditText
         android:id="@+id/meal_type_glycemia_target_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_meal_type_glycemia_target_hint" 
+        android:hint="@string/enter_meal_type_blood_glucose_target_hint"
         android:inputType="numberDecimal">
     </EditText>
 

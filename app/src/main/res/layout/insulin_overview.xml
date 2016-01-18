@@ -76,23 +76,23 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_glycemia_target_textview"
+            android:id="@+id/insulin_overview_blood_glucose_target_textview"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_meal_type_glycemia_target"
+            android:text="@string/edit_meal_type_blood_glucose_target"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/insulin_overview_glycemia_target_value_textview"
+            android:id="@+id/insulin_overview_blood_glucose_target_value_textview"
             android:layout_width="90sp"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:gravity="right" />
         <TextView
-            android:id="@+id/insulin_overview_glycemia_target_unit_textview"
+            android:id="@+id/insulin_overview_blood_glucose_target_unit_textview"
             android:paddingLeft="5sp"
             android:layout_width="90sp"
-            android:text="@string/insulin_overview_glycemia_target_unit"
+            android:text="@string/insulin_overview_blood_glucose_target_unit"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
     </LinearLayout>
@@ -131,10 +131,10 @@
         android:paddingTop="20sp"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_title_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_title_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
-            android:text="@string/insulin_overview_recap_glycemia"
+            android:text="@string/insulin_overview_recap_blood_glucose"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:gravity="right"
@@ -155,10 +155,10 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_unit_title_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_unit_title_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
-            android:text="@string/insulin_overview_recap_glycemia_unit"
+            android:text="@string/insulin_overview_recap_blood_glucose_unit"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:gravity="right" />
@@ -179,7 +179,7 @@
         android:paddingTop="10sp"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_first_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_first_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
@@ -200,7 +200,7 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_second_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_second_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_third_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_third_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
@@ -242,7 +242,7 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_fourth_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_fourth_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
@@ -263,7 +263,7 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_fifth_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_fifth_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
         android:layout_height="wrap_content"
         >
         <TextView
-            android:id="@+id/insulin_overview_recap_glycemia_sixth_textview"
+            android:id="@+id/insulin_overview_recap_blood_glucose_sixth_textview"
             android:paddingRight="20sp"
             android:layout_width="180sp"
             android:layout_height="wrap_content"
