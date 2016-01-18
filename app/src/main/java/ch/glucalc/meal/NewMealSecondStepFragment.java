@@ -176,7 +176,7 @@ public class NewMealSecondStepFragment extends Fragment {
         }
         newMealFoodListFragment.setNewMealFoods(foodDiaries);
         Bundle arguments = new Bundle();
-        arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, mealDiary.getMealTypeId());
+        arguments.putLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiary.getId());
         newMealFoodListFragment.setArguments(arguments);
 
         fragmentTransaction.replace(R.id.new_meal_second_step_food_container, newMealFoodListFragment);

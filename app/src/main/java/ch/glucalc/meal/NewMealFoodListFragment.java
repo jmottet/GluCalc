@@ -23,6 +23,7 @@ import ch.glucalc.food.category.CategoryFood;
 import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.food.favourite.food.FavouriteFoodAdapter;
 import ch.glucalc.meal.diary.FoodDiary;
+import ch.glucalc.meal.diary.MealDiary;
 import ch.glucalc.meal.type.MealTypeConstants;
 
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
@@ -41,6 +42,8 @@ public class NewMealFoodListFragment extends ListFragment {
     private final SelectionBean selectionBean = new SelectionBean();
 
     private ImageButton deleteButton;
+
+    private boolean itemClickDisabled = false;
 
     // Container Activity must implement this interface
     public interface OnNewMealFoodEdition {
@@ -86,29 +89,29 @@ public class NewMealFoodListFragment extends ListFragment {
         log("NewMealFoodListFragment.onListItemClick");
 
         super.onListItemClick(l, v, position, id);
-        final FoodDiary currentNewMealFood = (FoodDiary) getListView().getItemAtPosition(position);
+        if (!itemClickDisabled) {
+            final FoodDiary currentNewMealFood = (FoodDiary) getListView().getItemAtPosition(position);
 
-        if (!selectionBean.isModeMultiSelection()) {
-            Toast.makeText(getActivity(), "Position clicked : " + position, Toast.LENGTH_LONG).show();
-            mCallback.openEditNewMealFoodFragment(currentNewMealFood);
-        } else {
-            if (!currentNewMealFood.isSelected()) {
-                v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
-                currentNewMealFood.setSelected(true);
-                selectionBean.addOneToNumberItemSelected();
-                if (selectionBean.getNumberItemSelected() == 1) {
-                    deleteButton.setVisibility(View.VISIBLE);
-                }
+            if (!selectionBean.isModeMultiSelection()) {
+                mCallback.openEditNewMealFoodFragment(currentNewMealFood);
             } else {
-                v.setBackground(null);
-                currentNewMealFood.setSelected(false);
-                selectionBean.substractOneToNumberItemSelected();
-                if (selectionBean.getNumberItemSelected() == 0) {
-                    deleteButton.setVisibility(View.GONE);
+                if (!currentNewMealFood.isSelected()) {
+                    v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
+                    currentNewMealFood.setSelected(true);
+                    selectionBean.addOneToNumberItemSelected();
+                    if (selectionBean.getNumberItemSelected() == 1) {
+                        deleteButton.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    v.setBackground(null);
+                    currentNewMealFood.setSelected(false);
+                    selectionBean.substractOneToNumberItemSelected();
+                    if (selectionBean.getNumberItemSelected() == 0) {
+                        deleteButton.setVisibility(View.GONE);
+                    }
                 }
             }
         }
-
     }
 
     public void setSectionMode(boolean mode) {
@@ -118,6 +121,10 @@ public class NewMealFoodListFragment extends ListFragment {
             selectionBean.setModeMultiSelection(false);
             selectionBean.setNumberItemSelected(0);
         }
+    }
+
+    public void setItemClickDisabled(boolean itemClickDisabled) {
+        this.itemClickDisabled = itemClickDisabled;
     }
 
     public void setDeleteButton(ImageButton aDeleteButton) {
@@ -178,7 +185,7 @@ public class NewMealFoodListFragment extends ListFragment {
     private void refreshFoodDiaries() {
         // Reload the categories from the Database
         newMealFoods.clear();
-        newMealFoods.addAll(GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries(getMealTypeId()));
+        newMealFoods.addAll(GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries(getMealDiaryId()));
         newMealFoodAdapter.notifyDataSetChanged();
     }
 
@@ -196,8 +203,8 @@ public class NewMealFoodListFragment extends ListFragment {
         return result;
     }
 
-    private long getMealTypeId() {
-        return getArguments().getLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, FAKE_DEFAULT_ID);
+    private long getMealDiaryId() {
+        return getArguments().getLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, FAKE_DEFAULT_ID);
     }
 
     private void log(String msg) {

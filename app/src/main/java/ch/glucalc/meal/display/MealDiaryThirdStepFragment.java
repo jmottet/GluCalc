@@ -66,6 +66,7 @@ public class MealDiaryThirdStepFragment extends Fragment {
         log("MealDiaryThirdStepFragment.onCreate");
         View layout = inflater.inflate(R.layout.meal_diary_third_step_view, container, false);
         newMealFoodListFragment = new NewMealFoodListFragment();
+        newMealFoodListFragment.setItemClickDisabled(true);
         initFields(layout);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -74,7 +75,7 @@ public class MealDiaryThirdStepFragment extends Fragment {
         newMealFoodListFragment.setNewMealFoods(foodDiaries);
 
         Bundle arguments = new Bundle();
-        arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, mealDiary.getMealTypeId());
+        arguments.putLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiary.getId());
         newMealFoodListFragment.setArguments(arguments);
 
         fragmentTransaction.replace(R.id.meal_diary_third_step_food_container, newMealFoodListFragment);
