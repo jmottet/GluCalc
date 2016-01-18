@@ -44,7 +44,7 @@
                 android:layout_marginRight="0.5sp"
                 android:layout_marginTop="1sp"
                 android:text="@string/new_meal_second_step_carbohydrate"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/new_meal_third_step_insulin_textview"
@@ -59,7 +59,7 @@
                 android:layout_marginTop="1sp"
                 android:text="@string/new_meal_second_step_insulin"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -74,7 +74,7 @@
                 android:layout_marginRight="1sp"
                 android:layout_marginTop="1sp"
                 android:text="@string/new_meal_third_step_blood_glucose"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
         <!-- 2ème ligne -->
 
@@ -95,7 +95,7 @@
                 android:layout_marginLeft="1sp"
                 android:layout_marginRight="0.5sp"
                 android:layout_marginTop="0.5sp"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/new_meal_third_step_insulin_value_textview"
@@ -109,7 +109,7 @@
                 android:layout_marginRight="0.5sp"
                 android:layout_marginTop="0.5sp"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -123,7 +123,7 @@
                 android:layout_marginLeft="0.5sp"
                 android:layout_marginRight="1sp"
                 android:layout_marginTop="0.5sp"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -140,7 +140,7 @@
             android:layout_weight=".40"
             android:layout_height="wrap_content"
             android:text="@string/new_meal_third_step_bolus_given"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
         <EditText
             android:id="@+id/new_meal_third_step_bolus_given_textview"
             android:layout_width="0dp"
@@ -153,7 +153,7 @@
             android:layout_weight=".40"
             android:layout_height="wrap_content"
             android:text="@string/new_meal_third_step_bolus_unit"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
