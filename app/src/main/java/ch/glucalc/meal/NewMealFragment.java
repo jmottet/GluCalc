@@ -2,15 +2,17 @@ package ch.glucalc.meal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -18,10 +20,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import ch.glucalc.DialogHelper;
+import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
@@ -53,48 +57,30 @@ public class NewMealFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         log("NewMealFragment.onCreate");
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        log("NewMealFragment.onCreateOptionsMenu");
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.next_page_menu, menu);
-    }
+    private void goToNextPage() {
+        if (areSomeMandatoryFieldsMissing()) {
+            DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
+        } else {
+            final String newFoodBloodGlucoseText = newMealBloodGlucose.getText().toString();
+            try {
+                final Float newMealBloodGlucoseAsFloat = Float.valueOf(newFoodBloodGlucoseText);
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        log("NewMealFragment.onOptionsItemSelected");
-        switch (item.getItemId()) {
-            case R.id.next:
-
-                if (areSomeMandatoryFieldsMissing()) {
-                    DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
-                } else {
-                    final String newFoodBloodGlucoseText = newMealBloodGlucose.getText().toString();
-                    try {
-                        final Float newMealBloodGlucoseAsFloat = Float.valueOf(newFoodBloodGlucoseText);
-
-                        final int selectedItemPosition = mealTypeSpinner.getSelectedItemPosition();
-                        long mealTypeIdSelected = -1;
-                        int i = 1;
-                        for (final MealType mealType : mealTypes) {
-                            if (i == selectedItemPosition) {
-                                mealTypeIdSelected = mealType.getId();
-                                break;
-                            }
-                            i++;
-                        }
-
-                        mCallback.openNewMealSecondStepFragment(mealTypeIdSelected, newMealBloodGlucoseAsFloat, favouriteFoodSwitch.isChecked());
-                    } catch (final NumberFormatException nfe) {
+                final int selectedItemPosition = mealTypeSpinner.getSelectedItemPosition();
+                long mealTypeIdSelected = -1;
+                int i = 1;
+                for (final MealType mealType : mealTypes) {
+                    if (i == selectedItemPosition) {
+                        mealTypeIdSelected = mealType.getId();
+                        break;
                     }
+                    i++;
                 }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+
+                mCallback.openNewMealSecondStepFragment(mealTypeIdSelected, newMealBloodGlucoseAsFloat, favouriteFoodSwitch.isChecked());
+            } catch (final NumberFormatException nfe) {
+            }
         }
     }
 
@@ -139,7 +125,43 @@ public class NewMealFragment extends Fragment {
             favouriteFoodStatus.setText("OFF");
         }
 
+        initializeGestureDetector(layout);
+
         return layout;
+    }
+
+    private void initializeGestureDetector(View layout) {
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        log("NewMealFragment.onFling");
+                        try {
+                            if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (GestureHelper.isGestureRightToLeft(e1, e2, velocityX)) {
+                                goToNextPage();
+                            }
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     @Override

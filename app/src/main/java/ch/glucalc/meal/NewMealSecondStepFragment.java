@@ -9,10 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.glucalc.EnumColor;
+import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
@@ -121,29 +124,18 @@ public class NewMealSecondStepFragment extends Fragment {
             mealDiary = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealDiary(getNewMealDiaryId());
             mealType = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealType(mealDiary.getMealTypeId());
         }
-
-        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         log("NewMealSecondStepFragment.onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.next_page_menu, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        log("NewMealSecondStepFragment.onOptionsItemSelected");
-        switch (item.getItemId()) {
-            case R.id.next:
-                // On sauve les données et on passe à l'écran 3 de la prise de repas
-                GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealDiary(mealDiary);
-                mCallback2.openNewMealThirdStepFragment(mealDiary.getId());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    private void goToNextPage() {
+        // On sauve les données et on passe à l'écran 3 de la prise de repas
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealDiary(mealDiary);
+        mCallback2.openNewMealThirdStepFragment(mealDiary.getId());
     }
 
 
@@ -187,6 +179,7 @@ public class NewMealSecondStepFragment extends Fragment {
         computeCarbohydrateTotal();
         computeBolus();
 
+        initializeGestureDetector(layout);
         return layout;
     }
 
@@ -277,6 +270,43 @@ public class NewMealSecondStepFragment extends Fragment {
             }
         });
 
+    }
+
+    private void initializeGestureDetector(View layout) {
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        log("NewMealFragment.onFling");
+                        try {
+                            if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (GestureHelper.isGestureRightToLeft(e1, e2, velocityX)) {
+                                goToNextPage();
+
+                            } else if (GestureHelper.isGestureLeftToRight(e1, e2, velocityX)) {
+                                getActivity().onBackPressed();
+                            }
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     private void computeCarbohydrateTotal() {

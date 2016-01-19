@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import ch.glucalc.EnumColor;
 import ch.glucalc.ExportNewMealActivity;
+import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
@@ -92,6 +95,7 @@ public class NewMealThirdStepFragment extends Fragment {
         log("NewMealThirdStepFragment.onCreate");
         View layout = inflater.inflate(R.layout.new_meal_third_step_view, container, false);
         initFields(layout);
+        initializeGestureDetector(layout);
 
         return layout;
     }
@@ -218,6 +222,40 @@ public class NewMealThirdStepFragment extends Fragment {
         } else {
             sendMealStatus.setText("OFF");
         }
+    }
+
+    private void initializeGestureDetector(View layout) {
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        log("NewMealFragment.onFling");
+                        try {
+                            if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH) {
+                                return false;
+                            } else if (GestureHelper.isGestureLeftToRight(e1, e2, velocityX)) {
+                                getActivity().onBackPressed();
+                            }
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     public String getCarbohydrateUnit() {
