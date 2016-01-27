@@ -97,7 +97,7 @@
 
     <string name="edit_food_category">Category :</string>
 
-    <string name="edit_food_carbohydrate">Carbohydrate :</string>
+    <string name="edit_food_carbohydrate">Carbohydrates :</string>
     <string name="enter_food_carbohydrate_hint">Enter a carbohydrate</string>
 
     <string name="edit_food_quantity">Quantity :</string>

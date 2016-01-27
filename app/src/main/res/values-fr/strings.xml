@@ -97,7 +97,7 @@
 
     <string name="edit_food_category">Catégorie :</string>
 
-    <string name="edit_food_carbohydrate">Glucide :</string>
+    <string name="edit_food_carbohydrate">Glucides :</string>
     <string name="enter_food_carbohydrate_hint">Saisie une quantité de glucides</string>
 
     <string name="edit_food_quantity">Quantité :</string>
