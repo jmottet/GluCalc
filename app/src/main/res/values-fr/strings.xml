@@ -49,8 +49,8 @@
     <!-- Edit new meal -->
     <string name="enter_new_meal_type_hint">Saisir un type de repas</string>
     <string name="edit_new_meal_type">Type de repas</string>
-    <string name="enter_new_meal_blood_glucose_hint">Saisir une quantité de glucides</string>
-    <string name="edit_new_meal_blood_glucose">Glucides</string>
+    <string name="enter_new_meal_blood_glucose_hint">Saisir une quantité de glycémie</string>
+    <string name="edit_new_meal_blood_glucose">Glycémie</string>
     <string name="favourite_food_switch">Aliment favoris</string>
 
     <!-- New meal second step -->
