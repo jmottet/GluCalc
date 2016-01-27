@@ -3,12 +3,10 @@ package ch.glucalc.meal;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,14 +27,14 @@ import ch.glucalc.EnumColor;
 import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.MainActivity;
+import ch.glucalc.NavigationBackAndNext;
 import ch.glucalc.R;
 import ch.glucalc.food.favourite.food.FavouriteFood;
 import ch.glucalc.meal.diary.FoodDiary;
 import ch.glucalc.meal.diary.MealDiary;
 import ch.glucalc.meal.type.MealType;
-import ch.glucalc.util.ColorHelper;
 
-public class NewMealSecondStepFragment extends Fragment {
+public class NewMealSecondStepFragment extends Fragment implements NavigationBackAndNext {
 
     private static String TAG = "GluCalc";
 
@@ -45,7 +42,7 @@ public class NewMealSecondStepFragment extends Fragment {
     private MealDiary mealDiary = null;
     private boolean alreadyExists = true;
     private OnNewMealFoodDiaryAddition mCallback;
-    private OnNewMealThirdStep mCallback2;
+    private OnNewMealThirdStepOrBack mCallback2;
 
     private TextView carbohydrateTextView;
     private TextView insulinTextView;
@@ -74,8 +71,10 @@ public class NewMealSecondStepFragment extends Fragment {
         void openNewMealFoodDiaryListSelectionFragment(long mealDiaryId);
     }
 
-    public interface OnNewMealThirdStep {
+    public interface OnNewMealThirdStepOrBack {
         void openNewMealThirdStepFragment(long mealDiaryId);
+
+        void openNewMealFragment();
     }
     @Override
     public void onAttach(Activity activity) {
@@ -91,12 +90,11 @@ public class NewMealSecondStepFragment extends Fragment {
         }
 
         try {
-            mCallback2 = (OnNewMealThirdStep) activity;
+            mCallback2 = (OnNewMealThirdStepOrBack) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnNewMealThirdStep");
         }
-
     }
 
     @Override
@@ -124,18 +122,38 @@ public class NewMealSecondStepFragment extends Fragment {
             mealDiary = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealDiary(getNewMealDiaryId());
             mealType = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealType(mealDiary.getMealTypeId());
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         log("NewMealSecondStepFragment.onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.next_page_menu, menu);
     }
 
-    private void goToNextPage() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        log("NewMealSecondStepFragment.onOptionsItemSelected");
+        switch (item.getItemId()) {
+            case R.id.next:
+                goToNextPage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void goToNextPage() {
         // On sauve les données et on passe à l'écran 3 de la prise de repas
         GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).updateMealDiary(mealDiary);
         mCallback2.openNewMealThirdStepFragment(mealDiary.getId());
+    }
+
+    @Override
+    public void goToPreviousPage() {
+        mCallback2.openNewMealFragment();
     }
 
 
@@ -144,6 +162,7 @@ public class NewMealSecondStepFragment extends Fragment {
         log("NewMealSecondStepFragment.onCreate");
         View layout = inflater.inflate(R.layout.new_meal_second_step_view, container, false);
         newMealFoodListFragment = new NewMealFoodListFragment();
+        newMealFoodListFragment.setNavigationBackAndNext(this);
 
         initFields(layout);
 
@@ -235,6 +254,7 @@ public class NewMealSecondStepFragment extends Fragment {
             public void onClick(View v) {
                 newMealFoodListFragment.deleteAction();
                 computeCarbohydrateTotal();
+                computeBolus();
 
                 newMealFoodListFragment.setSectionMode(false);
                 unselectButton.setVisibility(View.GONE);
@@ -292,7 +312,7 @@ public class NewMealSecondStepFragment extends Fragment {
                                 goToNextPage();
 
                             } else if (GestureHelper.isGestureLeftToRight(e1, e2, velocityX)) {
-                                getActivity().onBackPressed();
+                                goToPreviousPage();
                             }
                         } catch (Exception e) {
                             // nothing

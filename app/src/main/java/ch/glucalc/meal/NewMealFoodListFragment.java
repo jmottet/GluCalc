@@ -5,9 +5,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -16,15 +15,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.NavigationBackAndNext;
 import ch.glucalc.R;
 import ch.glucalc.beans.SelectionBean;
-import ch.glucalc.food.category.CategoryFood;
-import ch.glucalc.food.favourite.food.FavouriteFood;
-import ch.glucalc.food.favourite.food.FavouriteFoodAdapter;
 import ch.glucalc.meal.diary.FoodDiary;
-import ch.glucalc.meal.diary.MealDiary;
-import ch.glucalc.meal.type.MealTypeConstants;
 
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 
@@ -45,6 +41,8 @@ public class NewMealFoodListFragment extends ListFragment {
 
     private boolean itemClickDisabled = false;
 
+    private NavigationBackAndNext navigationBackAndNext;
+
     // Container Activity must implement this interface
     public interface OnNewMealFoodEdition {
 
@@ -56,6 +54,10 @@ public class NewMealFoodListFragment extends ListFragment {
 
     public void setNewMealFoods(List<FoodDiary> newMealFoods) {
         this.newMealFoods = newMealFoods;
+    }
+
+    public void setNavigationBackAndNext(NavigationBackAndNext navigationBackAndNext) {
+        this.navigationBackAndNext = navigationBackAndNext;
     }
 
     @Override
@@ -82,6 +84,14 @@ public class NewMealFoodListFragment extends ListFragment {
         setListAdapter(newMealFoodAdapter);
         selectionBean.setNumberItemSelected(0);
         selectionBean.setModeMultiSelection(false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (navigationBackAndNext != null) {
+            initializeGestureDetector(getListView());
+        }
     }
 
     @Override
@@ -187,6 +197,43 @@ public class NewMealFoodListFragment extends ListFragment {
         newMealFoods.clear();
         newMealFoods.addAll(GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadFoodDiaries(getMealDiaryId()));
         newMealFoodAdapter.notifyDataSetChanged();
+    }
+
+    private void initializeGestureDetector(View layout) {
+        final GestureDetector gesture = new GestureDetector(getActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                           float velocityY) {
+                        log("NewMealFragment.onFling");
+                        try {
+                            if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (GestureHelper.isGestureRightToLeft(e1, e2, velocityX)) {
+                                navigationBackAndNext.goToNextPage();
+
+                            } else if (GestureHelper.isGestureLeftToRight(e1, e2, velocityX)) {
+                                navigationBackAndNext.goToPreviousPage();
+                            }
+                        } catch (Exception e) {
+                            // nothing
+                        }
+                        return super.onFling(e1, e2, velocityX, velocityY);
+                    }
+                });
+
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     public void initList() {

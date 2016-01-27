@@ -57,7 +57,28 @@ public class NewMealFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         log("NewMealFragment.onCreate");
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        log("NewMealFragment.onCreateOptionsMenu");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.next_page_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        log("NewMealFragment.onOptionsItemSelected");
+        switch (item.getItemId()) {
+            case R.id.next:
+                goToNextPage();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     private void goToNextPage() {
         if (areSomeMandatoryFieldsMissing()) {

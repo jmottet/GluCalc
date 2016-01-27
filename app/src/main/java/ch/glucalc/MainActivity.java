@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
-        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStep, NewMealThirdStepFragment.OnNewMealSaved, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary {
+        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStepOrBack, NewMealThirdStepFragment.OnNewMealSavedOrBackToPrevious, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary {
 
     private static String TAG = "GluCalc";
 
@@ -339,6 +339,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         arguments.putLong(NewMealConstants.NEW_MEAL_TYPE_ID_PARAMETER, mealTypeId);
         arguments.putFloat(NewMealConstants.NEW_MEAL_BLOOD_GLUCOSE_PARAMETER, newMealBloodGlucose);
         arguments.putBoolean(NewMealConstants.NEW_MEAL_WITH_FAVOURITE_FOOD_PARAMETER, favouriteFood);
+
+        NewMealSecondStepFragment newMealSecondStepFragment = new NewMealSecondStepFragment();
+        newMealSecondStepFragment.setArguments(arguments);
+        openFragment(newMealSecondStepFragment, true);
+    }
+
+    @Override
+    public void goBackToNewMealSecondStepFragment(long mealDiaryId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiaryId);
 
         NewMealSecondStepFragment newMealSecondStepFragment = new NewMealSecondStepFragment();
         newMealSecondStepFragment.setArguments(arguments);

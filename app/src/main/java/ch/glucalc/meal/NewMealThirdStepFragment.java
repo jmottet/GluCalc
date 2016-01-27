@@ -21,6 +21,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import ch.glucalc.DialogHelper;
 import ch.glucalc.EnumColor;
 import ch.glucalc.ExportNewMealActivity;
 import ch.glucalc.GestureHelper;
@@ -45,16 +46,18 @@ public class NewMealThirdStepFragment extends Fragment {
     private TextView percentageOfDiffenrenceTextView;
     private TextView bolusGivenTextView ;
     private int percentageOfDiffenrence = 0;
-    private OnNewMealSaved mCallback;
+    private OnNewMealSavedOrBackToPrevious mCallback;
 
     private static int ORANGE_COLOR = Color.parseColor("#FF6600");
     private static int GREEN_COLOR = Color.parseColor("#669900");
     private static int RED_COLOR = Color.parseColor("#FF0000");
 
     // Container Activity must implement this interface
-    public interface OnNewMealSaved {
+    public interface OnNewMealSavedOrBackToPrevious {
 
         void openNewMealFragment();
+
+        void goBackToNewMealSecondStepFragment(long mealDiaryId);
 
     }
 
@@ -67,10 +70,10 @@ public class NewMealThirdStepFragment extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnNewMealSaved) activity;
+            mCallback = (OnNewMealSavedOrBackToPrevious) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnNewMealSaved");
+                    + " must implement OnNewMealSavedOrBackToPrevious");
         }
     }
 
@@ -116,7 +119,6 @@ public class NewMealThirdStepFragment extends Fragment {
                     startIntent.putExtra(NewMealConstants.NEW_MEAL_DIARY_ID_PARAMETER, mealDiary.getId());
                     startActivity(startIntent);
                 }
-
 
                 mCallback.openNewMealFragment();
                 return true;
@@ -241,7 +243,7 @@ public class NewMealThirdStepFragment extends Fragment {
                             if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH) {
                                 return false;
                             } else if (GestureHelper.isGestureLeftToRight(e1, e2, velocityX)) {
-                                getActivity().onBackPressed();
+                                mCallback.goBackToNewMealSecondStepFragment(mealDiary.getId());
                             }
                         } catch (Exception e) {
                             // nothing
