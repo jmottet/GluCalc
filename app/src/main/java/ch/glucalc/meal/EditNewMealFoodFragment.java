@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +14,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ch.glucalc.DialogHelper;
@@ -86,7 +89,7 @@ public class EditNewMealFoodFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.save:
                 initNewMealFoodFromFields();
-                if (newMealFood.areSomeMandatoryFieldsMissing()) {
+                if (areSomeMandatoryFieldsMissing()) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
                     saveNewMealFood();
@@ -106,9 +109,25 @@ public class EditNewMealFoodFragment extends Fragment {
 
     private void initFieldsAndButtonForEdition(View layout) {
         log("EditNewMealFoodFragment.initFieldsAndButtonForEdition");
+        final ImageButton buttonQuantityClearText = (ImageButton) layout.findViewById(R.id.quantity_clear_text);
+        final ImageButton buttonCarbohydrateClearText = (ImageButton) layout.findViewById(R.id.carbohydrate_clear_text);
+
+        buttonQuantityClearText.setVisibility(View.INVISIBLE);
+        buttonCarbohydrateClearText.setVisibility(View.INVISIBLE);
 
         newMealFoodQuantity = (EditText) layout.findViewById(R.id.new_meal_food_quantity_edittext);
         newMealFoodCarbohydrate = (EditText) layout.findViewById(R.id.new_meal_food_carbohydrate_edittext);
+
+        newMealFoodQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    buttonQuantityClearText.setVisibility(View.VISIBLE);
+                } else {
+                    buttonQuantityClearText.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         newMealFoodQuantity.addTextChangedListener(new TextWatcher() {
 
@@ -116,6 +135,9 @@ public class EditNewMealFoodFragment extends Fragment {
                 Float newFoodQuantityAsFloat = null;
                 try {
                     newFoodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
+                    if (newMealFoodQuantity.hasFocus()) {
+                        buttonQuantityClearText.setVisibility(View.VISIBLE);
+                    }
                 } catch (final NumberFormatException nfe) {
                 }
 
@@ -136,12 +158,34 @@ public class EditNewMealFoodFragment extends Fragment {
             }
         });
 
+        buttonQuantityClearText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                newMealFoodQuantity.setText("");
+                buttonQuantityClearText.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+        newMealFoodCarbohydrate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    buttonCarbohydrateClearText.setVisibility(View.VISIBLE);
+                } else {
+                    buttonCarbohydrateClearText.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
         newMealFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
                 Float newFoodCarbohydrateAsFloat = null;
                 try {
                     newFoodCarbohydrateAsFloat = Float.valueOf(newMealFoodCarbohydrate.getText().toString());
+                    if (newMealFoodCarbohydrate.hasFocus()) {
+                        buttonCarbohydrateClearText.setVisibility(View.VISIBLE);
+                    }
                 } catch (final NumberFormatException nfe) {
                 }
 
@@ -160,6 +204,12 @@ public class EditNewMealFoodFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
+            }
+        });
+
+        buttonCarbohydrateClearText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                newMealFoodCarbohydrate.setText("");
             }
         });
 
@@ -188,7 +238,7 @@ public class EditNewMealFoodFragment extends Fragment {
         try {
             foodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return true;
+            return false;
         }
 
 
@@ -196,7 +246,7 @@ public class EditNewMealFoodFragment extends Fragment {
         try {
             foodCarbohydrateAsFloat = Float.valueOf(newMealFoodCarbohydrate.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return true;
+            return false;
         }
         return !(format(foodQuantityAsFloat).equals(format(foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate())));
     }
@@ -236,7 +286,18 @@ public class EditNewMealFoodFragment extends Fragment {
     }
 
     private String format(float number) {
-        return String.format("%.2f", number).replaceAll(",", ".");
+        String result =  String.format("%.2f", number).replaceAll(",", ".");
+        if (result.endsWith(".00")) {
+            result = result.substring(0, result.length() - 3);
+        }
+        return result;
+    }
+
+    private boolean areSomeMandatoryFieldsMissing() {
+        if (TextUtils.isEmpty(newMealFoodCarbohydrate.getText()) || TextUtils.isEmpty(newMealFoodQuantity.getText())) {
+            return true;
+        }
+        return false;
     }
 
 }
