@@ -59,7 +59,7 @@
     <string name="new_meal_second_step_blood_glucose">Glycémie</string>
     <string name="new_meal_second_step_select">Sélect.</string>
     <string name="new_meal_second_step_food">Aliment</string>
-    <string name="new_meal_second_step_quantity">Quantity</string>
+    <string name="new_meal_second_step_quantity">Quantité</string>
     <string name="new_meal_second_step_insulin_unit">[UI]</string>
 
     <!-- New meal third step -->
