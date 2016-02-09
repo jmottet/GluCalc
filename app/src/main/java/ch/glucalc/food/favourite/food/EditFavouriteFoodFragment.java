@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ch.glucalc.DecimalDigitsInputFilter;
@@ -107,53 +109,34 @@ public class EditFavouriteFoodFragment extends Fragment {
 
     private void initFieldsAndButtonForEdition(View layout) {
         log("EditFoodFragment.initFieldsAndButtonForEdition");
+        final ImageButton buttonQuantityClearText = (ImageButton) layout.findViewById(R.id.quantity_clear_text);
+        final ImageButton buttonCarbohydrateClearText = (ImageButton) layout.findViewById(R.id.carbohydrate_clear_text);
 
         favouriteFoodQuantity = (EditText) layout.findViewById(R.id.favourite_food_quantity_edittext);
         favouriteFoodCarbohydrate = (EditText) layout.findViewById(R.id.favourite_food_carbohydrate_edittext);
 
-        //favouriteFoodQuantity.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
-        //favouriteFoodCarbohydrate.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10, 2)});
+        favouriteFoodQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                showClearButtonIfNecessary(favouriteFoodQuantity, buttonQuantityClearText);
+            }
+        });
 
         favouriteFoodQuantity.addTextChangedListener(new TextWatcher() {
 
-             public void afterTextChanged(Editable s) {
-                 Float newFoodQuantityAsFloat = null;
-                 try {
-                     newFoodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
-                 } catch (final NumberFormatException nfe) {
-                 }
-
-
-                 if (mustFieldBeComputed()) {
-                     Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
-                     favouriteFoodCarbohydrate.setText(format(result));
-                 }
-             }
-
-             public void beforeTextChanged(CharSequence s, int start,
-                                           int count, int after) {
-             }
-
-             public void onTextChanged(CharSequence s, int start,
-                                       int before, int count) {
-
-             }
-         });
-
-        favouriteFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
-
             public void afterTextChanged(Editable s) {
-                Float newFoodCarbohydrateAsFloat = null;
+                Float newFoodQuantityAsFloat = null;
+                showClearButtonIfNecessary(favouriteFoodQuantity, buttonQuantityClearText);
+
                 try {
-                    newFoodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
+                    newFoodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
                 } catch (final NumberFormatException nfe) {
                 }
 
 
-                if (mustFieldBeComputed()) {
-                    Float result = (newFoodCarbohydrateAsFloat != null ?  newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
-                    favouriteFoodQuantity.setText(format(result));
-
+                if (mustFieldBeComputed(true, false)) {
+                    Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
+                    favouriteFoodCarbohydrate.setText(format(result));
                 }
             }
 
@@ -163,6 +146,56 @@ public class EditFavouriteFoodFragment extends Fragment {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
+
+            }
+        });
+
+        buttonQuantityClearText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                favouriteFoodQuantity.setText("");
+                buttonQuantityClearText.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        favouriteFoodCarbohydrate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                showClearButtonIfNecessary(favouriteFoodCarbohydrate, buttonCarbohydrateClearText);
+            }
+        });
+
+        favouriteFoodCarbohydrate.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Float newFoodCarbohydrateAsFloat = null;
+                showClearButtonIfNecessary(favouriteFoodCarbohydrate, buttonCarbohydrateClearText);
+
+                try {
+                    newFoodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
+                } catch (final NumberFormatException nfe) {
+                }
+
+
+                if (mustFieldBeComputed(false, true)) {
+                    Float result = (newFoodCarbohydrateAsFloat != null ? newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
+                    favouriteFoodQuantity.setText(format(result));
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+            }
+        });
+
+        buttonCarbohydrateClearText.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                favouriteFoodCarbohydrate.setText("");
+                buttonCarbohydrateClearText.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -184,17 +217,27 @@ public class EditFavouriteFoodFragment extends Fragment {
 
         TextView selected_food_unit = (TextView) layout.findViewById(R.id.favourite_food_selected_food_unit_value_textview);
         selected_food_unit.setText(food.getUnit());
-
-
     }
 
-    private boolean mustFieldBeComputed() {
+    private void showClearButtonIfNecessary(EditText champEditable, ImageButton boutonEffacer) {
+        if (champEditable.hasFocus() && !TextUtils.isEmpty(champEditable.getText())) {
+            boutonEffacer.setVisibility(View.VISIBLE);
+        } else {
+            boutonEffacer.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private boolean mustFieldBeComputed(boolean hasQuantityChanged, boolean hasCarbohydrateChanged) {
         boolean result = false;
         Float foodQuantityAsFloat = null;
         try {
             foodQuantityAsFloat = Float.valueOf(favouriteFoodQuantity.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return true;
+            if (hasQuantityChanged) {
+                return false;
+            } else {
+                foodQuantityAsFloat = Float.valueOf(0);
+            }
         }
 
 
@@ -203,7 +246,11 @@ public class EditFavouriteFoodFragment extends Fragment {
         try {
             foodCarbohydrateAsFloat = Float.valueOf(favouriteFoodCarbohydrate.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return true;
+            if (hasCarbohydrateChanged) {
+                return false;
+            } else {
+                foodCarbohydrateAsFloat = Float.valueOf(0);
+            }
         }
         return !(format(foodQuantityAsFloat).equals(format(foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate())));
     }
@@ -243,7 +290,11 @@ public class EditFavouriteFoodFragment extends Fragment {
     }
 
     private String format(float number) {
-        return String.format("%.2f", number).replaceAll(",",".");
+        String result =  String.format("%.2f", number).replaceAll(",", ".");
+        if (result.endsWith(".00")) {
+            result = result.substring(0, result.length() - 3);
+        }
+        return result;
     }
 
 //    private void propagateResultForEdition() {

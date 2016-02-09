@@ -36,13 +36,11 @@
                 android:id="@+id/quantity_clear_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/myBackgroundColor"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_clear_text"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:text="Button"/>
-
-
+                android:layout_margin="5dp"/>
 
         </RelativeLayout>
 
@@ -68,8 +66,7 @@
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="160sp"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/new_meal_food_carbohydrate_edittext"
@@ -82,13 +79,13 @@
 
             <ImageButton
                 android:id="@+id/carbohydrate_clear_text"
+                android:background="@color/myBackgroundColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_clear_text"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:text="Button"/>
+                android:layout_margin="5dp" />
         </RelativeLayout>
 
         <TextView

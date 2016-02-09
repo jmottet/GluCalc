@@ -17,17 +17,34 @@
             android:text="@string/edit_favourite_food_quantity"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/favourite_food_quantity_edittext"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="160sp"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_favourite_food_quantity_hint"
-            android:inputType="numberDecimal">
-        </EditText>
+            >
+
+            <EditText
+                android:id="@+id/favourite_food_quantity_edittext"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_favourite_food_quantity_hint"
+                android:inputType="numberDecimal"
+                android:singleLine="true">
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/quantity_clear_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/myBackgroundColor"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_clear_text"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/favourite_food_quantity_unit_textview"
-            android:layout_width="40sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp" />
     </LinearLayout>
@@ -44,17 +61,33 @@
             android:text="@string/edit_favourite_food_carbohydrate"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/favourite_food_carbohydrate_edittext"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="160sp"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_favourite_food_carbohydrate_hint"
-            android:inputType="numberDecimal">
-        </EditText>
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/favourite_food_carbohydrate_edittext"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_favourite_food_carbohydrate_hint"
+                android:inputType="numberDecimal"
+                android:singleLine="true">
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/carbohydrate_clear_text"
+                android:background="@color/myBackgroundColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_clear_text"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/favourite_food_carbohydrate_unit_textview"
-            android:layout_width="40sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_favourite_food_carbohydrate_quantity"
             android:textSize="20sp" />

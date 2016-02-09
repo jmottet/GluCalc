@@ -121,11 +121,7 @@ public class EditNewMealFoodFragment extends Fragment {
         newMealFoodQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    buttonQuantityClearText.setVisibility(View.VISIBLE);
-                } else {
-                    buttonQuantityClearText.setVisibility(View.INVISIBLE);
-                }
+                showClearButtonIfNecessary(newMealFoodQuantity, buttonQuantityClearText);
             }
         });
 
@@ -133,16 +129,14 @@ public class EditNewMealFoodFragment extends Fragment {
 
             public void afterTextChanged(Editable s) {
                 Float newFoodQuantityAsFloat = null;
+                showClearButtonIfNecessary(newMealFoodQuantity, buttonQuantityClearText);
+
                 try {
                     newFoodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
-                    if (newMealFoodQuantity.hasFocus()) {
-                        buttonQuantityClearText.setVisibility(View.VISIBLE);
-                    }
                 } catch (final NumberFormatException nfe) {
                 }
 
-
-                if (mustFieldBeComputed()) {
+                if (mustFieldBeComputed(true, false)) {
                     Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
                     newMealFoodCarbohydrate.setText(format(result));
                 }
@@ -169,11 +163,7 @@ public class EditNewMealFoodFragment extends Fragment {
         newMealFoodCarbohydrate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    buttonCarbohydrateClearText.setVisibility(View.VISIBLE);
-                } else {
-                    buttonCarbohydrateClearText.setVisibility(View.INVISIBLE);
-                }
+                showClearButtonIfNecessary(newMealFoodCarbohydrate, buttonCarbohydrateClearText);
             }
         });
 
@@ -181,19 +171,16 @@ public class EditNewMealFoodFragment extends Fragment {
 
             public void afterTextChanged(Editable s) {
                 Float newFoodCarbohydrateAsFloat = null;
+                showClearButtonIfNecessary(newMealFoodCarbohydrate, buttonCarbohydrateClearText);
+
                 try {
                     newFoodCarbohydrateAsFloat = Float.valueOf(newMealFoodCarbohydrate.getText().toString());
-                    if (newMealFoodCarbohydrate.hasFocus()) {
-                        buttonCarbohydrateClearText.setVisibility(View.VISIBLE);
-                    }
                 } catch (final NumberFormatException nfe) {
                 }
 
-
-                if (mustFieldBeComputed()) {
+                if (mustFieldBeComputed(false, true)) {
                     Float result = (newFoodCarbohydrateAsFloat != null ? newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
                     newMealFoodQuantity.setText(format(result));
-
                 }
             }
 
@@ -210,6 +197,8 @@ public class EditNewMealFoodFragment extends Fragment {
         buttonCarbohydrateClearText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 newMealFoodCarbohydrate.setText("");
+                buttonCarbohydrateClearText.setVisibility(View.INVISIBLE);
+
             }
         });
 
@@ -232,21 +221,36 @@ public class EditNewMealFoodFragment extends Fragment {
         selected_food_unit.setText(food.getUnit());
     }
 
-    private boolean mustFieldBeComputed() {
+    private void showClearButtonIfNecessary(EditText champEditable, ImageButton boutonEffacer) {
+        if (champEditable.hasFocus() && !TextUtils.isEmpty(champEditable.getText())) {
+            boutonEffacer.setVisibility(View.VISIBLE);
+        } else {
+            boutonEffacer.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private boolean mustFieldBeComputed(boolean hasQuantityChanged, boolean hasCarbohydrateChanged) {
         boolean result = false;
         Float foodQuantityAsFloat = null;
         try {
             foodQuantityAsFloat = Float.valueOf(newMealFoodQuantity.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return false;
+            if (hasQuantityChanged) {
+                return false;
+            } else {
+                foodQuantityAsFloat = Float.valueOf(0);
+            }
         }
-
 
         Float foodCarbohydrateAsFloat = null;
         try {
             foodCarbohydrateAsFloat = Float.valueOf(newMealFoodCarbohydrate.getText().toString());
         } catch (final NumberFormatException nfe) {
-            return false;
+            if (hasCarbohydrateChanged) {
+                return false;
+            } else {
+                foodCarbohydrateAsFloat = Float.valueOf(0);
+            }
         }
         return !(format(foodQuantityAsFloat).equals(format(foodCarbohydrateAsFloat * food.getQuantity() / food.getCarbonhydrate())));
     }
