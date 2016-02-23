@@ -2,6 +2,7 @@ package ch.glucalc.meal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -14,13 +15,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class NewMealFragment extends Fragment {
         if (areSomeMandatoryFieldsMissing()) {
             DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
         } else {
+            hideKeyboard(getActivity());
             final String newFoodBloodGlucoseText = newMealBloodGlucose.getText().toString();
             try {
                 final Float newMealBloodGlucoseAsFloat = Float.valueOf(newFoodBloodGlucoseText);
@@ -103,6 +105,18 @@ public class NewMealFragment extends Fragment {
             } catch (final NumberFormatException nfe) {
             }
         }
+    }
+
+    public static void hideKeyboard(Context ctx) {
+        InputMethodManager inputManager = (InputMethodManager) ctx
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // check if no view has focus:
+        View v = ((Activity) ctx).getCurrentFocus();
+        if (v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     @Override
