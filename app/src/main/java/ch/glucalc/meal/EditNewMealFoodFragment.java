@@ -118,6 +118,10 @@ public class EditNewMealFoodFragment extends Fragment {
         newMealFoodQuantity = (EditText) layout.findViewById(R.id.new_meal_food_quantity_edittext);
         newMealFoodCarbohydrate = (EditText) layout.findViewById(R.id.new_meal_food_carbohydrate_edittext);
 
+        // Initialiser les champs
+        newMealFoodQuantity.setText(format(newMealFood.getQuantity()));
+        newMealFoodCarbohydrate.setText(format(newMealFood.getCarbohydrate()));
+
         newMealFoodQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -136,7 +140,7 @@ public class EditNewMealFoodFragment extends Fragment {
                 } catch (final NumberFormatException nfe) {
                 }
 
-                if (mustFieldBeComputed(true, false)) {
+                if (newMealFoodQuantity.hasFocus() && mustFieldBeComputed(true, false)) {
                     Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
                     newMealFoodCarbohydrate.setText(format(result));
                 }
@@ -178,7 +182,7 @@ public class EditNewMealFoodFragment extends Fragment {
                 } catch (final NumberFormatException nfe) {
                 }
 
-                if (mustFieldBeComputed(false, true)) {
+                if (newMealFoodCarbohydrate.hasFocus() && mustFieldBeComputed(false, true)) {
                     Float result = (newFoodCarbohydrateAsFloat != null ? newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
                     newMealFoodQuantity.setText(format(result));
                 }

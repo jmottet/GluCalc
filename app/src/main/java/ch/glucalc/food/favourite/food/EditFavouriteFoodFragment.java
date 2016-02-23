@@ -134,7 +134,7 @@ public class EditFavouriteFoodFragment extends Fragment {
                 }
 
 
-                if (mustFieldBeComputed(true, false)) {
+                if (favouriteFoodQuantity.hasFocus() && mustFieldBeComputed(true, false)) {
                     Float result = (newFoodQuantityAsFloat != null ? newFoodQuantityAsFloat : 0) * food.getCarbonhydrate() / food.getQuantity();
                     favouriteFoodCarbohydrate.setText(format(result));
                 }
@@ -176,7 +176,7 @@ public class EditFavouriteFoodFragment extends Fragment {
                 }
 
 
-                if (mustFieldBeComputed(false, true)) {
+                if (favouriteFoodCarbohydrate.hasFocus() && mustFieldBeComputed(false, true)) {
                     Float result = (newFoodCarbohydrateAsFloat != null ? newFoodCarbohydrateAsFloat : 0) * food.getQuantity() / food.getCarbonhydrate();
                     favouriteFoodQuantity.setText(format(result));
                 }

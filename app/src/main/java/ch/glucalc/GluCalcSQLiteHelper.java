@@ -1071,6 +1071,8 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
                 result = new FoodDiary();
                 result.setId(cursor.getLong(0));
                 result.setFoodName(cursor.getString(1));
+                result.setQuantity(cursor.getFloat(2));
+                result.setUnit(cursor.getString(3));
                 result.setCarbohydrate(cursor.getFloat(4));
                 result.setMealDiaryId(cursor.getInt(5));
             }
