@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.R;
 
 import static ch.glucalc.meal.type.MealTypeConstants.FAKE_DEFAULT_FLOAT_ID;
@@ -88,6 +89,7 @@ public class EditMealTypeFragment extends Fragment {
                 if (newMealType.areSomeMandatoryFieldsMissing()) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
+                    KeyboardHelper.hideKeyboard(getActivity());
                     saveNewMealType(newMealType);
                     log("EditMealTypeFragment.onClick : DONE");
                     mCallback.openMealTypeListFragment();

@@ -26,6 +26,7 @@ import ch.glucalc.EnumColor;
 import ch.glucalc.ExportNewMealActivity;
 import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
 import ch.glucalc.meal.diary.MealDiary;
@@ -120,6 +121,7 @@ public class NewMealThirdStepFragment extends Fragment {
                     startActivity(startIntent);
                 }
 
+                KeyboardHelper.hideKeyboard(getActivity());
                 mCallback.openNewMealFragment();
                 return true;
             default:
@@ -243,6 +245,7 @@ public class NewMealThirdStepFragment extends Fragment {
                             if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH) {
                                 return false;
                             } else if (GestureHelper.isGestureLeftToRight(e1, e2, velocityX)) {
+                                KeyboardHelper.hideKeyboard(getActivity());
                                 mCallback.goBackToNewMealSecondStepFragment(mealDiary.getId());
                             }
                         } catch (Exception e) {

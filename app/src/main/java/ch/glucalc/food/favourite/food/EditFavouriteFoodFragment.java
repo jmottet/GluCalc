@@ -22,6 +22,7 @@ import android.widget.TextView;
 import ch.glucalc.DecimalDigitsInputFilter;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.Food;
 
@@ -92,6 +93,7 @@ public class EditFavouriteFoodFragment extends Fragment {
                 if (favouriteFood.areSomeMandatoryFieldsMissing()) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
+                    KeyboardHelper.hideKeyboard(getActivity());
                     saveFavouriteFood();
                     log("EditFoodFragment.onClick : DONE");
                     mCallback.openFavouriteFoodListFragment(favouriteFood.getMealTypeId());

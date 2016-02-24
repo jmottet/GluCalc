@@ -28,6 +28,7 @@ import java.util.List;
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.MainActivity;
 import ch.glucalc.R;
 import ch.glucalc.meal.type.MealType;
@@ -85,7 +86,7 @@ public class NewMealFragment extends Fragment {
         if (areSomeMandatoryFieldsMissing()) {
             DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
         } else {
-            hideKeyboard(getActivity());
+            KeyboardHelper.hideKeyboard(getActivity());
             final String newFoodBloodGlucoseText = newMealBloodGlucose.getText().toString();
             try {
                 final Float newMealBloodGlucoseAsFloat = Float.valueOf(newFoodBloodGlucoseText);
@@ -105,18 +106,6 @@ public class NewMealFragment extends Fragment {
             } catch (final NumberFormatException nfe) {
             }
         }
-    }
-
-    public static void hideKeyboard(Context ctx) {
-        InputMethodManager inputManager = (InputMethodManager) ctx
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // check if no view has focus:
-        View v = ((Activity) ctx).getCurrentFocus();
-        if (v == null)
-            return;
-
-        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     @Override

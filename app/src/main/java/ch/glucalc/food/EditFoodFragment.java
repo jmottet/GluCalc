@@ -25,6 +25,7 @@ import java.util.List;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.category.CategoryFood;
 
@@ -110,6 +111,7 @@ public class EditFoodFragment extends Fragment {
                 if (newFood.areSomeMandatoryFieldsMissing()) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
+                    KeyboardHelper.hideKeyboard(getActivity());
                     saveNewFood(newFood);
                     log("EditFoodFragment.onClick : DONE");
                     mCallback.openFoodListFragment();

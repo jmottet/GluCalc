@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.Food;
 import ch.glucalc.meal.diary.FoodDiary;
@@ -93,6 +94,7 @@ public class EditNewMealFoodFragment extends Fragment {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
                     saveNewMealFood();
+                    KeyboardHelper.hideKeyboard(getActivity());
                     log("EditNewMealFoodFragment.onClick : DONE");
                     mCallback.openNewMealSecondStepFragment(newMealFood.getMealDiaryId());
                 }

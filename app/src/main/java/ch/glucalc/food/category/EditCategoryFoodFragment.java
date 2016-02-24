@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.KeyboardHelper;
 import ch.glucalc.R;
 import ch.glucalc.food.Food;
 
@@ -94,6 +95,7 @@ public class EditCategoryFoodFragment extends Fragment {
                 if (TextUtils.isEmpty(newCategoryFoodName)) {
                     DialogHelper.displayErrorMessageAllFieldsMissing(getActivity());
                 } else {
+                    KeyboardHelper.hideKeyboard(getActivity());
                     saveNewCategory(newCategoryFoodName);
                     log("EditCategoryFoodFragment.onClick : DONE");
                     mCallback.openCategoryFoodListFragment();
