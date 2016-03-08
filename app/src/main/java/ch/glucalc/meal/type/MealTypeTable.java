@@ -11,9 +11,10 @@ public class MealTypeTable {
   public static final String COLUMN_GLYCEMIA_TARGET = "glycemia_target";
   public static final String COLUMN_INSULIN_SENSITIVITY = "insulin_sensitivity";
   public static final String COLUMN_INSULIN = "insulin";
+  public static final String COLUMN_DELETED = "deleted";
 
   public static final String[] COLUMNS = { COLUMN_ID, COLUMN_NAME, COLUMN_FOOD_TARGET, COLUMN_GLYCEMIA_TARGET,
-      COLUMN_INSULIN_SENSITIVITY, COLUMN_INSULIN };
+      COLUMN_INSULIN_SENSITIVITY, COLUMN_INSULIN, COLUMN_DELETED };
 
   // Database creation sql statement
   public static final String TABLE_CREATE = "create table " + TABLE_NAME + "(" //
@@ -22,7 +23,8 @@ public class MealTypeTable {
       + COLUMN_FOOD_TARGET + " real not null, " //
       + COLUMN_GLYCEMIA_TARGET + " real not null, " //
       + COLUMN_INSULIN_SENSITIVITY + " real not null," //
-      + COLUMN_INSULIN + " real not null);";
+      + COLUMN_INSULIN + " real not null," //
+      + COLUMN_DELETED + " integer default 0);";
 
   public static final String TABLE_DROP = "drop table " + TABLE_NAME + ";";
 }

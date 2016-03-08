@@ -11,6 +11,7 @@ public class MealType {
   private Float insulinSensitivity;
   private Float insulin;
   private boolean selected = false;
+  private Boolean deleted = false;
 
   public long getId() {
     return id;
@@ -58,6 +59,14 @@ public class MealType {
 
   public void setInsulin(Float insulin) {
     this.insulin = insulin;
+  }
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
   }
 
   public boolean isSelected() {

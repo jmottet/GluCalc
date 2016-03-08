@@ -27,7 +27,7 @@ import ch.glucalc.meal.type.MealTypeTable;
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "glucalc.db";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     private static GluCalcSQLiteHelper singleInstance;
 
@@ -55,17 +55,14 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-
-        if (DATABASE_VERSION == 6) {
+        if (DATABASE_VERSION == 10) {
+            db.execSQL(FoodDiaryTable.TABLE_DROP);
+            db.execSQL(MealDiaryTable.TABLE_DROP);
+            db.execSQL(FavouriteFoodTable.TABLE_DROP);
             db.execSQL(FoodTable.TABLE_DROP);
             db.execSQL(CategoryFoodTable.TABLE_DROP);
             db.execSQL(MealTypeTable.TABLE_DROP);
             onCreate(db);
-        } else if (DATABASE_VERSION > 6) {
-            db.execSQL(FavouriteFoodTable.TABLE_CREATE);
-        } else if (DATABASE_VERSION > 8) {
-            db.execSQL(MealDiaryTable.TABLE_CREATE);
-            db.execSQL(FoodDiaryTable.TABLE_CREATE);
         }
     }
 
@@ -79,8 +76,22 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
      ******/
 
     public void deleteMealType(Long mealTypeId) {
-        getWritableDatabase().delete(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMN_ID + " = ?",
-                new String[]{String.valueOf(mealTypeId)});
+        final SQLiteDatabase db = getWritableDatabase();
+        db.setForeignKeyConstraintsEnabled(true);
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(MealTypeTable.COLUMN_DELETED, 1);
+            db.update(MealTypeTable.TABLE_NAME, values, MealTypeTable.COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(mealTypeId)});
+
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void deleteMealTypes() {
@@ -91,7 +102,8 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
         List<MealType> mealTypes = null;
         try {
-            cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, null, null,
+            final String whereClause = MealTypeTable.COLUMN_DELETED + "=0";
+            cursor = getReadableDatabase().query(MealTypeTable.TABLE_NAME, MealTypeTable.COLUMNS, whereClause, null,
                     null, null, MealTypeTable.COLUMN_NAME);
             mealTypes = new ArrayList<MealType>(cursor.getCount());
             while (cursor.moveToNext()) {
@@ -102,6 +114,14 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
                 mealType.setGlycemiaTarget(cursor.getFloat(3));
                 mealType.setInsulinSensitivity(cursor.getFloat(4));
                 mealType.setInsulin(cursor.getFloat(5));
+
+                int deleted = cursor.getInt(6);
+
+                if (deleted == 0) {
+                    mealType.setDeleted(false);
+                } else if (deleted == 1) {
+                    mealType.setDeleted(true);
+                }
                 mealTypes.add(mealType);
                 System.out.println("Meal Type Id : " + mealType.getId());
             }
@@ -130,6 +150,14 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
                 result.setGlycemiaTarget(cursor.getFloat(3));
                 result.setInsulinSensitivity(cursor.getFloat(4));
                 result.setInsulin(cursor.getFloat(5));
+
+                int deleted = cursor.getInt(6);
+
+                if (deleted == 0) {
+                    result.setDeleted(false);
+                } else if (deleted == 1) {
+                    result.setDeleted(true);
+                }
             }
         } finally {
             if(cursor != null)
