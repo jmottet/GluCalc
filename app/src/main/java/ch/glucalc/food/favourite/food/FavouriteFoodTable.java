@@ -34,7 +34,7 @@ public class FavouriteFoodTable {
       + "foreign key (" + COLUMN_FK_MEAL_TYPE + ") REFERENCES " + MealTypeTable.TABLE_NAME + "("
       + MealTypeTable.COLUMN_ID + ")," //
       + "foreign key (" + COLUMN_FK_FOOD + ") REFERENCES " + FoodTable.TABLE_NAME + "("
-      + FoodTable.COLUMN_ID + ")" //
+      + FoodTable.COLUMN_ID + ") ON DELETE CASCADE" //
       + ");";
 
   public static final String TABLE_DROP = "drop table " + TABLE_NAME + ";";

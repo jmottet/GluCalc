@@ -27,7 +27,7 @@ import ch.glucalc.meal.type.MealTypeTable;
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "glucalc.db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private static GluCalcSQLiteHelper singleInstance;
 
@@ -55,7 +55,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        if (DATABASE_VERSION == 10) {
+        if (DATABASE_VERSION >= 10) {
             db.execSQL(FoodDiaryTable.TABLE_DROP);
             db.execSQL(MealDiaryTable.TABLE_DROP);
             db.execSQL(FavouriteFoodTable.TABLE_DROP);
