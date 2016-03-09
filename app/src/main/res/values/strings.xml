@@ -133,6 +133,13 @@
     <string name="enter_meal_type_insulin_hint">Enter an insulin</string>
     <string name="edit_meal_type_insulin">Insulin</string>
 
+        <!-- Info -->
+        <string name="edit_meal_type_name_info">This field defines the name of the meal. If you add a number before the name of the meal, you can sort the meal in order of numbers.</string>
+        <string name="edit_meal_type_food_target_info">This field defines in grams, the recommended quantity of carbohydrates for the meal.</string>
+        <string name="edit_meal_type_blood_glucose_target_info">This field defines the wished blood glucose value after the meal, expressed in the selected unit.</string>
+        <string name="edit_meal_type_insulin_sensitivity_info">The sensitivity factor is also named the correction factor. It expresses the reduction of the blood glucose value when 1 IU of insulin is injected. This value must be define in the same unit as the one selected in GluCalc.\n\nThe sensibility factor allows to calculate the necessary quantity of insulin to reach the target blood glucose. This quantity is separate of the meals insulin and must be valid even if no carbohydrates are ingested.</string>
+        <string name="edit_meal_type_insulin_info">This field define the requirement of insulin corresponding to 10 grams of carbohydrates ingested during the meal.</string>
+
     <!-- Insulin Overview -->
     <string name="insulin_overview_target_food_unit">[g]</string>
     <string name="insulin_overview_sensitivity_unit">[mmol/l]</string>
@@ -154,6 +161,8 @@
     <string name="dialog_confirm_title">Confirm</string>
     <string name="dialog_confirm_category_delete_cascade">A category contains some food, therefore this action will delete them too. Do you want to continue?</string>
     <string name="dialog_confirm_food_import">Please be aware that all current food will be lost. Food from the chosen file will be imported. Do you want to continue?</string>
+
+    <string name="dialog_info_title">Info</string>
 
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_yes">Yes</string>

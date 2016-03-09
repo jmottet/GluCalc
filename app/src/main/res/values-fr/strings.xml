@@ -133,6 +133,13 @@
     <string name="enter_meal_type_insulin_hint">Saisir une quantité d\'insuline pour 10g de glucides</string>
     <string name="edit_meal_type_insulin">Insuline</string>
 
+        <!-- Info -->
+        <string name="edit_meal_type_name_info">Ce champ définit le nom du repas. L’ajout d’un numéro devant le nom du repas permet de faire apparaître les repas dans la séquence désirée.</string>
+        <string name="edit_meal_type_food_target_info">Ce champ définit en grammes, la quantité de glucides recommandée pour le repas.</string>
+        <string name="edit_meal_type_blood_glucose_target_info">Ce champ définit la valeur de glycémie souhaitée après le repas, exprimée dans l’unité de mesure choisie.</string>
+        <string name="edit_meal_type_insulin_sensitivity_info">Le facteur de sensibilité est aussi appelé le facteur de correction. Il exprime la diminution de la valeur de glycémie lorsque 1 UI d’insuline est injectée. Cette valeur doit être définie dans la même unité de mesure que celle qui est sélectionnée dans GluCalc.\n\nLe facteur de sensibilité permet de calculer la dose d’insuline nécessaire pour atteindre la glycémie cible. Celle-ci est indépendante du repas et doit être valable sans apport de glucides.</string>
+        <string name="edit_meal_type_insulin_info">Ce champ définit le besoin en insuline correspondant à 10 g de glucides ingérés au moment du repas.</string>
+
     <!-- Insulin Overview -->
     <string name="insulin_overview_target_food_unit">[g]</string>
     <string name="insulin_overview_sensitivity_unit">[mmol/l]</string>
@@ -154,6 +161,8 @@
     <string name="dialog_confirm_title">Confirmer</string>
     <string name="dialog_confirm_category_delete_cascade">Cette catégorie contient des aliments, cette action va tous les supprimer. Voulez-vous continuer ?</string>
     <string name="dialog_confirm_food_import">Attention, tous les aliments existants vont être supprimés. Les aliments du fichiers sélectionné vont être importés. Voulez-vous continuer ?</string>
+
+    <string name="dialog_info_title">Info</string>
 
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_yes">Oui</string>

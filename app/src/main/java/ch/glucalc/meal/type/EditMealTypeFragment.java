@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
@@ -110,6 +111,42 @@ public class EditMealTypeFragment extends Fragment {
         } else {
             initFieldsAndButtonForEdition(layout);
         }
+
+        ImageButton mealTypeNameInfoButton =(ImageButton) layout.findViewById(R.id.meal_type_name_info_button);
+        mealTypeNameInfoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogHelper.getDialogInfo(getActivity(), getString(R.string.edit_meal_type_name), getString(R.string.edit_meal_type_name_info)).show();
+            }
+        });
+
+        ImageButton mealTypeFoodTargetInfoButton =(ImageButton) layout.findViewById(R.id.meal_type_food_target_info_button);
+        mealTypeFoodTargetInfoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogHelper.getDialogInfo(getActivity(), getString(R.string.edit_meal_type_food_target), getString(R.string.edit_meal_type_food_target_info)).show();
+            }
+        });
+
+        ImageButton mealTypeGlycemiaTargetInfoButton =(ImageButton) layout.findViewById(R.id.meal_type_glycemia_target_info_button);
+        mealTypeGlycemiaTargetInfoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogHelper.getDialogInfo(getActivity(), getString(R.string.edit_meal_type_blood_glucose_target), getString(R.string.edit_meal_type_blood_glucose_target_info)).show();
+            }
+        });
+
+        ImageButton mealTypeInsulinSensitivityInfoButton =(ImageButton) layout.findViewById(R.id.meal_type_insulin_sensitivity_info_button);
+        mealTypeInsulinSensitivityInfoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogHelper.getDialogInfo(getActivity(), getString(R.string.edit_meal_type_insulin_sensitivity), getString(R.string.edit_meal_type_insulin_sensitivity_info)).show();
+            }
+        });
+
+        ImageButton mealTypeInsulinInfoButton =(ImageButton) layout.findViewById(R.id.meal_type_insulin_info_button);
+        mealTypeInsulinInfoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogHelper.getDialogInfo(getActivity(), getString(R.string.edit_meal_type_insulin), getString(R.string.edit_meal_type_insulin_info)).show();
+            }
+        });
+
         return layout;
     }
 
