@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <TextView
+        android:id="@+id/configuration_first_step"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/configuration_first_step_glycemia"
+        android:textSize="20sp"
+        android:padding="10dp"/>
+
+    <FrameLayout
+        android:id="@+id/configuration_blood_glucose_unit_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/configuration_first_step_warning_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/configuration_first_step_warning"
+        android:textColor="@color/red"
+        android:textSize="12sp"
+        android:padding="10dp"/>
+
+</LinearLayout>

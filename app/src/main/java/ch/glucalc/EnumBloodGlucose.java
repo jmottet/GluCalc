@@ -1,17 +1,24 @@
 package ch.glucalc;
 
 public enum EnumBloodGlucose {
-  MMOL_L("[mmol/l]"), MG_DL("[mg/dl]"), G_L("[g/l]");
+  MMOL_L("[mmol/l]", R.string.blood_glucose_millimoles_per_liter), MG_DL("[mg/dl]", R.string.blood_glucose_milligrams_per_liter), G_L("[g/l]", R.string.blood_glucose_grams_per_liter);
 
   private String label;
 
-    EnumBloodGlucose(String aLabel) {
-        label = aLabel;
-    }
+  private int descriptionKey;
 
-    public String getLabel() {
-        return label;
-    }
+  EnumBloodGlucose(String aLabel, int aDescriptionKey) {
+    label = aLabel;
+    descriptionKey = aDescriptionKey;
+  }
+
+  public String getLabel() {
+      return label;
+  }
+
+  public int getDescriptionKey() {
+  return descriptionKey;
+}
 
   public EnumColor getColor(float value) {
 

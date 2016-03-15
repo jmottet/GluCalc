@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import ch.glucalc.configuration.ParametersTable;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodTable;
 import ch.glucalc.food.category.CategoryFood;
@@ -27,7 +28,7 @@ import ch.glucalc.meal.type.MealTypeTable;
 public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "glucalc.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     private static GluCalcSQLiteHelper singleInstance;
 
@@ -50,6 +51,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(FavouriteFoodTable.TABLE_CREATE);
         db.execSQL(MealDiaryTable.TABLE_CREATE);
         db.execSQL(FoodDiaryTable.TABLE_CREATE);
+        db.execSQL(ParametersTable.TABLE_CREATE);
     }
 
     @Override
@@ -1115,6 +1117,56 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     public void deleteFoodDiary(Long foodDiaryId) {
         getWritableDatabase().delete(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(foodDiaryId)});
+    }
+
+    /******
+     * PARAMETERS SECTION
+     ******/
+
+    public String loadParameterByKey(String key) {
+        String result = null;
+
+        final String whereClause = ParametersTable.COLUMN_KEY + "=?";
+        final String[] whereArgs = {key};
+
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(ParametersTable.TABLE_NAME, ParametersTable.COLUMNS, whereClause, whereArgs,
+                    null, null, null);
+            if (cursor.moveToNext()) {
+                result = cursor.getString(1);
+            }
+        } finally {
+            if(cursor != null)
+                cursor.close();
+        }
+        return result;
+    }
+
+    public void storeParameter(String key, String value) {
+        // On supprime la clé si elle existe au préalable.
+        deleteParameter(key);
+
+        final SQLiteDatabase db = getWritableDatabase();
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(ParametersTable.COLUMN_KEY, key);
+            values.put(ParametersTable.COLUMN_VALUE, value);
+
+            db.insert(ParametersTable.TABLE_NAME, "", values);
+            values.clear();
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteParameter(String key) {
+        getWritableDatabase().delete(ParametersTable.TABLE_NAME, ParametersTable.COLUMN_KEY + " = ?",
+                new String[]{String.valueOf(key)});
     }
 
     private void sortFoodDiary(List<FoodDiary> foodDiaries) {

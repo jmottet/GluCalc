@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.glucalc.about.AboutTermsFragment;
+import ch.glucalc.configuration.BloodGlucoseUnitListFragment;
+import ch.glucalc.configuration.ConfigurationFirstStepFragment;
 import ch.glucalc.food.EditFoodFragment;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodConstants;
@@ -59,7 +61,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         FavouriteFoodMealTypeListSelectionFragment.OnMealTypeFavouriteFood, FavouriteFoodListFragment.OnFavouriteFoodAddition, FavouriteFoodListSelectionFragment.OnFavouriteFoodAddition,
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
-        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStepOrBack, NewMealThirdStepFragment.OnNewMealSavedOrBackToPrevious, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary {
+        NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStepOrBack, NewMealThirdStepFragment.OnNewMealSavedOrBackToPrevious, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary,
+        ConfigurationFirstStepFragment.OnConfigurationSecondStep, BloodGlucoseUnitListFragment.OnBloodGlucoseUnitSelection{
 
     private static String TAG = "GluCalc";
 
@@ -67,6 +70,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     NavigationDrawerFragment drawerFragment;
 
     public static EnumBloodGlucose GLOBAL_BLOOD_GLUCOSE = EnumBloodGlucose.MMOL_L;
+
+    private static String GLOBAL_BLOOD_GLUCOSE_UNIT_KEY = "GLOBAL_BLOOD_GLUCOSE_UNIT";
 
     @Override
     public void onBackPressed() {
@@ -81,7 +86,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
-        int count = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadFavouriteFoods().size();
+
+        String bloodGlucoseValue = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).loadParameterByKey(GLOBAL_BLOOD_GLUCOSE_UNIT_KEY);
+        if (bloodGlucoseValue != null) {
+            GLOBAL_BLOOD_GLUCOSE = EnumBloodGlucose.valueOf(bloodGlucoseValue);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -403,6 +412,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         openFragment(mealDiaryThirdStepFragment, true);
     }
 
+    @Override
+    public void openConfigurationSecondStepFragment() {
+        ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
+        openFragment(configurationFirstStepFragment, true);
+    }
+
+    @Override
+    public void openConfigurationFirstStepFragment() {
+        ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
+        openFragment(configurationFirstStepFragment, true);
+    }
+
     private void openFragment(Fragment fragment, boolean backAvailable) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -416,5 +437,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    @Override
+    public void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit) {
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(GLOBAL_BLOOD_GLUCOSE_UNIT_KEY, bloodGlucoseUnit.name());
+        GLOBAL_BLOOD_GLUCOSE = bloodGlucoseUnit;
     }
 }

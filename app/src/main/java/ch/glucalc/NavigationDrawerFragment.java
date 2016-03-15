@@ -102,6 +102,8 @@ public class NavigationDrawerFragment extends Fragment {
         public void openMealDiaryFirstStepFragment();
 
         public void openAboutTermsFragment();
+
+        public void openConfigurationFirstStepFragment();
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -335,6 +337,7 @@ public class NavigationDrawerFragment extends Fragment {
                 case SETTINGS_ALERTS_IDX:
                     break;
                 case SETTINGS_INITIAL_SETUP_IDX:
+                    mCallback.openConfigurationFirstStepFragment();
                     break;
                 case SETTINGS_RESET_IDX:
                     break;

@@ -4,22 +4,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import ch.glucalc.DialogHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.KeyboardHelper;
+import ch.glucalc.MainActivity;
 import ch.glucalc.R;
 
 import static ch.glucalc.meal.type.MealTypeConstants.FAKE_DEFAULT_FLOAT_ID;
@@ -102,9 +101,18 @@ public class EditMealTypeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
 
         View layout = inflater.inflate(R.layout.edit_meal_type, container, false);
+
+        String globalBloodGlucose = MainActivity.GLOBAL_BLOOD_GLUCOSE.getLabel();
+
+        TextView unitTextView = (TextView) layout.findViewById((R.id.meal_type_glycemia_target_unit_textview));
+        unitTextView.setText(globalBloodGlucose);
+
+        unitTextView = (TextView) layout.findViewById((R.id.meal_type_insulin_sensitivity_unit_textview));
+        unitTextView.setText(globalBloodGlucose);
+
 
         if (getMealTypeId() == FAKE_DEFAULT_ID) {
             initFieldsAndButtonForCreation(layout);

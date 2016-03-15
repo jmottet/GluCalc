@@ -126,6 +126,7 @@
     <string name="edit_meal_type_name">Meal type</string>
     <string name="enter_meal_type_food_target_hint">Enter a food target</string>
     <string name="edit_meal_type_food_target">Food target</string>
+    <string name="edit_meal_type_food_target_unit">[g]</string>
     <string name="enter_meal_type_blood_glucose_target_hint">Enter a blood glucose target</string>
     <string name="edit_meal_type_blood_glucose_target">Blood glucose target</string>
     <string name="enter_meal_type_insulin_sensitivity_hint">Enter an insulin sensitivity</string>
@@ -149,6 +150,15 @@
     <string name="insulin_overview_recap_insulin">Insulin</string>
     <string name="insulin_overview_recap_blood_glucose_unit">[mmol/l]</string>
     <string name="insulin_overview_recap_insulin_unit">IU</string>
+
+    <!-- configuration -->
+    <string name="configuration_first_step_blood_glucose">Select the unit of measurement of blood glucose</string>
+
+    <string name="blood_glucose_millimoles_per_liter">Millimoles per liter</string>
+    <string name="blood_glucose_milligrams_per_liter">Milligrams per deciliter</string>
+    <string name="blood_glucose_grams_per_liter">Grams per liter</string>
+
+    <string name="configuration_first_step_warning">Entering configuration parameters must be monitored by the medical team</string>
 
     <!-- Button Labels -->
     <string name="save_button_string">Save</string>

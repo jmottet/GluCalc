@@ -126,6 +126,7 @@
     <string name="edit_meal_type_name">Type de repas</string>
     <string name="enter_meal_type_food_target_hint">Saisir une cible alimentaire</string>
     <string name="edit_meal_type_food_target">Cible alimentaire</string>
+    <string name="edit_meal_type_food_target_unit">[g]</string>
     <string name="enter_meal_type_blood_glucose_target_hint">Saisir une cible de glycémie</string>
     <string name="edit_meal_type_blood_glucose_target">Cible de glycémie</string>
     <string name="enter_meal_type_insulin_sensitivity_hint">Saisir le facteur de sensibilité à l\'insuline</string>
@@ -149,6 +150,14 @@
     <string name="insulin_overview_recap_insulin">Insuline</string>
     <string name="insulin_overview_recap_blood_glucose_unit">[mmol/l]</string>
     <string name="insulin_overview_recap_insulin_unit">UI</string>
+
+    <!-- configuration -->
+    <string name="configuration_first_step_glycemia">Sélectionner l\'unité de mesure de la glycémie</string>
+    <string name="blood_glucose_millimoles_per_liter">Millimole par litre</string>
+    <string name="blood_glucose_milligrams_per_liter">Milligramme par décilitre</string>
+    <string name="blood_glucose_grams_per_liter">Grammes par litre</string>
+
+    <string name="configuration_first_step_warning">La saisie des paramètres de configuration doit être supervisée par l\'équipe médicale</string>
 
     <!-- Button Labels -->
     <string name="save_button_string">Sauvegarder</string>
