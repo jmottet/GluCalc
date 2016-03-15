@@ -9,7 +9,7 @@
         android:id="@+id/configuration_first_step"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/configuration_first_step_glycemia"
+        android:text="@string/configuration_first_step_blood_glucose"
         android:textSize="20sp"
         android:padding="10dp"/>
 

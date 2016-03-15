@@ -152,7 +152,7 @@
     <string name="insulin_overview_recap_insulin_unit">UI</string>
 
     <!-- configuration -->
-    <string name="configuration_first_step_glycemia">Sélectionner l\'unité de mesure de la glycémie</string>
+    <string name="configuration_first_step_blood_glucose">Sélectionner l\'unité de mesure de la glycémie</string>
     <string name="blood_glucose_millimoles_per_liter">Millimole par litre</string>
     <string name="blood_glucose_milligrams_per_liter">Milligramme par décilitre</string>
     <string name="blood_glucose_grams_per_liter">Grammes par litre</string>
