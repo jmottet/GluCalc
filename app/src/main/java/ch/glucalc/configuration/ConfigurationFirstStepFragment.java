@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -14,23 +13,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import java.util.List;
-
-import ch.glucalc.DialogHelper;
+import ch.glucalc.EnumBloodGlucose;
 import ch.glucalc.GestureHelper;
-import ch.glucalc.GluCalcSQLiteHelper;
 import ch.glucalc.KeyboardHelper;
-import ch.glucalc.MainActivity;
 import ch.glucalc.R;
-import ch.glucalc.meal.NewMealFoodListFragment;
-import ch.glucalc.meal.type.MealType;
 
 
 @SuppressLint("DefaultLocale")
@@ -38,15 +26,32 @@ public class ConfigurationFirstStepFragment extends Fragment {
 
     private static String TAG = "GluCalc";
 
-    private OnConfigurationSecondStep mCallback;
+    private OnConfigurationFirstStep mCallback;
 
     private BloodGlucoseUnitListFragment bloodGlucoseUnitListFragment;
 
+    private boolean isInstallationProcess = false;
+
+    public interface OnBloodGlucoseUnitSelection {
+
+
+    }
+
     // Container Activity must implement this interface
-    public interface OnConfigurationSecondStep {
+    public interface OnConfigurationFirstStep {
 
         void openConfigurationSecondStepFragment();
 
+        void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit);
+
+    }
+
+    public boolean isInstallationProcess() {
+        return isInstallationProcess;
+    }
+
+    public void setInstallationProcess(boolean isInstallationProcess) {
+        this.isInstallationProcess = isInstallationProcess;
     }
 
     @Override
@@ -60,7 +65,12 @@ public class ConfigurationFirstStepFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         log("ConfigurationFirstStepFragment.onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.next_page_menu, menu);
+
+        if (isInstallationProcess) {
+            inflater.inflate(R.menu.next_page_menu, menu);
+        } else {
+            inflater.inflate(R.menu.accept_menu, menu);
+        }
     }
 
     @Override
@@ -69,6 +79,9 @@ public class ConfigurationFirstStepFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.next:
                 goToNextPage();
+                return true;
+            case R.id.save:
+                mCallback.saveBloodGlucoseUnit(bloodGlucoseUnitListFragment.getCurrentBloodGlucoseUnit());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -97,41 +110,49 @@ public class ConfigurationFirstStepFragment extends Fragment {
 
         initializeGestureDetector(layout);
 
+
+        if (!isInstallationProcess) {
+            TextView warningTextView = (TextView) layout.findViewById(R.id.configuration_first_step_warning_textview);
+            warningTextView.setVisibility(View.GONE);
+        }
+
         return layout;
     }
 
     private void initializeGestureDetector(View layout) {
-        final GestureDetector gesture = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
+        if (isInstallationProcess) {
+            final GestureDetector gesture = new GestureDetector(getActivity(),
+                    new GestureDetector.SimpleOnGestureListener() {
 
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                           float velocityY) {
-                        log("ConfigurationFirstStepFragment.onFling");
-                        try {
-                            if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH)
-                                return false;
-                            if (GestureHelper.isGestureRightToLeft(e1, e2, velocityX)) {
-                                goToNextPage();
-                            }
-                        } catch (Exception e) {
-                            // nothing
+                        @Override
+                        public boolean onDown(MotionEvent e) {
+                            return true;
                         }
-                        return super.onFling(e1, e2, velocityX, velocityY);
-                    }
-                });
 
-        layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
-            }
-        });
+                        @Override
+                        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                               float velocityY) {
+                            log("ConfigurationFirstStepFragment.onFling");
+                            try {
+                                if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH)
+                                    return false;
+                                if (GestureHelper.isGestureRightToLeft(e1, e2, velocityX)) {
+                                    goToNextPage();
+                                }
+                            } catch (Exception e) {
+                                // nothing
+                            }
+                            return super.onFling(e1, e2, velocityX, velocityY);
+                        }
+                    });
+
+            layout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return gesture.onTouchEvent(event);
+                }
+            });
+        }
     }
 
     @Override
@@ -147,7 +168,7 @@ public class ConfigurationFirstStepFragment extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnConfigurationSecondStep) activity;
+            mCallback = (OnConfigurationFirstStep) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnConfigurationSecondStep");

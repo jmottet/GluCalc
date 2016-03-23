@@ -8,6 +8,8 @@ import android.os.Handler;
 public class SplashActivity extends Activity {
     private static boolean splashLoaded = false;
 
+    private static String CONDITIONS_GENERALES_ACCEPTED = "CONDITIONS_GENERALES_ACCEPTED";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +19,12 @@ public class SplashActivity extends Activity {
             int secondsDelayed = 2;
             new Handler().postDelayed(new Runnable() {
                 public void run() {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    String conditionGeneralesAccepted = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getApplicationContext()).loadParameterByKey(CONDITIONS_GENERALES_ACCEPTED);
+                    if (Boolean.parseBoolean(conditionGeneralesAccepted)) {
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    } else {
+                        startActivity(new Intent(SplashActivity.this, InstallationSetUpActivity.class));
+                    }
                     finish();
                 }
             }, secondsDelayed * 1000);

@@ -209,4 +209,10 @@
 
     <string name="exported_new_meal_successfully">Le nouveau repas exporté avec succès!</string>
 
+    <!-- Conditions Générales -->
+    <string name="conditions_generales">CONDITION GENERALES\nEn accédant à l\'application GluCalc (ci-après : l\'Application), vous déclarez avoir compris et accepter les conditions générales suivantes. Si vous n\'acceptez pas les présentes conditions générales, vous devez renoncer à accéder à l\'applicatin GluCalc.\n</string>
+    <string name="accepter_conditions">J\'accepte</string>
+    <string name="refuser_conditions">Je refuse</string>
+
+
 </resources>

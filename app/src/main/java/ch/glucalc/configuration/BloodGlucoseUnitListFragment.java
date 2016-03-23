@@ -39,29 +39,14 @@ public class BloodGlucoseUnitListFragment extends ListFragment {
 
     private NavigationBackAndNext navigationBackAndNext;
 
-    private OnBloodGlucoseUnitSelection mCallback;
-
-    public interface OnBloodGlucoseUnitSelection {
-
-        void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit);
-    }
+    private EnumBloodGlucose currentBloodGlucoseUnit;
 
     public void setNavigationBackAndNext(NavigationBackAndNext navigationBackAndNext) {
         this.navigationBackAndNext = navigationBackAndNext;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnBloodGlucoseUnitSelection) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnBloodGlucoseUnitSelection");
-        }
+    public EnumBloodGlucose getCurrentBloodGlucoseUnit() {
+        return currentBloodGlucoseUnit;
     }
 
     @Override
@@ -96,8 +81,7 @@ public class BloodGlucoseUnitListFragment extends ListFragment {
         }
         v.setBackgroundColor(getResources().getColor(R.color.lightSkyBlue));
         bloodGlucoseUnitAdapter.setSelectedPosition(position);
-        final EnumBloodGlucose currentBloodGlucoseUnit = (EnumBloodGlucose) getListView().getItemAtPosition(position);
-        mCallback.saveBloodGlucoseUnit(currentBloodGlucoseUnit);
+        currentBloodGlucoseUnit = (EnumBloodGlucose) getListView().getItemAtPosition(position);
     }
 
     @Override

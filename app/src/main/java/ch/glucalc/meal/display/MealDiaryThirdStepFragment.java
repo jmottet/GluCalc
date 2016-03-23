@@ -111,7 +111,7 @@ public class MealDiaryThirdStepFragment extends Fragment {
         insulinTextView.setTypeface(null, Typeface.BOLD);
 
         TextView bloodGlucoseTextView = (TextView) layout.findViewById(R.id.meal_diary_third_step_blood_glucose_value_textview);
-        bloodGlucoseTextView.setText(format(mealDiary.getGlycemiaMeasured()));
+        bloodGlucoseTextView.setText(format(mealDiary.getGlycemiaMeasured())  + " " + getBloodGlucoseUnit());
 
         EnumColor color = MainActivity.GLOBAL_BLOOD_GLUCOSE.getColor(mealDiary.getGlycemiaMeasured());
         switch (color) {

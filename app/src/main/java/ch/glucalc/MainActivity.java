@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
         NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStepOrBack, NewMealThirdStepFragment.OnNewMealSavedOrBackToPrevious, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary,
-        ConfigurationFirstStepFragment.OnConfigurationSecondStep, BloodGlucoseUnitListFragment.OnBloodGlucoseUnitSelection{
+        ConfigurationFirstStepFragment.OnConfigurationFirstStep{
 
     private static String TAG = "GluCalc";
 
@@ -421,6 +421,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void openConfigurationFirstStepFragment() {
         ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
+        configurationFirstStepFragment.setInstallationProcess(false);
         openFragment(configurationFirstStepFragment, true);
     }
 
