@@ -145,7 +145,7 @@
     <string name="insulin_overview_target_food_unit">[g]</string>
     <string name="insulin_overview_sensitivity_unit">[mmol/l]</string>
     <string name="insulin_overview_blood_glucose_target_unit">[mmol/l]</string>
-    <string name="insulin_overview_insulin_unit">[UI/l0 g]</string>
+    <string name="insulin_overview_insulin_unit">[UI/10 g]</string>
     <string name="insulin_overview_recap_blood_glucose">Glycémie</string>
     <string name="insulin_overview_recap_insulin">Insuline</string>
     <string name="insulin_overview_recap_blood_glucose_unit">[mmol/l]</string>
