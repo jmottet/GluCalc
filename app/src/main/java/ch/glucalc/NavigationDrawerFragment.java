@@ -23,6 +23,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import ch.glucalc.meal.type.EditMealTypeFragment;
+import ch.glucalc.meal.type.MealTypeConstants;
+
+import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -104,6 +109,9 @@ public class NavigationDrawerFragment extends Fragment {
         public void openAboutTermsFragment();
 
         public void openConfigurationFirstStepFragment();
+
+        public void openEditMealTypeFragment();
+
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -246,7 +254,13 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        mCallback.openNewMealFragment();
+        boolean hasMealTypes = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealTypes().isEmpty();
+        if (hasMealTypes) {
+            mCallback.openNewMealFragment();
+        } else {
+            // On ouvre la création d'un type de repas si aucun n'existe
+            mCallback.openEditMealTypeFragment();
+        }
     }
 
     public void setDrawerIndicatorEnabled(boolean indicatorEnabled) {

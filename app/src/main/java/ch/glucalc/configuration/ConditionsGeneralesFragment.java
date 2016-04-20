@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import ch.glucalc.EnumBloodGlucose;
@@ -28,12 +29,18 @@ public class ConditionsGeneralesFragment extends Fragment {
 
     private static String TAG = "GluCalc";
 
+    private boolean isInitialProcess = false;
+
     private OnConditionsAccepted mCallback;
 
     public interface OnConditionsAccepted {
 
-        void openMainActivity();
+        void openConfigurationFirstStepFragment();
 
+    }
+
+    public void setIsInitialProcess(boolean isInitialProcess) {
+        this.isInitialProcess = isInitialProcess;
     }
 
     @Override
@@ -66,22 +73,30 @@ public class ConditionsGeneralesFragment extends Fragment {
         Button accepterButton = (Button) layout.findViewById(R.id.accepter_button);
         Button refuserButton = (Button) layout.findViewById(R.id.refuser_button);
 
-        accepterButton.setOnClickListener(new View.OnClickListener() {
+        if (isInitialProcess) {
+            accepterButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                mCallback.openMainActivity();
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    mCallback.openConfigurationFirstStepFragment();
+                }
+            });
 
-        refuserButton.setOnClickListener(new View.OnClickListener() {
+            refuserButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-                System.exit(0);
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    getActivity().finish();
+                    System.exit(0);
+                }
+            });
+        } else {
+            LinearLayout titleContainer = (LinearLayout) layout.findViewById(R.id.conditions_generales_title_container);
+
+            titleContainer.setVisibility(View.GONE);
+            accepterButton.setVisibility(View.GONE);
+            refuserButton.setVisibility(View.GONE);
+        }
         return layout;
     }
 

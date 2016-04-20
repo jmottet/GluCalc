@@ -58,11 +58,15 @@ import ch.glucalc.meal.type.MealTypeListFragment;
 import static ch.glucalc.food.category.CategoryFoodConstants.FAKE_DEFAULT_ID;
 import static ch.glucalc.food.category.CategoryFoodConstants.REQUEST_EDIT_CODE;
 
-public class InstallationSetUpActivity extends FragmentActivity implements ConditionsGeneralesFragment.OnConditionsAccepted {
+public class InstallationSetUpActivity extends FragmentActivity implements ConditionsGeneralesFragment.OnConditionsAccepted, ConfigurationFirstStepFragment.OnConfigurationFirstStep {
 
     private static String TAG = "GluCalc";
 
     private static String CONDITIONS_GENERALES_ACCEPTED = "CONDITIONS_GENERALES_ACCEPTED";
+
+    public static EnumBloodGlucose GLOBAL_BLOOD_GLUCOSE = EnumBloodGlucose.MMOL_L;
+
+    private static String GLOBAL_BLOOD_GLUCOSE_UNIT_KEY = "GLOBAL_BLOOD_GLUCOSE_UNIT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +74,9 @@ public class InstallationSetUpActivity extends FragmentActivity implements Condi
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.installation_setup_view);
-
-        openFragment(new ConditionsGeneralesFragment(), true);
+        ConditionsGeneralesFragment conditionsGeneralesFragment = new ConditionsGeneralesFragment();
+        conditionsGeneralesFragment.setIsInitialProcess(true);
+        openFragment(conditionsGeneralesFragment, true);
     }
 
     private void openFragment(Fragment fragment, boolean backAvailable) {
@@ -89,9 +94,26 @@ public class InstallationSetUpActivity extends FragmentActivity implements Condi
         transaction.commit();
     }
 
-    @Override
     public void openMainActivity() {
         GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(CONDITIONS_GENERALES_ACCEPTED, "true");
         startActivity(new Intent(InstallationSetUpActivity.this, MainActivity.class));
+    }
+
+    @Override
+    public void openConfigurationFirstStepFragment() {
+        ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
+        configurationFirstStepFragment.setInstallationProcess(true);
+        openFragment(configurationFirstStepFragment, true);
+    }
+
+    @Override
+    public void openConfigurationSecondStepFragment() {
+        openMainActivity();
+    }
+
+    @Override
+    public void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit) {
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(GLOBAL_BLOOD_GLUCOSE_UNIT_KEY, bloodGlucoseUnit.name());
+        GLOBAL_BLOOD_GLUCOSE = bloodGlucoseUnit;
     }
 }

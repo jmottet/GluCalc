@@ -46,10 +46,6 @@ public class ConfigurationFirstStepFragment extends Fragment {
 
     }
 
-    public boolean isInstallationProcess() {
-        return isInstallationProcess;
-    }
-
     public void setInstallationProcess(boolean isInstallationProcess) {
         this.isInstallationProcess = isInstallationProcess;
     }
@@ -171,7 +167,7 @@ public class ConfigurationFirstStepFragment extends Fragment {
             mCallback = (OnConfigurationFirstStep) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnConfigurationSecondStep");
+                    + " must implement OnConfigurationFirstStep");
         }
     }
 

@@ -210,7 +210,30 @@
     <string name="exported_new_meal_successfully">New meal exported successfully!</string>
 
     <!-- Conditions Générales -->
-    <string name="conditions_generales">CONDITION GENERALES\nEn accédant à l\'application GluCalc (ci-après : l\'Application), vous déclarez avoir compris et accepter les conditions générales suivantes. Si vous n\'acceptez pas les présentes conditions générales, vous devez renoncer à accéder à l\'applicatin GluCalc.\n</string>    <string name="accepter_conditions">I agree</string>
+    <string name="conditions_generales_main_title">Terms of use</string>
+    <string name="conditions_generales_version">GluCalc V1.2</string>
+    <string name="conditions_generales_title1">DISCLAIMER</string>
+    <string name="conditions_generales_part1">In using GluCalc (the Application), you declare that you have understood and accepted the following disclaimer. If you do not accept these conditions you should not use the GluCalc application.\n</string>
+
+    <string name="conditions_generales_title2">USE OF THE APPLICATION</string>
+    <string name="conditions_generales_part2">The fees related to phone calls and internet connections while using the Application are to be fully borne by the user of the Application and can vary depending on the mobile network provider.\n</string>
+
+    <string name="conditions_generales_title3">COPYRIGHT</string>
+    <string name="conditions_generales_part3">The Application is protected by legislation related to copyright.\n</string>
+
+    <string name="conditions_generales_title4">EXCLUSION OF WARRANTY AND COMPLETENESS OF INFORMATIONS</string>
+    <string name="conditions_generales_part4">Although the author chooses and verifies information presented by GluCalc very carefully, neither the author, nor his partners can guarantee that information or software documents will always be up to date, accurate or exhaustive.\n</string>
+
+    <string name="conditions_generales_title5">RESPONSIBILITY WAIVER</string>
+    <string name="conditions_generales_part5">You are using the GluCalc application at your own risk. The Author cannot be held responsible for accidents or damages of any nature as a consequence of the use of the Application.\nThe Author cannot be held responsible for possible direct or indirect damages resulting from the use of information appearing on the Application or found on internet website accessed via the Application.\nThe Author cannot be hold responsible for any direct or indirect damages resulting from the access or use of (or from impossibility to access and use or from malfunctioning) the elements of the Application. The continuous and correct functioning of the mobile phone network and the Application cannot be guaranteed.\nPersons establishing connection to internet websites do so at their own risk.\n</string>
+
+    <string name="conditions_generales_title6">DATA PROTECTION</string>
+    <string name="conditions_generales_part6">The application requires no personal data. However data transmission is not encrypted and therefore there is a risk that data could be lost and/or received by a third person. The author takes no responsibility regarding the safety of data transmission.\n</string>
+
+    <string name="conditions_generales_title7">LAW TO BE APPLIED</string>
+    <string name="conditions_generales_part7">All information or data, their use, the use of the Application and the present disclaimer subject to the Swiss law only.\nThe author reserves the right to modify at any time and without notice, the information or the data in the application as well as the disclaimer.\n</string>
+
+    <string name="accepter_conditions">I agree</string>
     <string name="refuser_conditions">I decline</string>
 
 </resources>

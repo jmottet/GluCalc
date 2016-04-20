@@ -210,7 +210,29 @@
     <string name="exported_new_meal_successfully">Le nouveau repas exporté avec succès!</string>
 
     <!-- Conditions Générales -->
-    <string name="conditions_generales">CONDITION GENERALES\nEn accédant à l\'application GluCalc (ci-après : l\'Application), vous déclarez avoir compris et accepter les conditions générales suivantes. Si vous n\'acceptez pas les présentes conditions générales, vous devez renoncer à accéder à l\'applicatin GluCalc.\n</string>
+    <string name="conditions_generales_main_title">Conditions générales</string>
+    <string name="conditions_generales_version">GluCalc V1.2</string>
+    <string name="conditions_generales_title1">CONDITIONS GENERALES</string>
+    <string name="conditions_generales_part1">En accédant à l\'application GluCalc (ci-après : l\'Application), vous déclarez avoir compris et accepter les conditions générales suivantes. Si vous n\'acceptez pas les présentes conditions générales, vous devez renoncer à accéder à l\'application GluCalc.\n</string>
+
+    <string name="conditions_generales_title2">UTILISATION</string>
+    <string name="conditions_generales_part2">Les frais de connexion au réseau téléphonique et internet relatifs à l\'utilisation de l\'Application sont évidemment à la charge des utilisateurs de l\'Application et sont en fonction des tarifs de l\'opérateur mobile.\n</string>
+
+    <string name="conditions_generales_title3">DROIT D\'AUTEUR</string>
+    <string name="conditions_generales_part3">L\'Application est protégée par les dispositions légales relatives aux droits d\'auteurs.\n</string>
+
+    <string name="conditions_generales_title4">EXCLUSION DE GARANTIE - EXHAUSTIVITE DES INFORMATIONS</string>
+    <string name="conditions_generales_part4">Bien que l\'auteur vérifie et choisisse soigneusement les informations présentes sur l\'Application GluCalc au moment de leur publication, ni l\'auteur, ni ses éventuels partenaires ne sont en mesure de garantir que les informations, logiciels, documents ou autre renseignements transmis ou mis à disposition sont toujours d\'actualité, exhaustifs ou exacts.\n</string>
+
+    <string name="conditions_generales_title5">EXCLUSION DE RESPONSABILITE</string>
+    <string name="conditions_generales_part5">Vous utilisez l\'application GluCalc à vos propres risques et périls. La responsabilité de l\'auteur ne saurait être engagée pour les accidents ou dommage de quelque nature que ce soit survenus durant l\'’utilisation de l\'Application.\nL\'auteur ne peut en aucun cas être tenu responsable d\'éventuels dommages directs ou indirects résultant de l\'utilisation des informations figurant sur l\'Application ou de l\'accès à d\'autres sites internet par le biais de liens existants.\nEn aucun cas l\'auteur ne peut être tenu responsable pour tout dommage direct ou indirect résultant de l\'accès et de l\'utilisation (ou de l\'impossibilité d\'accéder et d\'utiliser ou encore du mauvais fonctionnement) des éléments de l\'Application. Ainsi notamment, le fonctionnement permanent et exempt de défaillance du réseau de téléphonie et de l\'Application n\'est pas garanti.\nLes personnes établissant des liens vers des pages hors site ou vers d\'autres sites internet agissent à leurs propres risques et périls.\n</string>
+
+    <string name="conditions_generales_title6">PROTECTION DES DONNEES</string>
+    <string name="conditions_generales_part6">L\'application n’exige pas de données nominatives. Néanmoins, l\'envoi des données n’étant pas crypté, il existe un risque que des données soient perdues et / ou reçues par des tiers. L\'auteur décline en conséquence toute responsabilité concernant la sécurité de la transmission des données.\n</string>
+
+    <string name="conditions_generales_title7">DROIT APPLICABLE</string>
+    <string name="conditions_generales_part7">Toute information ou donnée, leur utilisation, l\'utilisation de l\'Application, ainsi que les présentes conditions générales sont soumises exclusivement au droit suisse.\nL\'auteur se réserve enfin le droit de modifier à tout moment et sans préavis les informations ou les données présentes sur son application, ainsi que les conditions générales.\n</string>
+
     <string name="accepter_conditions">J\'accepte</string>
     <string name="refuser_conditions">Je refuse</string>
 

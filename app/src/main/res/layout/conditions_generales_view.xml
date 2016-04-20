@@ -5,31 +5,170 @@
     android:layout_height="fill_parent"
     >
 
-    <TextView
-        android:id="@+id/conditions_generales_textview"
+    <LinearLayout
+        android:id="@+id/conditions_generales_title_container"
+        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/conditions_generales"
-        android:textSize="20sp" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/primaryColorDark">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
+        <TextView
+            android:id="@+id/conditions_generales_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conditions_generales_main_title"
+            android:textSize="28sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/conditions_generales_version_container"
+        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        >
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/primaryColor">
 
-    <Button
-        android:id="@+id/accepter_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/green_kaki"
-        android:text="@string/accepter_conditions" />
+        <TextView
+            android:id="@+id/conditions_generales_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conditions_generales_version"
+            android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/refuser_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/red"
-        android:text="@string/refuser_conditions" />
+    </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+
+            <TextView
+                android:id="@+id/conditions_generales_title1_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title1"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part1_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part1"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_title2_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title2"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part2_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part2"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_title3_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title3"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part3_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part3"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_title4_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title4"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part4_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part4"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_title5_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title5"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part5_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part5"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_title6_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title6"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part6_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part6"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_title7_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_title7"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/conditions_generales_part7_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/conditions_generales_part7"
+                android:textSize="18sp" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                >
+
+            <Button
+                android:id="@+id/accepter_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_kaki"
+                android:text="@string/accepter_conditions" />
+
+            <Button
+                android:id="@+id/refuser_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:text="@string/refuser_conditions" />
+                </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 </LinearLayout>
