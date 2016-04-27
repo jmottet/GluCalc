@@ -71,7 +71,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     public static EnumBloodGlucose GLOBAL_BLOOD_GLUCOSE = EnumBloodGlucose.MMOL_L;
 
-    private static String GLOBAL_BLOOD_GLUCOSE_UNIT_KEY = "GLOBAL_BLOOD_GLUCOSE_UNIT";
+    public static String GLOBAL_BLOOD_GLUCOSE_UNIT_KEY = "GLOBAL_BLOOD_GLUCOSE_UNIT";
+
+    public static String REDIRECT_TO_NEW_MEAL_TYPE = "REDIRECT_TO_NEW_MEAL_TYPE";
 
     @Override
     public void onBackPressed() {
@@ -103,6 +105,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         /* Set up the navigation bar which is the left menu */
         drawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+
+        boolean redirectToNewMealType = getIntent().getBooleanExtra(REDIRECT_TO_NEW_MEAL_TYPE, false);
+        if (redirectToNewMealType) {
+            openEditMealTypeFragment();
+        } else {
+            openNewMealFragment();
+        }
+
+        drawerFragment.closeDrawer();
     }
 
     @Override
@@ -413,12 +424,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
-    public void openConfigurationSecondStepFragment() {
-        ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
-        openFragment(configurationFirstStepFragment, true);
-    }
-
-    @Override
     public void openConfigurationFirstStepFragment() {
         ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
         configurationFirstStepFragment.setInstallationProcess(false);
@@ -441,8 +446,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
-    public void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit) {
-        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(GLOBAL_BLOOD_GLUCOSE_UNIT_KEY, bloodGlucoseUnit.name());
+    public void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit, boolean withRedirectionToNewMeal) {
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(MainActivity.GLOBAL_BLOOD_GLUCOSE_UNIT_KEY, bloodGlucoseUnit.name());
         GLOBAL_BLOOD_GLUCOSE = bloodGlucoseUnit;
+
+        if (withRedirectionToNewMeal) {
+            openNewMealFragment();
+        }
     }
 }

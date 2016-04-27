@@ -5,6 +5,55 @@
     android:layout_height="fill_parent"
     >
 
+    <RelativeLayout
+        android:id="@+id/configuration_first_step_title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primaryColorDark">
+
+        <TextView
+            android:id="@+id/configuration_first_step_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/configuration_first_step_main_title"
+            android:textSize="28sp"
+            android:layout_centerInParent="true"
+            android:padding="8sp"/>
+
+        <ImageButton
+            android:id="@+id/saveImageButton"
+            android:src="@drawable/ic_action_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10sp"
+            android:layout_alignParentRight="true"
+            android:background="#5ec639"/>
+    </RelativeLayout>
+<!--
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:id="@+id/configuration_first_step_title_container"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/primaryColorDark">
+
+            <TextView
+                android:id="@+id/configuration_first_step_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/configuration_first_step_main_title"
+                android:textSize="28sp" />
+
+        </LinearLayout>
+
+    </LinearLayout> -->
+
     <TextView
         android:id="@+id/configuration_first_step"
         android:layout_width="match_parent"

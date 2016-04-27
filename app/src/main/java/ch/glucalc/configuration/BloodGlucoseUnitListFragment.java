@@ -39,7 +39,7 @@ public class BloodGlucoseUnitListFragment extends ListFragment {
 
     private NavigationBackAndNext navigationBackAndNext;
 
-    private EnumBloodGlucose currentBloodGlucoseUnit;
+    private EnumBloodGlucose currentBloodGlucoseUnit = MainActivity.GLOBAL_BLOOD_GLUCOSE;
 
     public void setNavigationBackAndNext(NavigationBackAndNext navigationBackAndNext) {
         this.navigationBackAndNext = navigationBackAndNext;

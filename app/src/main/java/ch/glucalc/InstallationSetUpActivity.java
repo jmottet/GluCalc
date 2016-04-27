@@ -62,11 +62,7 @@ public class InstallationSetUpActivity extends FragmentActivity implements Condi
 
     private static String TAG = "GluCalc";
 
-    private static String CONDITIONS_GENERALES_ACCEPTED = "CONDITIONS_GENERALES_ACCEPTED";
-
-    public static EnumBloodGlucose GLOBAL_BLOOD_GLUCOSE = EnumBloodGlucose.MMOL_L;
-
-    private static String GLOBAL_BLOOD_GLUCOSE_UNIT_KEY = "GLOBAL_BLOOD_GLUCOSE_UNIT";
+    public static String CONDITIONS_GENERALES_ACCEPTED = "CONDITIONS_GENERALES_ACCEPTED";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +90,6 @@ public class InstallationSetUpActivity extends FragmentActivity implements Condi
         transaction.commit();
     }
 
-    public void openMainActivity() {
-        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(CONDITIONS_GENERALES_ACCEPTED, "true");
-        startActivity(new Intent(InstallationSetUpActivity.this, MainActivity.class));
-    }
-
     @Override
     public void openConfigurationFirstStepFragment() {
         ConfigurationFirstStepFragment configurationFirstStepFragment = new ConfigurationFirstStepFragment();
@@ -107,13 +98,8 @@ public class InstallationSetUpActivity extends FragmentActivity implements Condi
     }
 
     @Override
-    public void openConfigurationSecondStepFragment() {
-        openMainActivity();
-    }
-
-    @Override
-    public void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit) {
-        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(GLOBAL_BLOOD_GLUCOSE_UNIT_KEY, bloodGlucoseUnit.name());
-        GLOBAL_BLOOD_GLUCOSE = bloodGlucoseUnit;
+    public void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit, boolean withRedirectionToNewMeal) {
+        GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).storeParameter(MainActivity.GLOBAL_BLOOD_GLUCOSE_UNIT_KEY, bloodGlucoseUnit.name());
+        MainActivity.GLOBAL_BLOOD_GLUCOSE = bloodGlucoseUnit;
     }
 }

@@ -2,6 +2,9 @@ package ch.glucalc.configuration;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,11 +16,18 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.glucalc.EnumBloodGlucose;
 import ch.glucalc.GestureHelper;
+import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.InstallationSetUpActivity;
 import ch.glucalc.KeyboardHelper;
+import ch.glucalc.MainActivity;
 import ch.glucalc.R;
 
 
@@ -32,18 +42,11 @@ public class ConfigurationFirstStepFragment extends Fragment {
 
     private boolean isInstallationProcess = false;
 
-    public interface OnBloodGlucoseUnitSelection {
-
-
-    }
 
     // Container Activity must implement this interface
     public interface OnConfigurationFirstStep {
 
-        void openConfigurationSecondStepFragment();
-
-        void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit);
-
+        void saveBloodGlucoseUnit(EnumBloodGlucose bloodGlucoseUnit, boolean withRedirectionToNewMeal);
     }
 
     public void setInstallationProcess(boolean isInstallationProcess) {
@@ -54,7 +57,10 @@ public class ConfigurationFirstStepFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         log("ConfigurationFirstStepFragment.onCreate");
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        if (!isInstallationProcess) {
+            // On désactive le menu car on affiche un titre avec bouton à la place
+            setHasOptionsMenu(true);
+        }
     }
 
     @Override
@@ -62,31 +68,19 @@ public class ConfigurationFirstStepFragment extends Fragment {
         log("ConfigurationFirstStepFragment.onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
 
-        if (isInstallationProcess) {
-            inflater.inflate(R.menu.next_page_menu, menu);
-        } else {
-            inflater.inflate(R.menu.accept_menu, menu);
-        }
+        inflater.inflate(R.menu.accept_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         log("ConfigurationFirstStepFragment.onOptionsItemSelected");
         switch (item.getItemId()) {
-            case R.id.next:
-                goToNextPage();
-                return true;
             case R.id.save:
-                mCallback.saveBloodGlucoseUnit(bloodGlucoseUnitListFragment.getCurrentBloodGlucoseUnit());
+                mCallback.saveBloodGlucoseUnit(bloodGlucoseUnitListFragment.getCurrentBloodGlucoseUnit(), true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void goToNextPage() {
-        KeyboardHelper.hideKeyboard(getActivity());
-        mCallback.openConfigurationSecondStepFragment();
     }
 
     @Override
@@ -104,51 +98,51 @@ public class ConfigurationFirstStepFragment extends Fragment {
         fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
 
-        initializeGestureDetector(layout);
+        ImageButton saveImageButton = (ImageButton) layout.findViewById(R.id.saveImageButton);
 
+        if (isInstallationProcess) {
+            saveImageButton.setOnClickListener(new View.OnClickListener() {
 
-        if (!isInstallationProcess) {
+                @Override
+                public void onClick(View v) {
+                    mCallback.saveBloodGlucoseUnit(bloodGlucoseUnitListFragment.getCurrentBloodGlucoseUnit(), false);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.dialog_configuration_meal_type_title);
+                            builder.setMessage(R.string.dialog_configuration_meal_type_message)
+                                    .setCancelable(false)
+                                    .setPositiveButton(R.string.dialog_configuration_meal_create, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).storeParameter(InstallationSetUpActivity.CONDITIONS_GENERALES_ACCEPTED, "true");
+
+                                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                                            intent.putExtra(MainActivity.REDIRECT_TO_NEW_MEAL_TYPE, true);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.dialog_configuration_meal_cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity()).storeParameter(InstallationSetUpActivity.CONDITIONS_GENERALES_ACCEPTED, "true");
+
+                                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                                            intent.putExtra(MainActivity.REDIRECT_TO_NEW_MEAL_TYPE, false);
+                                            startActivity(intent);
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                }
+            });
+        } else {
             TextView warningTextView = (TextView) layout.findViewById(R.id.configuration_first_step_warning_textview);
             warningTextView.setVisibility(View.GONE);
+
+            RelativeLayout titleContainer = (RelativeLayout) layout.findViewById(R.id.configuration_first_step_title_container);
+            titleContainer.setVisibility(View.GONE);
         }
 
         return layout;
-    }
-
-    private void initializeGestureDetector(View layout) {
-        if (isInstallationProcess) {
-            final GestureDetector gesture = new GestureDetector(getActivity(),
-                    new GestureDetector.SimpleOnGestureListener() {
-
-                        @Override
-                        public boolean onDown(MotionEvent e) {
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                               float velocityY) {
-                            log("ConfigurationFirstStepFragment.onFling");
-                            try {
-                                if (Math.abs(e1.getY() - e2.getY()) > GestureHelper.SWIPE_MAX_OFF_PATH)
-                                    return false;
-                                if (GestureHelper.isGestureRightToLeft(e1, e2, velocityX)) {
-                                    goToNextPage();
-                                }
-                            } catch (Exception e) {
-                                // nothing
-                            }
-                            return super.onFling(e1, e2, velocityX, velocityY);
-                        }
-                    });
-
-            layout.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return gesture.onTouchEvent(event);
-                }
-            });
-        }
     }
 
     @Override

@@ -5,12 +5,10 @@
     android:layout_height="fill_parent"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/conditions_generales_title_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:background="@color/primaryColorDark">
 
         <TextView
@@ -18,9 +16,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/conditions_generales_main_title"
-            android:textSize="28sp" />
-
-    </LinearLayout>
+            android:textSize="28sp"
+            android:layout_centerInParent="true"
+            android:padding="8sp"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/conditions_generales_version_container"
@@ -35,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/conditions_generales_version"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+             />
 
     </LinearLayout>
 

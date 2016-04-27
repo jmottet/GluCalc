@@ -254,17 +254,15 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        boolean hasMealTypes = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(getActivity().getApplicationContext()).loadMealTypes().isEmpty();
-        if (hasMealTypes) {
-            mCallback.openNewMealFragment();
-        } else {
-            // On ouvre la création d'un type de repas si aucun n'existe
-            mCallback.openEditMealTypeFragment();
-        }
     }
 
     public void setDrawerIndicatorEnabled(boolean indicatorEnabled) {
         mDrawerToggle.setDrawerIndicatorEnabled(indicatorEnabled);
+    }
+
+    public void closeDrawer() {
+        // close the drawer
+        mDrawerLayout.closeDrawer(containerView);
     }
 
     private void prepareListData() {
