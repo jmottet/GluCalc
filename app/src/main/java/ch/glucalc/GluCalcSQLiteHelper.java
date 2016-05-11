@@ -970,7 +970,7 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
 
             @Override
             public int compare(MealDiary lhs, MealDiary rhs) {
-                return lhs.getMealDate().toLowerCase().compareTo(rhs.getMealDate().toLowerCase());
+                return rhs.getMealDate().toLowerCase().compareTo(lhs.getMealDate().toLowerCase());
             }
         });
     }
