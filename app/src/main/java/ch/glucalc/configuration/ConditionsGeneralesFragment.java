@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ch.glucalc.EnumBloodGlucose;
@@ -91,7 +92,7 @@ public class ConditionsGeneralesFragment extends Fragment {
                 }
             });
         } else {
-            LinearLayout titleContainer = (LinearLayout) layout.findViewById(R.id.conditions_generales_title_container);
+            RelativeLayout titleContainer = (RelativeLayout) layout.findViewById(R.id.conditions_generales_title_container);
 
             titleContainer.setVisibility(View.GONE);
             accepterButton.setVisibility(View.GONE);

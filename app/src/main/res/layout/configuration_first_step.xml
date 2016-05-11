@@ -9,14 +9,14 @@
         android:id="@+id/configuration_first_step_title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primaryColorDark">
+        android:background="@color/primaryColor">
 
         <TextView
             android:id="@+id/configuration_first_step_main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/configuration_first_step_main_title"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:layout_centerInParent="true"
             android:padding="8sp"/>
 
@@ -25,9 +25,9 @@
             android:src="@drawable/ic_action_accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10sp"
+            android:padding="8sp"
             android:layout_alignParentRight="true"
-            android:background="#5ec639"/>
+            android:background="@color/primaryColor"/>
     </RelativeLayout>
 <!--
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

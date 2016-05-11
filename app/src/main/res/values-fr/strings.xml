@@ -217,7 +217,7 @@
 
     <!-- Conditions Générales -->
     <string name="conditions_generales_main_title">Conditions générales</string>
-    <string name="conditions_generales_version">GluCalc V1.2</string>
+    <!--<string name="conditions_generales_version">GluCalc V1.2</string>-->
     <string name="conditions_generales_title1">CONDITIONS GENERALES</string>
     <string name="conditions_generales_part1">En accédant à l\'application GluCalc (ci-après : l\'Application), vous déclarez avoir compris et accepter les conditions générales suivantes. Si vous n\'acceptez pas les présentes conditions générales, vous devez renoncer à accéder à l\'application GluCalc.\n</string>
 
