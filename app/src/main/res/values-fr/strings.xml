@@ -124,14 +124,14 @@
     <!-- Edit meal type -->
     <string name="enter_meal_type_name_hint">Saisir un type de repas</string>
     <string name="edit_meal_type_name">Type de repas</string>
-    <string name="enter_meal_type_food_target_hint">Saisir une cible alimentaire</string>
+    <string name="enter_meal_type_food_target_hint">Saisir une valeur</string>
     <string name="edit_meal_type_food_target">Cible alimentaire</string>
     <string name="edit_meal_type_food_target_unit">[g]</string>
-    <string name="enter_meal_type_blood_glucose_target_hint">Saisir une cible de glycémie</string>
+    <string name="enter_meal_type_blood_glucose_target_hint">Saisir une valeur</string>
     <string name="edit_meal_type_blood_glucose_target">Cible de glycémie</string>
-    <string name="enter_meal_type_insulin_sensitivity_hint">Saisir le facteur de sensibilité à l\'insuline</string>
+    <string name="enter_meal_type_insulin_sensitivity_hint">Saisir une valeur</string>
     <string name="edit_meal_type_insulin_sensitivity">Facteur de sensibilité à l\'insuline</string>
-    <string name="enter_meal_type_insulin_hint">Saisir une quantité d\'insuline pour 10g de glucides</string>
+    <string name="enter_meal_type_insulin_hint">Saisir une valeur</string>
     <string name="edit_meal_type_insulin">Insuline</string>
 
         <!-- Info -->

@@ -36,7 +36,8 @@
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <EditText
                 android:id="@+id/meal_type_name_edittext"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_meal_type_name_hint"
                 android:inputType="text"
-                android:paddingLeft="10dp">
+                >
             </EditText>
 
         </LinearLayout>
@@ -75,7 +76,8 @@
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <EditText
                 android:id="@+id/meal_type_food_target_edittext"
@@ -83,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_meal_type_food_target_hint"
                 android:inputType="numberDecimal"
-                android:paddingLeft="10dp">
+                >
             </EditText>
 
             <TextView
@@ -119,14 +121,15 @@
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
             <EditText
                 android:id="@+id/meal_type_glycemia_target_edittext"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_meal_type_blood_glucose_target_hint"
                 android:inputType="numberDecimal"
-                android:paddingLeft="10dp">
+                >
             </EditText>
 
             <TextView
@@ -161,7 +164,8 @@
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
             <EditText
                 android:id="@+id/meal_type_insulin_sensitivity_edittext"
@@ -169,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_meal_type_insulin_sensitivity_hint"
                 android:inputType="numberDecimal"
-                android:paddingLeft="10dp">
+                >
             </EditText>
 
             <TextView
@@ -205,14 +209,15 @@
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
             <EditText
                 android:id="@+id/meal_type_insulin_edittext"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_meal_type_insulin_hint"
                 android:inputType="numberDecimal"
-                android:paddingLeft="10dp">
+                >
             </EditText>
 
             <TextView
