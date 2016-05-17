@@ -90,9 +90,6 @@ public class ImportActivity extends Activity {
     int result = 0;
     final Context context = getApplicationContext();
 
-    final Map<String, CategoryFood> categories = new HashMap<String, CategoryFood>();
-    final List<Food> foods = new ArrayList<Food>();
-
     if (data != null) {
 
       GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).deleteFoods();
@@ -105,43 +102,51 @@ public class ImportActivity extends Activity {
       }
       final InputStream is = cr.openInputStream(uri);
 
-      final BufferedReader inputReader = new BufferedReader(new InputStreamReader(is));
-      String buffer;
-      if ((buffer = inputReader.readLine()) != null) {
-        // Ignore the first line
-      }
-
-      while ((buffer = inputReader.readLine()) != null) {
-        final StringTokenizer tokenizer = new StringTokenizer(buffer, ";");
-        final String categoryName = tokenizer.nextToken();
-        final String foodName = tokenizer.nextToken();
-        final String foodCarbohydrate = tokenizer.nextToken();
-        final String foodQuantity = tokenizer.nextToken();
-        final String foodUnit = tokenizer.nextToken();
-
-        CategoryFood categoryFood = categories.get(categoryName.toLowerCase());
-        if (categoryFood == null) {
-          categoryFood = new CategoryFood();
-          categoryFood.setName(categoryName);
-          final long categoryId = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).storeCategory(categoryFood);
-          categoryFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).loadCategoryOfFood(categoryId);
-          categories.put(categoryFood.getName().toLowerCase(), categoryFood);
-        }
-
-        final Food newFood = new Food();
-        newFood.setCategoryId(categoryFood.getId());
-        newFood.setName(foodName);
-        newFood.setCarbonhydrate(Float.valueOf(foodCarbohydrate));
-        newFood.setQuantity(Float.valueOf(foodQuantity));
-        newFood.setUnit(foodUnit);
-
-        foods.add(newFood);
-
-      }
-      GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).store(foods);
-      result = foods.size();
-      is.close();
+      result = ImportActivity.ImportDatas(context, is);
     }
+    return result;
+  }
+
+  public static int ImportDatas(Context context, InputStream is) throws IOException {
+    final Map<String, CategoryFood> categories = new HashMap<String, CategoryFood>();
+    final List<Food> foods = new ArrayList<Food>();
+    int result;
+    final BufferedReader inputReader = new BufferedReader(new InputStreamReader(is));
+    String buffer;
+    if ((buffer = inputReader.readLine()) != null) {
+      // Ignore the first line
+    }
+
+    while ((buffer = inputReader.readLine()) != null) {
+      final StringTokenizer tokenizer = new StringTokenizer(buffer, ";");
+      final String categoryName = tokenizer.nextToken();
+      final String foodName = tokenizer.nextToken();
+      final String foodCarbohydrate = tokenizer.nextToken();
+      final String foodQuantity = tokenizer.nextToken();
+      final String foodUnit = tokenizer.nextToken();
+
+      CategoryFood categoryFood = categories.get(categoryName.toLowerCase());
+      if (categoryFood == null) {
+        categoryFood = new CategoryFood();
+        categoryFood.setName(categoryName);
+        final long categoryId = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).storeCategory(categoryFood);
+        categoryFood = GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).loadCategoryOfFood(categoryId);
+        categories.put(categoryFood.getName().toLowerCase(), categoryFood);
+      }
+
+      final Food newFood = new Food();
+      newFood.setCategoryId(categoryFood.getId());
+      newFood.setName(foodName);
+      newFood.setCarbonhydrate(Float.valueOf(foodCarbohydrate));
+      newFood.setQuantity(Float.valueOf(foodQuantity));
+      newFood.setUnit(foodUnit);
+
+      foods.add(newFood);
+
+    }
+    GluCalcSQLiteHelper.getGluCalcSQLiteHelper(context).store(foods);
+    result = foods.size();
+    is.close();
     return result;
   }
 

@@ -18,9 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+
 import ch.glucalc.EnumBloodGlucose;
 import ch.glucalc.GestureHelper;
 import ch.glucalc.GluCalcSQLiteHelper;
+import ch.glucalc.ImportActivity;
 import ch.glucalc.KeyboardHelper;
 import ch.glucalc.R;
 
@@ -79,6 +84,18 @@ public class ConditionsGeneralesFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
+                    Integer resourceId = null;
+                    if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
+                        resourceId = R.raw.default_foods_fr;
+                    } else {
+                        resourceId = R.raw.default_foods_en;
+                    }
+                    InputStream is = getResources().openRawResource(resourceId);
+                    try {
+                        ImportActivity.ImportDatas(getActivity().getApplicationContext(), is);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     mCallback.openConfigurationFirstStepFragment();
                 }
             });
