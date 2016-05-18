@@ -217,7 +217,7 @@
     <!-- Conditions Générales -->
     <string name="conditions_generales_main_title">Terms of use</string>
     <!--<string name="conditions_generales_version">GluCalc V1.2</string> -->
-    <string name="conditions_generales_title1">DISCLAIMER</string>
+    <string name="conditions_generales_title1">TERM OF USE</string>
     <string name="conditions_generales_part1">In using GluCalc (the Application), you declare that you have understood and accepted the following disclaimer. If you do not accept these conditions you should not use the GluCalc application.\n</string>
 
     <string name="conditions_generales_title2">USE OF THE APPLICATION</string>
