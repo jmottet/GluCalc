@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.glucalc.about.AboutTermsFragment;
+import ch.glucalc.about.ProjectInformationFragment;
 import ch.glucalc.configuration.BloodGlucoseUnitListFragment;
 import ch.glucalc.configuration.ConfigurationFirstStepFragment;
 import ch.glucalc.food.EditFoodFragment;
@@ -221,6 +222,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public void openAboutTermsFragment() {
         openFragment(new AboutTermsFragment(), true);
+    }
+
+    @Override
+    public void openProjectInformationFragment() {
+        openFragment(new ProjectInformationFragment(), true);
     }
 
     @Override

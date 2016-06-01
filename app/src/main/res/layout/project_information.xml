@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+
+            <TextView
+                android:id="@+id/project_information_title1_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_title1"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/project_information_part1_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_part1"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/project_information_title2_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_title2"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/project_information_part2_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_part2"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/project_information_title3_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_title3"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/project_information_part3_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_part3"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/project_information_title4_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_title4"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/project_information_part4_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_information_part4"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

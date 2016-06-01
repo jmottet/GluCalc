@@ -39,6 +39,7 @@
     </string-array>
 
     <string-array name="left_submenu_about_items_array">
+        <item>Project information</item>
         <item>Terms of use</item>
     </string-array>
 
@@ -213,6 +214,21 @@
     <string name="export_new_meal_food_carbohydrate_unit">[g]</string>
 
     <string name="exported_new_meal_successfully">New meal exported successfully!</string>
+
+    <!-- Project Information -->
+    <string name="project_information_main_title">Project information</string>
+    <!--<string name="conditions_generales_version">GluCalc V1.2</string> -->
+    <string name="project_information_title1">ABOUT GLUCALC</string>
+    <string name="project_information_part1">Glucalc helps the diabetic patient with calculations at mealtime. It calculates the amount of carbohydrates based on selected foods.\n\nGluCalc then determines the amount of insulin required following the correction factor or correction dose method.\n\nMeal insulin = (Insulin amount for 10 g Carbohydrate x Ingested Carbodydrates / 10) + (Measured Blood Glucose – Target Blood Glucose) / Insulin Sensitivity Factor\n\nFormula parameters have to be determined by a medical professional.\n\nYou can find more information on web site www.glucalc.ch\n\nGlucalc is a non-profitable project. It was designed and developed in Switzerland as a private initiative with support of interested partners and collaboration with an high school of business administration.\n</string>
+
+    <string name="project_information_title2">PROMOTION, CONCEPT AND PROJECT MANAGEMENT</string>
+    <string name="project_information_part2">Louis Boyer\nLa Tour-de-Trême - Switzerland\n</string>
+
+    <string name="project_information_title3">MEDICAL SUPPORT AND SUPERVISION</string>
+    <string name="project_information_part3">Dr. Michael Hauschild\nCHUV - Centre Hospitalier Universitaire Vaudois\nDivision d\'Endocrinologie Diabétologie et Obésité Pédiatrique\nLausanne - Switzerland\n</string>
+
+    <string name="project_information_title4">MOBILE APP DEVELOPMENT</string>
+    <string name="project_information_part4">Julien Mottet\nGrolley - Switzerland\n\nWe are still looking for partners for app maintenance and improvement. If you are interested, you can contact us at the following adress.\n\nContact : glucalc@glucalc.ch\n\n© 2015 Glucalc.ch\n</string>
 
     <!-- Conditions Générales -->
     <string name="conditions_generales_main_title">Terms of use</string>

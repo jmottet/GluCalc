@@ -39,6 +39,7 @@
     </string-array>
 
     <string-array name="left_submenu_about_items_array">
+        <item>Information sur le projet</item>
         <item>Conditions d\'utilisation</item>
     </string-array>
 
@@ -213,6 +214,21 @@
     <string name="export_new_meal_food_carbohydrate_unit">[g]</string>
 
     <string name="exported_new_meal_successfully">Le nouveau repas exporté avec succès!</string>
+
+    <!-- Project Information -->
+    <string name="project_information_main_title">Project information</string>
+    <!--<string name="conditions_generales_version">GluCalc V1.2</string> -->
+    <string name="project_information_title1">A PROPOS DE GLUCALC</string>
+    <string name="project_information_part1">Glucalc a pour but d\'alléger la tâche du patient diabétique pour les calculs à effectuer au moment du repas. L\'application permet de calculer les hydrates de carbones (glucides) en fonction des aliments sélectionnés.\n\nGluCalc calcule ensuite la quantité d\'insuline nécessaire (Bolus) selon la méthode du facteur de correction ou de la dose de correction.\n\nBolus = (Quantité d\'Insuline pour 10 g de glucides x Glucides Ingérés / 10) + (Glycémie Mesurée – Glycémie Cible) / Facteur de sensibilité à l\'insuline\n\nLes paramètres de cette formule doivent être défini selon une prescription médicale.\n\nDes informations complémentaires figurent sur le site www.glucalc.ch\n\nGluCalc est un projet sans vocation commerciale. Il a été conçu et développé en Suisse par une initiative privée, avec le soutien des milieux intéressés et le concours d’une haute école de gestion.\n</string>
+
+    <string name="project_information_title2">PROMOTION, CONCEPT ET GESTION DU PROJET</string>
+    <string name="project_information_part2">Louis Boyer\nLa Tour-de-Trême - Suisse\n</string>
+
+    <string name="project_information_title3">ACCOMPAGNEMENT ET SUPERVISION MEDICALE</string>
+    <string name="project_information_part3">Dr. Michael Hauschild\nCHUV - Centre Hospitalier Universitaire Vaudois\nDivision d\'Endocrinologie Diabétologie et Obésité Pédiatrique\nLausanne - Suisse\n</string>
+
+    <string name="project_information_title4">DEVELOPPEMENT DE L’APPLICATION MOBILE</string>
+    <string name="project_information_part4">Julien Mottet\nGrolley - Suisse\n\nNous sommes toujours à la recherche de partenaires pour maintenir et améliorer cette application. Si vous êtes intéressés, vous pouvez nous contacter à l\'adresse suivante.\n\nContact : glucalc@glucalc.ch\n\n© 2015 Glucalc.ch\n</string>
 
     <!-- Conditions Générales -->
     <string name="conditions_generales_main_title">Conditions générales</string>

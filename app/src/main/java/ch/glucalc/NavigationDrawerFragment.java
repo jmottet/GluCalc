@@ -54,7 +54,9 @@ public class NavigationDrawerFragment extends Fragment {
     private static final int SETTINGS_RESET_IDX = 4;
 
     /* Sub categories of About menu */
-    private static final int ABOUT_TERMS_OF_USE_IDX = 0;
+    private static final int ABOUT_PROJECT_INFORMATION_IDX = 0;
+
+    private static final int ABOUT_TERMS_OF_USE_IDX = 1;
 
     private static final List<Integer> CATEGORIES_WITH_SUBMENUS = Arrays.asList(CHECK_MENU_IDX, SETTINGS_MENU_IDX,
             ABOUT_MENU_IDX);
@@ -106,6 +108,8 @@ public class NavigationDrawerFragment extends Fragment {
         public void openMealDiaryFirstStepFragment();
 
         public void openAboutTermsFragment();
+
+        public void openProjectInformationFragment();
 
         public void openConfigurationFirstStepFragment();
 
@@ -301,7 +305,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         List<MenuChildItem> subAbout = new ArrayList<MenuChildItem>();
         final List<String> subAboutTitles = Arrays.asList(getResources().getStringArray(R.array.left_submenu_about_items_array));
-        Integer[] subAboutImageResources = {R.drawable.ic_submenu_terms_of_use};
+        Integer[] subAboutImageResources = {R.drawable.ic_submenu_terms_of_use, R.drawable.ic_submenu_terms_of_use};
         for(int i=0; i < subAboutTitles.size(); i++) {
             MenuChildItem menuChildItem = new MenuChildItem();
             menuChildItem.setTitle(subAboutTitles.get(i));
@@ -358,6 +362,9 @@ public class NavigationDrawerFragment extends Fragment {
             // setTitle(menuListDataHeader.get(groupPosition));
         } else if (groupPosition == ABOUT_MENU_IDX) {
             switch (childPosition) {
+                case ABOUT_PROJECT_INFORMATION_IDX:
+                    mCallback.openProjectInformationFragment();
+                    break;
                 case ABOUT_TERMS_OF_USE_IDX:
                     mCallback.openAboutTermsFragment();
                     break;
