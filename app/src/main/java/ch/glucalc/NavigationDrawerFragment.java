@@ -115,6 +115,8 @@ public class NavigationDrawerFragment extends Fragment {
 
         public void openEditMealTypeFragment();
 
+        public void openResetFragment();
+
     }
 
     private static void saveToPreferences(Context context, String preferenceName, String preferenceValue) {
@@ -353,6 +355,7 @@ public class NavigationDrawerFragment extends Fragment {
                     mCallback.openConfigurationFirstStepFragment();
                     break;
                 case SETTINGS_RESET_IDX:
+                    mCallback.openResetFragment();
                     break;
                 default:
                     break;

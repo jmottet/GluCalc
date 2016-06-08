@@ -51,7 +51,7 @@
     <string name="edit_new_meal_type">Meal type</string>
     <string name="enter_new_meal_blood_glucose_hint">Enter a blood glucose value</string>
     <string name="edit_new_meal_blood_glucose">Blood glucose</string>
-    <string name="favourite_food_switch">Favourite food</string>
+    <string name="favourite_food_switch">Favourite foods</string>
 
     <!-- New meal second step -->
     <string name="new_meal_second_step_carbohydrate">Carbohydrate</string>
@@ -173,6 +173,8 @@
     <string name="dialog_confirm_category_delete_cascade">A category contains some food, therefore this action will delete them too. Do you want to continue?</string>
     <string name="dialog_confirm_food_import">Please be aware that all current food will be lost. Food from the chosen file will be imported. Do you want to continue?</string>
 
+    <string name="dialog_reload_default_food">"Do you want to reload default food?</string>
+
     <string name="dialog_configuration_meal_type_title">Define Meal Type</string>
     <string name="dialog_configuration_meal_type_message">GluCalc run correctly when you define meal types with medical team supervision</string>
     <string name="dialog_configuration_meal_create">Create</string>
@@ -183,6 +185,7 @@
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_yes">Yes</string>
     <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_no">No</string>
 
     <string name="imported_food">Food imported : {0}</string>
     <string name="imported_food_failed">Food import failed!</string>
@@ -228,7 +231,7 @@
     <string name="project_information_part3">Dr. Michael Hauschild\nCHUV - Centre Hospitalier Universitaire Vaudois\nDivision d\'Endocrinologie Diabétologie et Obésité Pédiatrique\nLausanne - Switzerland\n</string>
 
     <string name="project_information_title4">MOBILE APP DEVELOPMENT</string>
-    <string name="project_information_part4">Julien Mottet\nGrolley - Switzerland\n\nWe are still looking for partners for app maintenance and improvement. If you are interested, you can contact us at the following adress.\n\nContact : glucalc@glucalc.ch\n\n© 2015 Glucalc.ch\n</string>
+    <string name="project_information_part4">Julien Mottet\nGrolley - Switzerland\n\nWe are still looking for partners for app maintenance and improvement. If you are interested, you can contact us at the following adress.\n\nContact : glucalc@glucalc.ch\n\n© 2016 Glucalc.ch\n</string>
 
     <!-- Conditions Générales -->
     <string name="conditions_generales_main_title">Terms of use</string>
@@ -256,5 +259,17 @@
 
     <string name="accepter_conditions">I agree</string>
     <string name="refuser_conditions">I decline</string>
+
+    <!-- Réinitialisation -->
+    <string name="reset_checkbox_foods">Foods and food categories</string>
+    <string name="reset_checkbox_meals">Meals settings</string>
+    <string name="reset_checkbox_diaries">Meal diary</string>
+    <string name="reset_button">Reset</string>
+
+    <string name="reset_at_least_one_criteria_title">Information</string>
+    <string name="reset_at_least_one_criteria_message">Please select at least one criteria</string>
+
+    <string name="reset_performed_title">Information</string>
+    <string name="reset_performed">Reset has been performed!</string>
 
 </resources>

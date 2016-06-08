@@ -113,7 +113,6 @@ public class EditMealTypeFragment extends Fragment {
         unitTextView = (TextView) layout.findViewById((R.id.meal_type_insulin_sensitivity_unit_textview));
         unitTextView.setText(globalBloodGlucose);
 
-
         if (getMealTypeId() == FAKE_DEFAULT_ID) {
             initFieldsAndButtonForCreation(layout);
         } else {

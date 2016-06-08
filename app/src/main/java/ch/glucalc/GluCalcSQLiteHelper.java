@@ -87,7 +87,21 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     }
 
     public void deleteMealTypes() {
-        getWritableDatabase().delete(MealTypeTable.TABLE_NAME, null, null);
+        final SQLiteDatabase db = getWritableDatabase();
+        db.setForeignKeyConstraintsEnabled(true);
+
+        final ContentValues values = new ContentValues();
+        try {
+            db.beginTransaction();
+
+            values.put(MealTypeTable.COLUMN_DELETED, 1);
+            db.update(MealTypeTable.TABLE_NAME, values, null, null);
+
+            values.clear();
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public List<MealType> loadMealTypes() {
@@ -955,6 +969,10 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
         return mealDiaries;
     }
 
+    public void deleteMealDiaries() {
+        getWritableDatabase().delete(MealDiaryTable.TABLE_NAME, null, null);
+    }
+
     private void sortMealDiaries(List<MealDiary> mealDiaries) {
         Collections.sort(mealDiaries, new Comparator<MealDiary>() {
 
@@ -1107,6 +1125,10 @@ public class GluCalcSQLiteHelper extends SQLiteOpenHelper {
     public void deleteFoodDiary(Long foodDiaryId) {
         getWritableDatabase().delete(FoodDiaryTable.TABLE_NAME, FoodDiaryTable.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(foodDiaryId)});
+    }
+
+    public void deleteFoodDiaries() {
+        getWritableDatabase().delete(FoodDiaryTable.TABLE_NAME, null, null);
     }
 
     /******

@@ -21,6 +21,7 @@ import ch.glucalc.about.AboutTermsFragment;
 import ch.glucalc.about.ProjectInformationFragment;
 import ch.glucalc.configuration.BloodGlucoseUnitListFragment;
 import ch.glucalc.configuration.ConfigurationFirstStepFragment;
+import ch.glucalc.configuration.ResetFragment;
 import ch.glucalc.food.EditFoodFragment;
 import ch.glucalc.food.Food;
 import ch.glucalc.food.FoodConstants;
@@ -63,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         EditFavouriteFoodFragment.OnFavouriteFoodSaved, InsulinOverviewMealTypeListSelectionFragment.OnMealTypeInsulinOverview, NewMealFragment.OnMealTypeInsulinSecondStep,
         NewMealFoodListFragment.OnNewMealFoodEdition, EditNewMealFoodFragment.OnNewMealFoodSaved, NewMealSecondStepFragment.OnNewMealFoodDiaryAddition,
         NewMealFoodDiaryListSelectionFragment.OnNewMealFoodAddition, NewMealSecondStepFragment.OnNewMealThirdStepOrBack, NewMealThirdStepFragment.OnNewMealSavedOrBackToPrevious, MealDiaryFirstStepFragment.OnMealDiaryDate, MealDiarySecondStepFragment.OnMealDiary,
-        ConfigurationFirstStepFragment.OnConfigurationFirstStep{
+        ConfigurationFirstStepFragment.OnConfigurationFirstStep, ResetFragment.OnResetRequest{
 
     private static String TAG = "GluCalc";
 
@@ -436,6 +437,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         openFragment(configurationFirstStepFragment, true);
     }
 
+    @Override
+    public void openResetFragment() {
+        ResetFragment resetFragment = new ResetFragment();
+        openFragment(resetFragment, true);
+    }
+
     private void openFragment(Fragment fragment, boolean backAvailable) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -458,6 +465,25 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         if (withRedirectionToNewMeal) {
             openNewMealFragment();
+        }
+    }
+
+    @Override
+    public void reset(boolean resetFoods, boolean resetMeals, boolean resetDiaries, boolean loadDefaultFoods) {
+        if (resetFoods) {
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).deleteFoods();
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).deleteCategoriesOfFood();
+            if (loadDefaultFoods) {
+                ImportDefaultHelper.importDefaultFoods(this, getResources());
+            }
+        }
+        if (resetDiaries) {
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).deleteFoodDiaries();
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).deleteMealDiaries();
+        }
+        if (resetMeals) {
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).deleteFavouriteFoods();
+            GluCalcSQLiteHelper.getGluCalcSQLiteHelper(this).deleteMealTypes();
         }
     }
 }
