@@ -34,6 +34,8 @@ public class ResetFragment extends Fragment {
 
     private boolean resetFoods= false;
 
+    private boolean restoreDefaultFood = false;
+
     private OnResetRequest mCallback;
 
     public interface OnResetRequest {
@@ -67,11 +69,29 @@ public class ResetFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.reset_view, container, false);
 
+        final CheckBox checkBoxImportDefaultFood = (CheckBox) layout.findViewById(R.id.checkbox_import_default_food);
+        checkBoxImportDefaultFood.setChecked(false);
+        checkBoxImportDefaultFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                restoreDefaultFood = checkBoxImportDefaultFood.isChecked();
+            }
+        });
+
         final CheckBox checkBoxFoods = (CheckBox) layout.findViewById(R.id.checkbox_foods);
         checkBoxFoods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetFoods = checkBoxFoods.isChecked();
+                if (resetFoods) {
+                    checkBoxImportDefaultFood.setClickable(true);
+                    checkBoxImportDefaultFood.setChecked(true);
+                    restoreDefaultFood = true;
+                } else {
+                    checkBoxImportDefaultFood.setClickable(false);
+                    checkBoxImportDefaultFood.setChecked(false);
+                    restoreDefaultFood = false;
+                }
             }
         });
 
@@ -98,47 +118,39 @@ public class ResetFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    if (resetFoods) {
+                    if (!resetFoods && !resetMeals && !resetDiaries) {
+                        DialogHelper.getDialogInfo(getActivity(), getString(R.string.reset_at_least_one_criteria_title), getString(R.string.reset_at_least_one_criteria_message)).show();
+                    } else {
                         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
                         // set title
                         alertDialogBuilder.setTitle(R.string.dialog_confirm_title);
 
                         // set dialog message
-                        alertDialogBuilder.setMessage(R.string.dialog_reload_default_food).setCancelable(false)
-                                .setPositiveButton(R.string.dialog_button_yes, new DialogInterface.OnClickListener() {
+                        alertDialogBuilder.setMessage(R.string.dialog_confirm_reset_data).setCancelable(false)
+                                .setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int id) {
-                                        mCallback.reset(resetFoods, resetMeals, resetDiaries, true);
                                     }
-                                }).setNegativeButton(R.string.dialog_button_no, new DialogInterface.OnClickListener() {
+                                }).setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mCallback.reset(resetFoods, resetMeals, resetDiaries, false);
+                                mCallback.reset(resetFoods, resetMeals, resetDiaries, restoreDefaultFood);
                                 DialogHelper.getDialogInfo(getActivity(), getString(R.string.reset_performed_title), getString(R.string.reset_performed)).show();
-                                reinitCheckboxes(checkBoxFoods, checkBoxMeals, checkBoxDiaries);
+                                reinitCheckboxes(checkBoxFoods, checkBoxMeals, checkBoxDiaries, checkBoxImportDefaultFood);
 
                             }
                         });
-
-                        // create alert dialog
-                        final AlertDialog alertDialog = alertDialogBuilder.create();
-                        // show it
-                        alertDialog.show();
-                    } else if (!resetFoods && !resetMeals && !resetDiaries) {
-                        DialogHelper.getDialogInfo(getActivity(), getString(R.string.reset_at_least_one_criteria_title), getString(R.string.reset_at_least_one_criteria_message)).show();
-                    } else {
-                        mCallback.reset(resetFoods, resetMeals, resetDiaries, false);
-                        DialogHelper.getDialogInfo(getActivity(), getString(R.string.reset_performed_title), getString(R.string.reset_performed)).show();
-                        reinitCheckboxes(checkBoxFoods, checkBoxMeals, checkBoxDiaries);
+                        alertDialogBuilder.show();
                     }
                 }
             });
+
         return layout;
     }
 
-    private void reinitCheckboxes(CheckBox checkBoxFoods, CheckBox checkBoxMeals, CheckBox checkBoxDiaries) {
+    private void reinitCheckboxes(CheckBox checkBoxFoods, CheckBox checkBoxMeals, CheckBox checkBoxDiaries, CheckBox checkBoxRestoreDefaultFood) {
         checkBoxFoods.setChecked(false);
         resetFoods = false;
 
@@ -147,6 +159,11 @@ public class ResetFragment extends Fragment {
 
         checkBoxDiaries.setChecked(false);
         resetDiaries = false;
+
+        checkBoxRestoreDefaultFood.setChecked(false);
+        restoreDefaultFood = false;
+
+        checkBoxRestoreDefaultFood.setClickable(false);
     }
 
     @Override

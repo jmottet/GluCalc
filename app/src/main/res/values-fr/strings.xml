@@ -171,8 +171,7 @@
     <string name="dialog_confirm_title">Confirmer</string>
     <string name="dialog_confirm_category_delete_cascade">Cette catégorie contient des aliments, cette action va tous les supprimer. Voulez-vous continuer ?</string>
     <string name="dialog_confirm_food_import">Attention, tous les aliments existants vont être supprimés. Les aliments du fichiers sélectionné vont être importés. Voulez-vous continuer ?</string>
-
-    <string name="dialog_reload_default_food">"Voulez-vous recharger les aliments par défaut?</string>
+    <string name="dialog_confirm_reset_data">Voulez-vous vraiment supprimer les données sélectionnées ?</string>
 
     <string name="dialog_configuration_meal_type_title">Création d\'un type de repas</string>
     <string name="dialog_configuration_meal_type_message">GluCalc fonctionne correctement, lorsque vous configurez des types de repas avec les conseils de l\'équipe médicale</string>
@@ -261,6 +260,7 @@
     <string name="refuser_conditions">Je refuse</string>
 
     <string name="reset_checkbox_foods">Aliments et catégories</string>
+    <string name="restore_default_food">Import des données par défaut</string>
     <string name="reset_checkbox_meals">Paramètres des repas</string>
     <string name="reset_checkbox_diaries">Journal des repas</string>
     <string name="reset_button">Réinitialiser</string>

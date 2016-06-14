@@ -87,6 +87,31 @@ public class DialogHelper {
     return dialog;
   }
 
+  public static Dialog getDialogWarningResetData(Context context, OnClickListener positiveListener) {
+    final Builder builder = new AlertDialog.Builder(context);
+
+    // Setting Dialog Title
+    builder.setTitle(R.string.dialog_confirm_title);
+
+    // Setting Dialog Message
+    builder.setMessage(R.string.dialog_confirm_reset_data);
+
+    // Setting Icon to Dialog if needed
+    // alertDialog.setIcon(R.drawable.)
+
+    // Setting OK Button
+    builder.setPositiveButton(R.string.dialog_button_ok, positiveListener);
+    builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
+
+    final AlertDialog dialog = builder.create();
+    return dialog;
+  }
+
   public static Dialog getDialogInfo(Context context, String title, String message) {
     final Builder builder = new AlertDialog.Builder(context);
 

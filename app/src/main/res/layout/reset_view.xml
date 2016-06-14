@@ -13,6 +13,15 @@
         android:paddingLeft="10sp"
         android:layout_marginTop="20sp"
         android:text="@string/reset_checkbox_foods"/>
+    <CheckBox android:id="@+id/checkbox_import_default_food"
+        android:clickable="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingLeft="10sp"
+        android:layout_marginLeft="40sp"
+        android:layout_marginTop="5sp"
+        android:text="@string/restore_default_food"/>
     <CheckBox android:id="@+id/checkbox_meals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

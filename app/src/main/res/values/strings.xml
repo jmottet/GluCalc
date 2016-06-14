@@ -172,8 +172,7 @@
     <string name="dialog_confirm_title">Confirm</string>
     <string name="dialog_confirm_category_delete_cascade">A category contains some food, therefore this action will delete them too. Do you want to continue?</string>
     <string name="dialog_confirm_food_import">Please be aware that all current food will be lost. Food from the chosen file will be imported. Do you want to continue?</string>
-
-    <string name="dialog_reload_default_food">"Do you want to reload default food?</string>
+    <string name="dialog_confirm_reset_data">Do you really want to delete the selected data ?</string>
 
     <string name="dialog_configuration_meal_type_title">Define Meal Type</string>
     <string name="dialog_configuration_meal_type_message">GluCalc run correctly when you define meal types with medical team supervision</string>
@@ -262,6 +261,7 @@
 
     <!-- Réinitialisation -->
     <string name="reset_checkbox_foods">Foods and food categories</string>
+    <string name="restore_default_food">Default data import</string>
     <string name="reset_checkbox_meals">Meals settings</string>
     <string name="reset_checkbox_diaries">Meal diary</string>
     <string name="reset_button">Reset</string>
