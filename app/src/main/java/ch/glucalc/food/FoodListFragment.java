@@ -347,20 +347,21 @@ public class FoodListFragment extends ListFragment implements OnQueryTextListene
         }
         adapter.setRows(rows);
         setListAdapter(adapter);
+        if (getView() != null) {
+            getView().setOnTouchListener(new OnTouchListener() {
 
-        getView().setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mGestureDetector.onTouchEvent(event)) {
-                    return true;
-                } else {
-                    return false;
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (mGestureDetector.onTouchEvent(event)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
-            }
-        });
+            });
 
-        updateList();
+            updateList();
+        }
     }
 
     private List<Food> populateFoods(boolean filtered, String nameCriteria) {
