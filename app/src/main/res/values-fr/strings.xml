@@ -267,5 +267,7 @@
 
     <string name="reset_at_least_one_criteria_title">Information</string>
     <string name="reset_at_least_one_criteria_message">Veuillez sélectionner au moins un critère</string>
+
+    <string name="reset_performed_title">Information</string>
     <string name="reset_performed">Réinitialisation effectuée!</string>
 </resources>
